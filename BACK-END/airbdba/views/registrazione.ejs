@@ -1,0 +1,25 @@
+<h1>Registrazione</h1>
+<br>
+<form action="/autenticazione/registrazione" method="POST">
+    <div>
+        <label for="nome">Nome:</label><br>
+        <input type="text" id="nome" name="nome"><br>
+    </div>
+    <div>
+        <label for="cognome">Cognome:</label><br>
+        <input type="text" id="cognome" name="cognome" ><br>
+    </div>
+    <div>
+        <label for="mail">E-mail:</label><br>
+        <input type="text" id="mail"  name="mail"><br>
+    </div>
+    <div>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" minlength="8" name="password"><br>
+        <button type="submit">Registrati</button>
+    </div>
+</form>
+<% if(typeof message!= "undefined" && message) { %>
+    <h2><%= message %></h2>
+<% } %> 
+<a href="/login">login</a>
