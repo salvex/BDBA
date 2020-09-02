@@ -3,10 +3,26 @@ const Utente = require('../model/Utente');
 //var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 
-//TODO: SOSTITUIRE TUTTI i messaggi con attributo "message"
+//TODO: SOSTITUIRE TUTTI i messaggi res.send con l'attributo "message"
+errorsHandler = (err) => {
+    let errors = { nome: "", cognome: "", email: "", password: "", indirizzo: "", data_nascita: "", numero_telefonico: ""};
+  
+    if (err.message === "email errata" || err.message === "password errata") {
+      errors.email = errors.password =
+        "Credenziali di accesso errate o inesistenti";
+    }
+  
+    if (err.message.includes("Validation error")) {
+      Object.values(err.errors).forEach((error) => {
+        errors[error.path] = error.message;
+      });
+    }
+  
+    return errors;
+  };
+
 
 exports.registrazione = (req,res) => {
-
     console.log("Registrazione in corso...");
 
     Utente.findOne({
@@ -32,7 +48,8 @@ exports.registrazione = (req,res) => {
             })
         }
     }).catch(err =>{
-        return res.stat(500).send("Errore! -> " + err);
+        const errors = errorsHandler(err);
+        return res.status(500).json(errors);
     });   
 }
 

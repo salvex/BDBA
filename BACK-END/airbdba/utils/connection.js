@@ -1,4 +1,6 @@
 const Sequelize = require("sequelize");
+const dotenv = require('dotenv');
+dotenv.config();
 const db = {};
 const sequelize = new Sequelize("airbdba", 'root', '', { 
     host: '127.0.0.1', 
@@ -12,6 +14,16 @@ const sequelize = new Sequelize("airbdba", 'root', '', {
         idle: 10000
     }
 });
+
+sequelize
+    .authenticate()
+    .then(() => {
+        console.log('Connesso al database!');
+    })
+    .catch(err => {
+        console.log('Connessione al database fallita!');
+    })
+
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
