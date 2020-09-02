@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
+const db = require('../utils/connection');
 
-
-module.exports = sequelize.define("Utente", {
+module.exports = db.sequelize.define("Utente", {
     id: {
         type: Sequelize.INTEGER(50),
         allowNull: false,
@@ -23,5 +23,17 @@ module.exports = sequelize.define("Utente", {
     cognome: {
         type: Sequelize.STRING(20),
         allowNull: false
+    },
+    indirizzo: {
+        type: Sequelize.STRING(80),
+        allowNull: false
+    },
+    data_nascita: {
+        type: Sequelize.DATE(20),
+        allowNull: false
+    }, 
+    numero_telefonico: {
+        type: Sequelize.INTEGER(11),
+        allowNull: false 
     }
 })

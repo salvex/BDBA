@@ -13,8 +13,9 @@ var insRouter = require('./routes/MostraInserzione');
 var recRouter = require('./routes/RecuperaPassword');
 var regRouter = require('./routes/Registrazione');
 var searchRouter = require('./routes/Ricerca');
-//----------------------------//
+//---------Database--------------//
 var mysql = require('mysql2');
+const db = require('./utils/connection');
 // CROSS-ORIGIN RESOURCE SHARING
 var cors = require('cors');
 var app = express();
@@ -36,7 +37,11 @@ app.use(cors());
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/user', utenteRouter);
-app.use('/registrazione', regRouter);
+app.use('/regpage', regRouter);
+app.use('/host', hostRouter);
+app.use('/inserzione', insRouter);
+app.use('/recovery', recRouter);
+app.use('/search', searchRouter); 
 
 
 
