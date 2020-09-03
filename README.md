@@ -1,3 +1,11 @@
+# INFORMAZIONI UTILI
+
+### PORTE SCELTE
+- **Front-end**: `3000`
+- **Back-end**: `3001`
+
+
+
 # BDBA
 Si richiede la progettazione di un sistema per il supporto alle attività di gestione e ricezione nel
 settore turistico delle case vacanza e B&B. Le specifiche di seguito espresse sono da considerarsi
