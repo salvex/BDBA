@@ -1,7 +1,7 @@
 # NOTA BENE
 I node modules mancano, quindi prima di usare il front end ricorda di importarli usando:
 
-***npm install***
+### `npm install`
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
