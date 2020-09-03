@@ -1,3 +1,5 @@
+# **Come gestire le cartelle**
+
 Il file index.js si occupa di renderizzare tutta l'applicazione che io costruisco nella cartella App
 Ogni componente principale è inserito in una cartella apposita e richiamato tramite un file index.js.
 Questo previene di dover scrivere l'intero path di un componente con ripetizioni.
