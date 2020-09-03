@@ -3,7 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 
-// React Router
+// React Router:
+// Si connette alla history api e mantiene la ui sincronizzata con l'URL
 import { BrowserRouter } from 'react-router-dom';
 
 // Material-ui
