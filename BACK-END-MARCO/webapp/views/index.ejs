@@ -9,7 +9,8 @@
     <p>Registrati o effettua il Log In</p>
 
     <% if (user) { %> Benvenuto <%= user.nome %> <br />
-    <a href="/logout">Log out</a>
+    <a href="/logout">Log out</a><br />
+    <a href="/user">Profilo</a>
     <% } else { %>
     <a href="/login">Log in</a>
     <a href="/signup">Registrati</a>

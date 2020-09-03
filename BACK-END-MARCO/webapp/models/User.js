@@ -38,11 +38,11 @@ const User = sequelize.define("User", {
   },
 
   password: {
-    type: DataTypes.STRING(16),
+    type: DataTypes.STRING(100),
     validate: {
       len: {
-        args: [8, 16],
-        msg: "Lunghezza password invalida",
+        args: [8, 100],
+        msg: "Lunghezza password non valida",
       },
     },
   },
@@ -64,4 +64,25 @@ User.login = async (email, password) => {
   }
   throw new Error("email errata");
 };
+
+User.modificaPassword = async (email, password, vecchiaPsw, nuovaPsw) => {
+  const confronto = await bcrypt.compare(vecchiaPsw, password);
+  console.log("confronto: ", confronto);
+  if (confronto) {
+    const salt = await bcrypt.genSalt();
+    nuovaPsw = await bcrypt.hash(nuovaPsw, salt);
+
+    const result = await User.update(
+      { password: nuovaPsw },
+      {
+        where: {
+          email,
+        },
+      }
+    );
+    return result;
+  }
+  throw new Error("password non combaciano");
+};
+
 module.exports = User;

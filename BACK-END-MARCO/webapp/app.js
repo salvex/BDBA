@@ -9,6 +9,7 @@ const { requireAuth, checkUser } = require("./middleware/authMiddleware");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var authRouter = require("./routes/authRoutes");
+var userRouter = require("./routes/userRoutes");
 
 var app = express();
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get("*", checkUser);
 app.use("/", indexRouter);
+app.use("/user", requireAuth, userRouter);
 app.use("/users", requireAuth, usersRouter);
 app.use(authRouter);
 

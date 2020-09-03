@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const app = require("../app");
 
 const requireAuth = (req, res, next) => {
   const token = req.cookies.jwt;
@@ -24,13 +25,14 @@ const checkUser = (req, res, next) => {
     jwt.verify(token, "mysupersecret", async (err, decodedToken) => {
       if (err) {
         res.locals.user = null;
+        req.app.set("user", {});
         console.log(err);
         next();
       } else {
         try {
-          console.log(decodedToken.id);
           const user = await User.findOne({ where: { id: decodedToken.id } });
           res.locals.user = user;
+          req.app.set("user", user);
           next();
         } catch (err) {
           console.log(err.message);

@@ -41,12 +41,10 @@ const signup_post = async (req, res) => {
     });
     const token = createToken(user.id);
     res.cookie("jwt", token, { httpOnly: true, expiresIn: maxAge * 1000 });
-    //res.status(201).json({ user: user.id });
     res.status(201).json({ user });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });
-    //res.status(400).render("signup", { errors });
   }
 };
 const login_get = (req, res) => {
