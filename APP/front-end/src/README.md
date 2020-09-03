@@ -6,11 +6,10 @@ Questo previene di dover scrivere l'intero path di un componente con ripetizioni
 
 ES. se ho un componente Home.js nella sua cartella Home, poi dovrei scrivere:
 
-import Home from './components/Home/Home.js'
+***import Home from './components/Home/Home.js'***
 
 In questo modo invece posso direttamente scrivere:
 
-
-import Home from './components/Home'
+***import Home from './components/Home'***
 
 e migliorare ordine delle cartelle e semplicità di lettura dei file
