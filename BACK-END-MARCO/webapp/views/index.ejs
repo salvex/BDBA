@@ -7,14 +7,12 @@
   <body>
     <h1>Home page</h1>
     <p>Registrati o effettua il Log In</p>
-    <ul>
-      <% if (user) { %>
-      <li>Benvenuto</li>
-      <li><a href="/logout">Log out</a></li>
-      <% } else { %>
-      <li><a href="/login">Log in</a></li>
-      <li><a href="/signup">Registrati</a></li>
-      <% } %>
-    </ul>
+
+    <% if (user) { %> Benvenuto <%= user.nome %> <br />
+    <a href="/logout">Log out</a>
+    <% } else { %>
+    <a href="/login">Log in</a>
+    <a href="/signup">Registrati</a>
+    <% } %>
   </body>
 </html>
