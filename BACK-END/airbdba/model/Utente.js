@@ -1,6 +1,5 @@
 const Sequelize = require("sequelize");
 const db = require('../utils/connection');
-
 //TO-DO mettere un validate, modificare allowNull per tutti gli attributi tranne id
 
 module.exports = db.sequelize.define("Utente", {
@@ -29,12 +28,12 @@ module.exports = db.sequelize.define("Utente", {
         type: Sequelize.STRING(20),
         allowNull: false
     },
-    indirizzo: {
+/*    indirizzo: {
         type: Sequelize.STRING(80),
         allowNull: false
     },
     data_nascita: {
-        type: Sequelize.DATE(20),
+        type: Sequelize.DATEONLY,
         validate: {
             notEmpty: {
               msg: "Inserisci una data",
@@ -42,13 +41,9 @@ module.exports = db.sequelize.define("Utente", {
           },
     }, 
     numero_telefonico: {
-        type: Sequelize.INTEGER(20),
-        validate: {
-            notEmpty: {
-              msg: "Inserisci un numero telefonico",
-            },
-          }, 
-    },
+        type: Sequelize.INTEGER,
+        
+    },*/
 }, {
     freezeTableName: true,
     timestamps: false

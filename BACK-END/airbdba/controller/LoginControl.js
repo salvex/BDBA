@@ -25,10 +25,11 @@ exports.login = (req,res) => {
         }
 
         //TOKEN JWT
-        var token = jwt.sign({ id: user.id}, process.env.TOKEN_SECRET, {
+        var token = jwt.sign({ id: utente.id}, process.env.TOKEN_SECRET, {
             expiresIn: 86400 //scade in 24 ore
         })
         res.header('auth-token', token).send(token);
+        return res.status(200).send({message: 'Utente loggato con successo!'});
     }).catch(err => {
         res.status(500).send({ reason: err.message})
     })

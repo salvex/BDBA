@@ -38,9 +38,9 @@ exports.registrazione = (req,res) => {
                 password: bcrypt.hashSync(req.body.password, 8),
                 nome: req.body.nome,
                 cognome: req.body.cognome,
-                indirizzo: req.body.indirizzo,
+            /*    indirizzo: req.body.indirizzo,
                 data_nascita: req.body.datanascita,
-                numero_telefonico: req.body.numerotel
+                numero_telefonico: req.body.numerotel */
             }).then(utente => {
                 return res.status(200).send('account registrato con successo!');
             }).catch(err => {
