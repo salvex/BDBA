@@ -1,15 +1,24 @@
 // React
 import React from 'react';
 
+// React Router 
+import { Switch, Route } from 'react-router-dom';
+
 // Material-ui
 // --> Components
-import Button from '@material-ui/core/Button';
+import { Grid } from '@material-ui/core';
 
-export default function App() {
+// Components
+import Home from './Components/Home';
+
+const App = () => {
   return (
-    <div>
-      <Button variant="contained" color="secondary" >Cliccami</Button>
-    </div>
-  )
+    <Grid container>
+      <Switch>
+        <Route component={Home} exact path="/" />
+      </Switch>
+    </Grid>
+  );
 }
 
+export default App;
