@@ -1,14 +1,25 @@
+// React
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-// Pacchetti aggiuntivi
+// React Router
 import { BrowserRouter } from 'react-router-dom';
+
+// Material-ui
+import ThemeProvider from '@material-ui/styles/ThemeProvider';
+
+// Themes
+import Theme from './App/Theme';
+
+// Components
+import App from './App';
 
 ReactDOM.render(
   <BrowserRouter>
-    <App />
+    <ThemeProvider theme={Theme}>
+      <App />
+    </ThemeProvider>
   </BrowserRouter>,
   document.getElementById('root')
 );

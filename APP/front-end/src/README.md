@@ -13,3 +13,10 @@ In questo modo invece posso direttamente scrivere:
 ***import Home from './components/Home'***
 
 e migliorare ordine delle cartelle e semplicità di lettura dei file
+
+
+## Usare sempre la stessa terminologia e struttura
+
+- Gli export vanno __sempre__ alla fine
+- I nomi dei componenti e delle relative cartelle hanno liniziale in ***maiuscolo***
+- I nomi dei file devono seguire un criterio in base all funzione e all'euristica scelta
