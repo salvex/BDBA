@@ -1,9 +1,13 @@
 var express = require('express');
 var router = express.Router();
+const RicercaControl = require('../controller/RicercaControl');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', (req, res, next) => {
+  //qualcosa
 });
+
+router.get('/results', RicercaControl.verRicerca );
+
+
 
 module.exports = router;
