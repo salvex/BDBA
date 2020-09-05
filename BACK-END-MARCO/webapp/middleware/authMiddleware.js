@@ -25,14 +25,12 @@ const checkUser = (req, res, next) => {
     jwt.verify(token, "mysupersecret", async (err, decodedToken) => {
       if (err) {
         res.locals.user = null;
-        req.app.set("user", {});
         console.log(err);
         next();
       } else {
         try {
           const user = await User.findOne({ where: { id: decodedToken.id } });
           res.locals.user = user;
-          req.app.set("user", user);
           next();
         } catch (err) {
           console.log(err.message);
@@ -41,8 +39,8 @@ const checkUser = (req, res, next) => {
     });
   } else {
     res.locals.user = null;
-    req.app.set("user", {});
     next();
   }
 };
+
 module.exports = { requireAuth, checkUser };

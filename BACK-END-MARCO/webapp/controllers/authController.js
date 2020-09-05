@@ -48,6 +48,10 @@ const signup_post = async (req, res) => {
   }
 };
 const login_get = (req, res) => {
+  const token = req.cookies.jwt;
+  if (token) {
+    res.redirect("/");
+  }
   res.render("login");
 };
 
@@ -58,6 +62,7 @@ const login_post = async (req, res) => {
     const user = await User.login(email, password);
     const token = createToken(user.id);
     res.cookie("jwt", token, { httpOnly: true, expiresIn: maxAge * 1000 });
+    console.log(req.app.get("user"));
     res.status(200).json({ user });
   } catch (err) {
     const errors = errorsHandler(err);
@@ -67,6 +72,7 @@ const login_post = async (req, res) => {
 
 const logout_get = (req, res) => {
   res.cookie("jwt", "", { maxAge: 1 });
+  //req.app.set("user", {});
   res.redirect("/");
 };
 

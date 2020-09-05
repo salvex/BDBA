@@ -65,24 +65,28 @@ User.login = async (email, password) => {
   throw new Error("email errata");
 };
 
-User.modificaPassword = async (email, password, vecchiaPsw, nuovaPsw) => {
-  const confronto = await bcrypt.compare(vecchiaPsw, password);
-  console.log("confronto: ", confronto);
-  if (confronto) {
-    const salt = await bcrypt.genSalt();
-    nuovaPsw = await bcrypt.hash(nuovaPsw, salt);
+User.modificaPassword = async (email, vecchiaPsw, nuovaPsw) => {
+  const user = await User.findOne({ where: { email } });
+  if (user) {
+    const confronto = await bcrypt.compare(vecchiaPsw, user.password);
+    console.log("confronto: ", confronto);
+    if (confronto) {
+      const salt = await bcrypt.genSalt();
+      nuovaPsw = await bcrypt.hash(nuovaPsw, salt);
 
-    const result = await User.update(
-      { password: nuovaPsw },
-      {
-        where: {
-          email,
-        },
-      }
-    );
-    return result;
+      const result = await User.update(
+        { password: nuovaPsw },
+        {
+          where: {
+            email,
+          },
+        }
+      );
+      return result;
+    }
+    throw new Error("password non combaciano");
   }
-  throw new Error("password non combaciano");
+  throw new Error("email non cambacia");
 };
 
 module.exports = User;

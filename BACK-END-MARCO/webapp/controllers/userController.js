@@ -1,10 +1,15 @@
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 
 const errorsHandler = (err) => {
   let error = { message: "" };
   if (err.message === "password non combaciano") {
     error.message = "La password immessa non combacia con la tua password";
   }
+  if (err.message === "email non combacia") {
+    error.message = "L'indirizzo email immesso non combacia con il tuo";
+  }
+
   return error;
 };
 
@@ -21,16 +26,9 @@ const modificaPassword_get = (req, res) => {
 };
 
 const modificaPassword_post = async (req, res) => {
-  const user = req.app.get("user");
-  console.log(user.email);
-  const { vecchiaPsw, nuovaPsw } = req.body;
+  const { email, vecchiaPsw, nuovaPsw } = req.body;
   try {
-    const result = await User.modificaPassword(
-      user.email,
-      user.password,
-      vecchiaPsw,
-      nuovaPsw
-    );
+    const result = await User.modificaPassword(email, vecchiaPsw, nuovaPsw);
     console.log(result);
   } catch (err) {
     const error = errorsHandler(err);
