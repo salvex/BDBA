@@ -19,10 +19,10 @@ exports.verRicerca = (req,res,next) => {
     }).then(inserzione => {
         if(inserzione.lenght === 0) {
             return res.status(404).send({message : 'Nessuna inserzione trovata'});
-            console.log(inserzione);
+            //console.log(inserzione);
         } else {
             return res.status(200).send(inserzione);
-            console.log(inserzione);
+            //console.log(inserzione);
         }
     }).catch(err => {
         res.status(500).send(err);

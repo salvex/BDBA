@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const db = require('./connection');
 const Utente = require('../model/Utente');
-//MIDDLEWARE PER VERIFICARE IL LOGIN
+//MIDDLEWARE - ACCESSO ALLE PAGINE SOLO SE HAI EFFETTUATO IL LOGIN
 
 
 verifyToken = (req, res, next) => {
