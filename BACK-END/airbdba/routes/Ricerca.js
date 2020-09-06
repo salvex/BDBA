@@ -6,7 +6,7 @@ router.get('/', (req, res, next) => {
   //qualcosa
 });
 
-router.get('/results', RicercaControl.verRicerca );
+router.get('/results', RicercaControl.ricerca_get );
 
 
 

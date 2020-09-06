@@ -2,32 +2,70 @@ const db = require('../utils/connection.js');
 const Inserzione = require('../model/Inserzione');
 const { Op } = require("sequelize");
 
-exports.verRicerca = (req,res,next) => {
-    console.log("Ricerca in corso..");
+const errorsHandler = (err) => {
+    let error = { message: "" };
+    if (err.message === "Nessuna inserzione") {
+      error.message = "Non è stata trovata nessuna inserzione";
+    }
+    return error;
+  };
 
-    //const { nomeCittà,checkIn,checkOut,nOspiti } = req.body;
 
-    //nomeCittà = nomeCittà.toLowerCase();
 
-    Inserzione.findAll({ //TO-DO: appena colleghiamo al frontend, si fa la decostruzione
-        where: {
-            citta : { [Op.like]: '%' + req.body.citta + '%'} ,
-            check_in : req.body.checkin,
-            check_out: req.body.checkout,
-            n_ospiti: req.body.nospiti 
-        }
-    }).then(inserzione => {
-        if(inserzione.lenght === 0) {
-            return res.status(404).send({message : 'Nessuna inserzione trovata'});
-            //console.log(inserzione);
-        } else {
-            return res.status(200).send(inserzione);
-            //console.log(inserzione);
-        }
-    }).catch(err => {
-        res.status(500).send(err);
-    })
-
-    next();
-
+const ricerca_get = async (req,res,next) => {
+    try {
+        var nomeCittà = req.body.citta;        
+        nomeCittà = nomeCittà.toLowerCase();
+        console.log("Ricerca in corso..");
+        const format_fields = await parseField(nomeCittà,req.body.checkin,req.body.checkout,req.body.nospiti);
+        console.log(format_fields);
+        const search_list = await Inserzione.verRicerca(format_fields);
+        res.status(200).json({search_list});
+    } catch (err) {
+        const error = errorsHandler(err);
+        res.status(404).json({error});
+    }
+    
 }
+
+async function parseField(CittàFilter,CheckInFilter,CheckOutFilter,nOspitiFilter) {
+    
+    const query = {};
+
+    if (CittàFilter || CheckInFilter || CheckOutFilter || nOspitiFilter) {
+        query[Op.or] = []
+        if (CittàFilter) {
+          query[Op.or].push({
+            citta: {
+              [Op.like]: `%${CittàFilter}%` //`%${CittàFilter}%`
+            }
+          })
+        }
+        if (CheckInFilter) {
+          query[Op.or].push({
+            check_in: {
+              [Op.like]: `%${CheckInFilter}%`
+            }
+          })
+        }
+        if (CheckOutFilter) {
+          query[Op.or].push({
+            check_out: {
+              [Op.like]: `%${CheckOutFilter}%`
+            }
+          })
+        }
+        if (nOspitiFilter) {
+            query[Op.or].push({
+              n_ospiti: {
+                [Op.like]: `%${nOspitiFilter}%`
+              }
+            })
+          }
+      };
+
+    return query;
+}
+
+
+module.exports = {ricerca_get};

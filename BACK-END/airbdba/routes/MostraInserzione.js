@@ -1,9 +1,8 @@
 var express = require('express');
 var router = express.Router();
+const ShowInsControl = require('../controller/ShowInsControl');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  //res.render('index', { title: 'Express' });
-});
+router.get('/res', ShowInsControl.mostra_get);
 
 module.exports = router;
