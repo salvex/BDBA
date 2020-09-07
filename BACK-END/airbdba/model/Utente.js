@@ -1,39 +1,40 @@
-const Sequelize = require("sequelize");
+const {Sequelize,DataTypes} = require("sequelize");
 const db = require('../utils/connection');
 //TO-DO mettere un validate, modificare allowNull per tutti gli attributi tranne id
+//TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 
-module.exports = db.sequelize.define("Utente", {
+const Utente = db.sequelize.define("Utente", {
     id: {
-        type: Sequelize.INTEGER(50),
+        type: DataTypes.INTEGER(50),
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
     },
     email: {
-        type: Sequelize.STRING(50),
+        type: DataTypes.STRING(50),
         allowNull: false,
         validate: {
             isEmail: true
         }
     }, 
     password: {
-        type: Sequelize.STRING(256),
+        type: DataTypes.STRING(256),
         allowNull: false
     },
     nome: {
-        type: Sequelize.STRING(20),
+        type: DataTypes.STRING(20),
         allowNull: false
     },
     cognome: {
-        type: Sequelize.STRING(20),
+        type: DataTypes.STRING(20),
         allowNull: false
     },
 /*    indirizzo: {
-        type: Sequelize.STRING(80),
+        type: DataTypes.STRING(80),
         allowNull: false
     },
     data_nascita: {
-        type: Sequelize.DATEONLY,
+        type: DataTypes.DATEONLY,
         validate: {
             notEmpty: {
               msg: "Inserisci una data",
@@ -41,10 +42,12 @@ module.exports = db.sequelize.define("Utente", {
           },
     }, 
     numero_telefonico: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         
     },*/
 }, {
     freezeTableName: true,
     timestamps: false
 });
+
+module.exports = Utente;

@@ -1,32 +1,32 @@
-const Sequelize = require("sequelize");
+const {Sequelize, DataTypes} = require("sequelize");
 const db = require('../utils/connection');
 //TO-DO mettere un validate, modificare allowNull per tutti gli attributi tranne id
-
+//TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 const Inserzione = db.sequelize.define("Inserzione", {
     id_inserzione: {
-        type: Sequelize.INTEGER(11),
+        type: DataTypes.INTEGER(11),
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
     },
     nome_inserzione: {
-        type: Sequelize.STRING(50),
+        type: DataTypes.STRING(50),
         allowNull: false
     },
     citta: {
-        type: Sequelize.STRING(20),
+        type: DataTypes.STRING(20),
         allowNull: false
     },
     check_in: {
-        type: Sequelize.STRING(30),
+        type: DataTypes.STRING(30),
         allowNull: false
     }, 
     check_out: {
-        type: Sequelize.STRING(30),
+        type: DataTypes.STRING(30),
         allowNull: false
     },
     n_ospiti: {
-        type: Sequelize.INTEGER(11),
+        type: DataTypes.INTEGER(11),
         validate: {
             len: {
                 args: [1,2],
@@ -34,11 +34,14 @@ const Inserzione = db.sequelize.define("Inserzione", {
             },
         },
     },
-/*   
+    descrizione: {
+        type: DataTypes.STRING(300),
+        allowNull: false
+    }, 
     ref_host: {
-        type: //TO-DO,
-        
-    },*/
+        type: DataTypes.INTEGER(11),
+        allowNull: false    
+    }
 }, {
     freezeTableName: true,
     timestamps: false
@@ -52,6 +55,7 @@ Inserzione.verRicerca = async (query) => {
     throw new Error("Nessuna inserzione");
 }
 
+//Funzione temporanea
 Inserzione.mostra = async (idInserzione) => {
     const risultato = await Inserzione.findOne({
         where: {

@@ -4,7 +4,7 @@ const { Op } = require("sequelize");
 
 const errorsHandler = (err) => {
     let error = { message: "" };
-    if (err.message === "Nessuna inserzione") {
+    if (err.message === "Nessuna inserzione" || err.message === "") {
       error.message = "Non è stata trovata nessuna inserzione";
     }
     return error;
