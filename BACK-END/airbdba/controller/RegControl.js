@@ -2,9 +2,10 @@ const db = require('../utils/connection.js');
 const Utente = require('../model/Utente');
 //var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
+const JwtToken = require('jsonwebtoken');
 
 //TODO: SOSTITUIRE TUTTI i messaggi res.send con l'attributo "message"
-errorsHandler = (err) => {
+var errorsHandler = (err) => {
     let errors = { nome: "", cognome: "", email: "", password: "", indirizzo: "", data_nascita: "", numero_telefonico: ""};
   
     if (err.message === "email errata" || err.message === "password errata") {
@@ -21,8 +22,11 @@ errorsHandler = (err) => {
     return errors;
   };
 
+const registrazione_get = (req, res) => {
+    //res.render("signup");
+};
 
-exports.registrazione = (req,res) => {
+const registrazione_post = (req,res) => {
     console.log("Registrazione in corso...");
 
     Utente.findOne({
@@ -53,3 +57,4 @@ exports.registrazione = (req,res) => {
     });   
 }
 
+module.exports = {registrazione_get,registrazione_post};

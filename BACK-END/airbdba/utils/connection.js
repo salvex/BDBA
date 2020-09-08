@@ -24,6 +24,12 @@ sequelize
         console.log('Connessione al database fallita!');
     })
 
+/*sequelize
+    .sync()
+    .then(() => console.log("sincronizzazione completata"))
+    .catch((err) => console.log(err.message));
+*/
+ 
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

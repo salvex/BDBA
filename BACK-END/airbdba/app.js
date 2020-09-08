@@ -6,6 +6,8 @@ var logger = require('morgan');
 const dotenv = require('dotenv');
 dotenv.config();
 const PORT = process.env.PORT || 5000;
+//AUTH MIDDLEWARE
+const {checkUser,verifyToken} = require("./utils/JwtToken");
 //Router init
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/Autenticazione');
@@ -36,6 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Cors
 app.use(cors());
 //Router
+app.use('*', checkUser);
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/user', utenteRouter);
@@ -64,5 +67,6 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(PORT, () => console.log("Server startato..porta: " + PORT) );
+
 
 module.exports = app;

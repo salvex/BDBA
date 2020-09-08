@@ -33,3 +33,7 @@ const Prenotazione = db.sequelize.define("Prenotazione", {
 });
 
 module.exports = Prenotazione;
+
+Prenotazione.checkPermanenza = async () => {
+    
+}

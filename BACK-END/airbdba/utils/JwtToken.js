@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
 const db = require('./connection');
 const Utente = require('../model/Utente');
-//MIDDLEWARE - ACCESSO ALLE PAGINE SOLO SE HAI EFFETTUATO IL LOGIN
+//MIDDLEWARE JWTs
 
-
-verifyToken = (req, res, next) => {
-    let token = req.headers['x-access-token'];
+const verifyToken = (req, res, next) => {
+    //let token = req.headers['x-access-token'];
+    let token = req.cookies.jwt;
 
     if(!token) {
         return res.status(403).send({
@@ -24,3 +24,35 @@ verifyToken = (req, res, next) => {
         next();
     })
 }
+
+const checkUser = (req, res, next) => {
+    const token = req.cookies.jwt;
+    if (token) {
+      jwt.verify(token, "mysupersecret", async (err, decodedToken) => {
+        if (err) {
+          res.locals.user = null;
+          console.log(err);
+          next();
+        } else {
+          try {
+            const user = await Utente.findOne({ where: { id: decodedToken.id } });
+            res.locals.user = user;
+            next();
+          } catch (err) {
+            console.log(err.message);
+          }
+        }
+      });
+    } else {
+      res.locals.user = null;
+      next();
+    }
+  };
+
+const maxAge = 60 * 60 * 24;
+const createToken = (userid) => {
+  return jwt.sign({ id: userid }, process.env.TOKEN_SECRET, { expiresIn: maxAge });
+};
+
+
+module.exports = {verifyToken,createToken,checkUser};
