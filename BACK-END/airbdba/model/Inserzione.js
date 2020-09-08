@@ -18,11 +18,11 @@ const Inserzione = db.sequelize.define("Inserzione", {
         allowNull: false
     },
     check_in: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.DATE,
         allowNull: false
     }, 
     check_out: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.DATE,
         allowNull: false
     },
     n_ospiti: {
@@ -38,7 +38,7 @@ const Inserzione = db.sequelize.define("Inserzione", {
         type: DataTypes.STRING(300),
         allowNull: false
     }, 
-    ref_host: {
+    ref_host_ins: {
         type: DataTypes.INTEGER(11),
         allowNull: false    
     }

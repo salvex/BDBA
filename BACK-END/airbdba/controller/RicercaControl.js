@@ -14,14 +14,14 @@ const errorsHandler = (err) => {
 
 const ricerca_get = async (req,res,next) => {
     try {
-        var nomeCittà = req.body.citta;        
+        var nomeCittà = req.body.citta;       
         nomeCittà = nomeCittà.toLowerCase();
         console.log("Ricerca in corso..");
         const format_fields = await parseField(nomeCittà,req.body.checkin,req.body.checkout,req.body.nospiti);
         console.log(format_fields);
         const search_list = await Inserzione.verRicerca(format_fields);
         res.status(200).json({search_list});
-    } catch (err) {
+    } catch (err) { 
         const error = errorsHandler(err);
         res.status(404).json({error});
     }
@@ -44,14 +44,16 @@ async function parseField(CittàFilter,CheckInFilter,CheckOutFilter,nOspitiFilte
         if (CheckInFilter) {
           query[Op.or].push({
             check_in: {
-              [Op.like]: `%${CheckInFilter}%`
+              [Op.like]: `%${CheckInFilter}%`,
+              [Op.gte]: `%${CheckInFilter}%`
             }
           })
         }
         if (CheckOutFilter) {
           query[Op.or].push({
             check_out: {
-              [Op.like]: `%${CheckOutFilter}%`
+              [Op.like]: `%${CheckOutFilter}%`,
+              [Op.lte]: `%${CheckOutFilter}%`
             }
           })
         }
