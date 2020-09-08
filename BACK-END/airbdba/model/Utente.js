@@ -1,4 +1,4 @@
-const {Sequelize,DataTypes} = require("sequelize");
+const {Sequelize,DataTypes, JSONB} = require("sequelize");
 const db = require('../utils/connection');
 const bcrypt = require("bcrypt");
 const User = require("../../../BACK-END-MARCO/webapp/models/User");
@@ -31,6 +31,10 @@ const Utente = db.sequelize.define("Utente", {
         type: DataTypes.STRING(20),
         allowNull: false
     },
+    isHost: {
+        type: DataTypes.INTEGER(11),
+        allowNull: false
+    }
 /*    indirizzo: {
         type: DataTypes.STRING(80),
         allowNull: false
@@ -66,7 +70,7 @@ Utente.Autentica = async (EmailUtente, password) => {
   };
 */
 
-Utente.Autentica2 = async (emailutente, password) => {
+Utente.Autentica = async (emailutente, password) => {
     console.log('Login in corso..');
     const utente = await Utente.findOne({where: {email: emailutente}});
     if(utente) {
@@ -77,6 +81,41 @@ Utente.Autentica2 = async (emailutente, password) => {
         throw new Error("password errata");            
     }
     throw new Error("email errata");
+}
+
+Utente.modificaPassword = async (email, vecchiaPsw, nuovaPsw) => {
+    const user = await Utente.findOne({ where: { email } });
+    if (user) {
+      const confronto = await bcrypt.compare(vecchiaPsw, user.password);
+      console.log("confronto: ", confronto);
+      if (confronto) {
+        const salt = await bcrypt.genSalt();
+        nuovaPsw = await bcrypt.hash(nuovaPsw, salt);
+  
+        const result = await Utente.update(
+          { password: nuovaPsw },
+          {
+            where: {
+              email,
+            },
+          }
+        );
+        return result;
+      }
+      throw new Error("password non combaciano");
+    }
+    throw new Error("email non cambacia");
+  };
+
+Utente.diventaHost = async (user_id) => {
+    const host = await Utente.findOne({ where: {id: user_id}});
+    if(!host) {
+        throw Error("Utente non aggiornato");
+    }
+    host.isHost = 1;
+    await host.save();
+
+    return host.email;
 }
 
 /*Utente.Autentica = async (emailutente, password) => {

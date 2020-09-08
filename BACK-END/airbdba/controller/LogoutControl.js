@@ -9,6 +9,7 @@ var bcrypt = require('bcrypt');
 const logout_get = (req, res) => {
     res.cookie("jwt", "", { maxAge: 1 });
     //req.app.set("user", {});
+    //res.send(req.id);
     res.send({message: 'Logout effettuato con successo'});
     res.render('/');
   };

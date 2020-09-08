@@ -59,7 +59,7 @@ var errorsHandler = (err) => {
 
 const login_post = async (req,res) => {
     try {
-        var utente = await Utente.Autentica2(req.body.email, req.body.password);
+        var utente = await Utente.Autentica(req.body.email, req.body.password);
         var token = JwtToken.createToken(utente.id);
         res.cookie("jwt", token, { httpOnly: true, expiresIn: maxAge * 1000});
         res.status(200).json({message: 'Login effettuato con successo!'});
@@ -70,15 +70,11 @@ const login_post = async (req,res) => {
 }
 
 
-/*const login_get = (req, res) => {
-    const token = req.cookies.jwt;
-    if (token) {
-      res.status(200).send({token : token});
-    }
-    res.status(400).send({message : 'Utente non autenticato'});
-};*/
+const login_get = (req, res) => {
+    //res.render('login');
+};
   
 
 
 
-module.exports = {login_post};
+module.exports = {login_post,login_get};

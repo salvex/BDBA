@@ -20,15 +20,34 @@ const verifyToken = (req, res, next) => {
                 message: 'Errore autenticazione: ' + err
             });
         }
-        req.id = decoded.id;
         next();
     })
 }
 
+const decodedId = (req) => {
+    var userId;
+    const token = req.cookies.jwt;
+
+    if(!token) {
+      console.log('errore');
+      userId = null;
+    }
+
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+      if(err) {
+        console.log(err);
+      } else {
+        userId = decoded.id;
+      }
+    })
+  return userId;
+}
+
+
 const checkUser = (req, res, next) => {
     const token = req.cookies.jwt;
     if (token) {
-      jwt.verify(token, "mysupersecret", async (err, decodedToken) => {
+      jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
         if (err) {
           res.locals.user = null;
           console.log(err);
@@ -55,4 +74,4 @@ const createToken = (userid) => {
 };
 
 
-module.exports = {verifyToken,createToken,checkUser};
+module.exports = {verifyToken,createToken,checkUser,decodedId};

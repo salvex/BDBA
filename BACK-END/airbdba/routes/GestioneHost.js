@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
+const JwtToken = require('../utils/JwtToken');
+const HostControl = require('../controller/HostControl');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+
+router.get('/become', [JwtToken.verifyToken], HostControl.become_host_post);
 
 module.exports = router;
