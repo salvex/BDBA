@@ -9,7 +9,7 @@ var fs = require('fs-extra');
     let type = req.params.type;
     let id = req.params.id;
     let path = '../public/uploads' + '/' + type + '/' + id +'/';
-    fs.mkdirSync(path); //crea il percorso qualora non ci fosse
+    fs.mkdirSync(path, {recursive: true}); //crea il percorso qualora non ci fosse
     cb(null, path);
   },         
     filename: function(req, file, cb) {

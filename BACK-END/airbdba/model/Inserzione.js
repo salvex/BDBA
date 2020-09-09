@@ -95,7 +95,8 @@ Inserzione.aggiungiInserzione = async (query) => {
             n_ospiti: query[4],
             descrizione: query[5],
             prezzo_base: query[6],
-            ref_host_ins: query[7]
+            galleryPath: query[7],
+            ref_host_ins: query[8]
         });
         return newIns;
     } 
@@ -162,6 +163,9 @@ Inserzione.modificaInserzione = async (id_ins,query) => {
         }
         if(query[6]) {
             ins_modifica.prezzo_base = query[6];    
+        }
+        if(query[7]) {
+            ins_modifica.galleryPath = query[7];
         }
        await ins_modifica.save();
        return ins_modifica;
