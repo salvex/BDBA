@@ -113,7 +113,7 @@ Utente.modificaPassword = async (email, vecchiaPsw, nuovaPsw) => {
 Utente.diventaHost = async (user_id) => {
     const host = await Utente.findOne({ where: {id: user_id}});
     if(!host) {
-        throw Error("Utente non aggiornato");
+        throw Error("Utente non trovato");
     }
     host.isHost = 1;
     await host.save();

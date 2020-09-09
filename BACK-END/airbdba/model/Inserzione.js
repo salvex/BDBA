@@ -59,7 +59,7 @@ const Inserzione = db.sequelize.define("inserzione", {
     timestamps: false
 });
 
-//ASSOCIAZIONE [1-MOLTI] 
+//ASSOCIAZIONE [1-MOLTI]-------  
 Utente.hasMany(Inserzione, {
     foreignKey: 'ref_host_ins',
     onDelete: "cascade"
@@ -68,7 +68,7 @@ Inserzione.belongsTo(Utente, {
     foreignKey: 'ref_host_ins'
 });
 
-//--------------------------------------//
+//--------------------------------//
 
 
 Inserzione.verRicerca = async (query) => {
@@ -94,7 +94,8 @@ Inserzione.aggiungiInserzione = async (query) => {
             check_out: query[3],
             n_ospiti: query[4],
             descrizione: query[5],
-            ref_host_ins: query[6]
+            prezzo_base: query[6],
+            ref_host_ins: query[7]
         });
         return newIns;
     } 
@@ -134,7 +135,11 @@ Inserzione.processaLista = async (id_host) => {
     throw new Error("Nessuna inserzione");
 }
 
-Inserzione.modificaInserzione = async (id_ins) => {
+Inserzione.modificaInserzione = async (id_ins,query) => {
+    const modifica = await Inserzione.findByPk(id_ins);
+    if(!modifica) {
+        throw new Error("Nessuna inserzione");
+    }
     
 }
 

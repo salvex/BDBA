@@ -27,11 +27,11 @@ var errorsHandler = (err) => {
     return errors;
 };
 
-async function parseField(NomeFilter ,CittàFilter,CheckInFilter,CheckOutFilter,nOspitiFilter,DescFilter,IdFilter) {
+async function parseField(NomeFilter ,CittàFilter,CheckInFilter,CheckOutFilter,nOspitiFilter,DescFilter,PrezzoFilter,IdFilter) {
     
     const query = [];
 
-    if (NomeFilter  || CittàFilter || CheckInFilter || CheckOutFilter || nOspitiFilter || DescFilter) {
+    if (NomeFilter  || CittàFilter || CheckInFilter || CheckOutFilter || nOspitiFilter || PrezzoFilter || DescFilter) {
         if (NomeFilter ) {
             query.push(NomeFilter)
         }
@@ -49,6 +49,9 @@ async function parseField(NomeFilter ,CittàFilter,CheckInFilter,CheckOutFilter,
         }
         if (DescFilter) {
             query.push(DescFilter)
+          }
+        if (PrezzoFilter) {
+            query.push(PrezzoFilter)
           }
         query.push(IdFilter)
       };
@@ -78,10 +81,10 @@ const become_host_get = async (req,res) => {
 
 const aggiungi_inserzione_post = async (req,res) => {
     try{
-        const {nome,citta,checkin,checkout,nospiti,desc} = req.body;
+        const {nome,citta,checkin,checkout,nospiti,desc,prezzo} = req.body;
         const id_host = JwtToken.decodedId(req);
-        var fields = await parseField(nome,citta,checkin,checkout,nospiti,desc,id_host);
-        console.log(fields);
+        var fields = await parseField(nome,citta,checkin,checkout,nospiti,desc,prezzo,id_host);
+        //console.log(fields);
         var inserzione = await Inserzione.aggiungiInserzione(fields);
         res.status(200).json({message: 'Inserzione creata con successo!', new_insertion: inserzione});
     } catch (err) {
@@ -105,6 +108,7 @@ const modifica_inserzione_put = async (req,res) => {
     try{
         const {id_inserzione,nome,citta,checkin,checkout,nospiti,desc} = req.body;
         var fields = await parseField(nome,citta,checkin,checkout,nospiti,desc,id_inserzione);
+        var inserzione_m = await Inserzione.modificaInserzione(id_inserzione,fields);
     } catch (err) {
         const errors = errorsHandler(err);
         res.status(400).json({errors});
