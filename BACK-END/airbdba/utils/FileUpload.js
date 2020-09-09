@@ -1,34 +1,34 @@
 //STORAGE CARICAMENTO FOTO
 const multer = require('multer');
 const path = require('path');
-var fs = require('fs');
+var fs = require('fs-extra');
 
-var upFiles = function (id,type) { //funzione custom
+ //funzione custom
   const storage = multer.diskStorage({
     destination: function (req, file,cb) {
-      //var dest = '../public/uploads' + '/'
-      cb(null, '../public/uploads' + '/' + type + '/' + id +'/');
-    },          //'../public/uploads'
+    let type = req.params.type;
+    let id = req.params.id;
+    let path = '../public/uploads' + '/' + type + '/' + id +'/';
+    fs.mkdirSync(path); //crea il percorso qualora non ci fosse
+    cb(null, path);
+  },         
     filename: function(req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-  });
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
 
   // Inizializza upload 
 
-  const upload = multer({ //?
-    storage: storage,
-    limits: {filesize: 1000000},
-    filefilter: function(req, file, cb) {
-      checkFileType(file, cb);
-    }
-  }).fields([
+const upFiles = multer({ //?
+  storage: storage,
+  limits: {filesize: 1000000},
+  filefilter: function(req, file, cb) {
+  checkFileType(file, cb);
+}
+}).fields([
     {name: 'avatar', maxCount: 1},
     {name: 'gallery', maxCount: 10 }
-  ]);
-
-  return upload;
-}
+]);
 
 //Controllo per il tipo di estensione
 function checkFileType(file, cb) {
@@ -46,4 +46,4 @@ function checkFileType(file, cb) {
 
 //---------------------//
 
-module.exports = {upFiles};
+module.exports = {upFiles}; 

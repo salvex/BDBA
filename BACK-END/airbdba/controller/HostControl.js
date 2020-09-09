@@ -27,11 +27,11 @@ var errorsHandler = (err) => {
     return errors;
 };
 
-async function parseField(NomeFilter ,CittàFilter,CheckInFilter,CheckOutFilter,nOspitiFilter,DescFilter,PrezzoFilter,IdFilter) {
+async function parseField(NomeFilter ,CittàFilter,CheckInFilter,CheckOutFilter,nOspitiFilter,DescFilter,PrezzoFilter, PathFilter,IdFilter) {
     
     const query = [];
 
-    if (NomeFilter  || CittàFilter || CheckInFilter || CheckOutFilter || nOspitiFilter || PrezzoFilter || DescFilter  ) {
+    if (NomeFilter  || CittàFilter || CheckInFilter || CheckOutFilter || nOspitiFilter || PrezzoFilter || DescFilter || PathFilter  ) {
         if (NomeFilter ) {
             query.push(NomeFilter)
         }
@@ -49,10 +49,13 @@ async function parseField(NomeFilter ,CittàFilter,CheckInFilter,CheckOutFilter,
         }
         if (DescFilter) {
             query.push(DescFilter)
-          }
+        }
         if (PrezzoFilter) {
             query.push(PrezzoFilter)
-          }
+        }
+        if (PathFilter) {
+            query.push(PathFilter)
+        }
         query.push(IdFilter)
       };
 
@@ -83,7 +86,8 @@ const aggiungi_inserzione_post = async (req,res) => {
     try{
         const {nome,citta,checkin,checkout,nospiti,desc,prezzo} = req.body;
         const id_host = JwtToken.decodedId(req);
-        var fields = await parseField(nome,citta,checkin,checkout,nospiti,desc,prezzo,id_host);
+        var path = req.files['gallery'][0].path;
+        var fields = await parseField(nome,citta,checkin,checkout,nospiti,desc,prezzo,path,id_host);
         //console.log(fields);
         var inserzione = await Inserzione.aggiungiInserzione(fields);
         res.status(200).json({message: 'Inserzione creata con successo!', new_insertion: inserzione});
