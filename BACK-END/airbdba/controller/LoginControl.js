@@ -64,7 +64,7 @@ const login_post = async (req,res) => {
         var token = JwtToken.createToken(utente.id);
         res.cookie("jwt", token, { httpOnly: true, expiresIn: maxAge * 1000});
         if(utente.isHost == 1) {
-            var token_host = JwtToken.createTokenHost();
+            var token_host = JwtToken.createTokenHost(utente.id);
             res.cookie("host", token_host, { httpOnly: true, expiresIn: maxAge * 1000} );
         }
         res.status(200).json({message: 'Login effettuato con successo!'});

@@ -42,7 +42,7 @@ const verifyHost = (req,res,next) => {
       });
     } else {
       var user = await Utente.findByPk(decodedId(req));
-      if(user.isHost == decoded.isHost ) {
+      if(user.isHost == decoded.isHost && user.id == decoded.id ) {
         next(); 
       } else {
         return res.status(500).send({
@@ -103,8 +103,8 @@ const maxAge = 60 * 60 * 24;
 const createToken = (userid) => {
   return jwt.sign({ id: userid }, process.env.TOKEN_SECRET, { expiresIn: maxAge });
 };
-const createTokenHost = () => {
-  return jwt.sign({ isHost: 1 }, process.env.TOKEN_SECRET, { expiresIn: maxAge }); 
+const createTokenHost = (userid) => {
+  return jwt.sign({ isHost: 1, id: userid }, process.env.TOKEN_SECRET, { expiresIn: maxAge }); 
 } 
 
 

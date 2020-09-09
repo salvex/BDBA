@@ -31,7 +31,7 @@ async function parseField(NomeFilter ,CittàFilter,CheckInFilter,CheckOutFilter,
     
     const query = [];
 
-    if (NomeFilter  || CittàFilter || CheckInFilter || CheckOutFilter || nOspitiFilter || PrezzoFilter || DescFilter) {
+    if (NomeFilter  || CittàFilter || CheckInFilter || CheckOutFilter || nOspitiFilter || PrezzoFilter || DescFilter  ) {
         if (NomeFilter ) {
             query.push(NomeFilter)
         }
@@ -69,8 +69,8 @@ const become_host_get = async (req,res) => {
         //res.cookie("jwt", "", { maxAge: 1 });
         //--------------------/
         //ricreo cookie + token 
-        var token = JwtToken.createTokenHost();
-        res.cookie("host", token, { httpOnly: true, expiresIn: maxAge * 1000});
+        var token_host = JwtToken.createTokenHost(id);
+        res.cookie("host", token_host, { httpOnly: true, expiresIn: maxAge * 1000});
         //--------------------/
         res.status(200).json({message: 'Utente trasformato in Host con successo!', user});
     } catch (err) {
@@ -109,12 +109,24 @@ const modifica_inserzione_put = async (req,res) => {
         const {id_inserzione,nome,citta,checkin,checkout,nospiti,desc} = req.body;
         var fields = await parseField(nome,citta,checkin,checkout,nospiti,desc,id_inserzione);
         var inserzione_m = await Inserzione.modificaInserzione(id_inserzione,fields);
+        res.status(200).json({message: 'hai modificato questa inserzione con successo!', inserzione_m});
     } catch (err) {
         const errors = errorsHandler(err);
         res.status(400).json({errors});
     }
 }
 
+const cancella_inserzione_delete = async (req,res) => {
+    try{
+        const {id_inserzione} = req.body;
+        var fields = await parseField(id_inserzione);
+        var inserzione_d = await Inserzione.cancellaInserzione(fields);
+        res.status(200).json({message: 'hai cancellato questa inserzione con successo!', inserzione_d});
+    } catch (err) {
+        const errors = errorsHandler(err);
+        res.satus(400).json({errors});
+    }
+}
 
 
-module.exports = {become_host_get,aggiungi_inserzione_post,visualizza_inserzioni_get}; // 
+module.exports = {become_host_get,aggiungi_inserzione_post,visualizza_inserzioni_get,modifica_inserzione_put,cancella_inserzione_delete}; // 

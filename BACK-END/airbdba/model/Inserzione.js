@@ -119,7 +119,7 @@ Inserzione.mostra = async (idInserzione) => {
 Inserzione.processaLista = async (id_host) => {
     const lista = await Inserzione.findAll({
         attributes: ['id_inserzione', 'nome_inserzione', 'citta', 'check_in', 
-        'check_out', 'n_ospiti', 'descrizione', 'galleryPath'],
+        'check_out', 'n_ospiti', 'descrizione', 'prezzo_base','galleryPath'],
         where: {
             ref_host_ins: id_host
         },
@@ -136,11 +136,53 @@ Inserzione.processaLista = async (id_host) => {
 }
 
 Inserzione.modificaInserzione = async (id_ins,query) => {
-    const modifica = await Inserzione.findByPk(id_ins);
+    const ins_modifica = await Inserzione.findByPk(id_ins);
     if(!modifica) {
         throw new Error("Nessuna inserzione");
     }
+
+    if(query) {
+        if(query[0]) { //nome inserzione
+            ins_modifica.nome_inserzione = query[0];
+        }
+        if(query[1]) {
+            ins_modifica.citta = query[1];
+        }
+        if(query[2]) {
+            ins_modifica.check_in = query[2];
+        }
+        if(query[3]) {
+            ins_modifica.check_out = query[3];
+        }
+        if(query[4]) {
+            ins_modifica.n_ospiti = query[4];
+        }
+        if(query[5]) {
+            ins_modifica.descrizione = query[5];
+        }
+        if(query[6]) {
+            ins_modifica.prezzo_base = query[6];    
+        }
+       await ins_modifica.save();
+       return ins_modifica;
+    } else {
+        throw new Error("query vuota");
+    }
     
+}
+
+Inserzione.cancellaInserzione = async (id_ins) => {
+    const ins_cancella = await Inserzione.destroy({
+        where: {
+            id_inserzione: id
+        }
+    });
+    if(!ins_cancella) {
+        throw new Error("Nessuna inserzione")
+    }
+
+    return ins_cancella;
+
 }
 
 

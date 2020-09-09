@@ -40,7 +40,7 @@ function checkFileType(file, cb) {
   if(mimetype && extnmae) {
     return cb(null,true);
   } else {
-    return cb('Errore: Carica solo immagini!');
+    return cb('Errore: puoi caricare solo immagini!');
   }
 }
 
