@@ -12,7 +12,7 @@ const errorsHandler = (err) => {
 
 
 
-const ricerca_get = async (req,res,next) => {
+const ricerca_post = async (req,res,next) => {
     try {
         var nomeCittà = req.body.citta;       
         nomeCittà = nomeCittà.toLowerCase();
@@ -70,4 +70,4 @@ async function parseField(CittàFilter,CheckInFilter,CheckOutFilter,nOspitiFilte
 }
 
 
-module.exports = {ricerca_get};
+module.exports = {ricerca_post};

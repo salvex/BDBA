@@ -1,11 +1,10 @@
 const {Sequelize,DataTypes, JSONB} = require("sequelize");
 const db = require('../utils/connection');
 const bcrypt = require("bcrypt");
-const User = require("../../../BACK-END-MARCO/webapp/models/User");
 //TO-DO mettere un validate, modificare allowNull per tutti gli attributi tranne id
 //TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 
-const Utente = db.sequelize.define("Utente", {
+const Utente = db.sequelize.define("utente", {
     id: {
         type: DataTypes.INTEGER(50),
         allowNull: false,
@@ -31,9 +30,13 @@ const Utente = db.sequelize.define("Utente", {
         type: DataTypes.STRING(20),
         allowNull: false
     },
+    imagePath: {
+        type: DataTypes.STRING(300),
+        allowNull: true
+    },
     isHost: {
         type: DataTypes.INTEGER(11),
-        allowNull: false
+        defaultValue: 0
     }
 /*    indirizzo: {
         type: DataTypes.STRING(80),
@@ -115,7 +118,7 @@ Utente.diventaHost = async (user_id) => {
     host.isHost = 1;
     await host.save();
 
-    return host.email;
+    return host;
 }
 
 /*Utente.Autentica = async (emailutente, password) => {

@@ -4,7 +4,7 @@ const db = require('../utils/connection');
 
 
 
-const Ospite = db.sequelize.define("Ospite", {
+const Ospite = db.sequelize.define("ospite", {
     nome: {
         type: DataTypes.STRING(20),
         allowNull: false,

@@ -1,8 +1,12 @@
 const db = require('../utils/connection.js');
 const Utente = require('../model/Utente');
-//var jwt = require('jsonwebtoken');
+const JwtToken = require('../utils/JwtToken');
+var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
-const JwtToken = require('jsonwebtoken');
+
+
+const maxAge = 60 * 60 * 24;
+
 
 //TODO: SOSTITUIRE TUTTI i messaggi res.send con l'attributo "message"
 var errorsHandler = (err) => {
@@ -29,12 +33,14 @@ const registrazione_get = (req, res) => {
 const registrazione_post = (req,res) => {
     console.log("Registrazione in corso...");
 
+
     Utente.findOne({
         where: {
             email: req.body.email
         }
     }).then(utente => {
         if(utente) {
+            res.cookie("jwt", "", { maxAge: 1 });
             return res.status(400).send('questa email è già stata utilizzata');
         } else {
             Utente.create({
@@ -46,6 +52,8 @@ const registrazione_post = (req,res) => {
                 data_nascita: req.body.datanascita,
                 numero_telefonico: req.body.numerotel */
             }).then(utente => {
+                var token = JwtToken.createToken(utente.id,utente.isHost);
+                res.cookie("jwt", token, { httpOnly: true, expiresIn: maxAge * 1000});
                 return res.status(200).send('account registrato con successo!');
             }).catch(err => {
                 return res.status(500).send("Errore! -> " + err);

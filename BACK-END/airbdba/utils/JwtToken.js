@@ -24,6 +24,37 @@ const verifyToken = (req, res, next) => {
     })
 }
 
+const verifyHost = (req,res,next) => {
+  
+  let token = req.cookies.host;
+
+  if(!token) {
+    return res.status(403).send({
+      isHost: false, message: 'Nessun token fornito'
+    });
+  }
+
+  jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
+    if(err) {
+      return res.status(500).send({
+        isHost: false,
+        message: 'Errore autenticazione ' + err
+      });
+    } else {
+      var user = await Utente.findByPk(decodedId(req));
+      if(user.isHost == decoded.isHost ) {
+        next(); 
+      } else {
+        return res.status(500).send({
+          isHost: false,
+          message: 'Errore autenticazione ' + err
+        })
+      }
+    }  
+  })
+
+}
+
 const decodedId = (req) => {
     var userId;
     const token = req.cookies.jwt;
@@ -72,6 +103,9 @@ const maxAge = 60 * 60 * 24;
 const createToken = (userid) => {
   return jwt.sign({ id: userid }, process.env.TOKEN_SECRET, { expiresIn: maxAge });
 };
+const createTokenHost = () => {
+  return jwt.sign({ isHost: 1 }, process.env.TOKEN_SECRET, { expiresIn: maxAge }); 
+} 
 
 
-module.exports = {verifyToken,createToken,checkUser,decodedId};
+module.exports = {verifyToken,verifyHost,createToken,createTokenHost,checkUser,decodedId};

@@ -4,7 +4,7 @@ const db = require('../utils/connection');
 
 
 
-const Prenotazione = db.sequelize.define("Prenotazione", {
+const Prenotazione = db.sequelize.define("prenotazione", {
     id_prenotazione: {
         type: DataTypes.INTEGER(11),
         allowNull: false,

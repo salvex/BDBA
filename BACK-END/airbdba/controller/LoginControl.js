@@ -59,9 +59,14 @@ var errorsHandler = (err) => {
 
 const login_post = async (req,res) => {
     try {
-        var utente = await Utente.Autentica(req.body.email, req.body.password);
+        const {email, password} = req.body;
+        var utente = await Utente.Autentica(email, password);
         var token = JwtToken.createToken(utente.id);
         res.cookie("jwt", token, { httpOnly: true, expiresIn: maxAge * 1000});
+        if(utente.isHost == 1) {
+            var token_host = JwtToken.createTokenHost();
+            res.cookie("host", token_host, { httpOnly: true, expiresIn: maxAge * 1000} );
+        }
         res.status(200).json({message: 'Login effettuato con successo!'});
     } catch (err) {
         const errors = errorsHandler(err);

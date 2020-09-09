@@ -6,7 +6,7 @@ router.get('/', (req, res, next) => {
   //qualcosa
 });
 
-router.post('/results', RicercaControl.ricerca_get );
+router.post('/results', RicercaControl.ricerca_post );
 
 
 
