@@ -32,31 +32,33 @@ async function parseField(NomeFilter ,CittàFilter,CheckInFilter,CheckOutFilter,
     const query = [];
 
     if (NomeFilter  || CittàFilter || CheckInFilter || CheckOutFilter || nOspitiFilter || PrezzoFilter || DescFilter || PathFilter  ) {
-        if (NomeFilter ) {
-            query.push(NomeFilter)
+        if (NomeFilter  ) {
+            query[0] = NomeFilter
+        } 
+        if (CittàFilter ) {
+            query[1] = CittàFilter;
+        } 
+        if (CheckInFilter ) {
+            query[2] = CheckInFilter;
+        } 
+        if (CheckOutFilter ) {
+            query[3] = CheckOutFilter;
+        } 
+        if (nOspitiFilter ) {
+            query[4] = nOspitiFilter;
+        } 
+        if (DescFilter ) {
+            query[5] = DescFilter;
         }
-        if (CittàFilter) {
-            query.push(CittàFilter)
+        if (PrezzoFilter ) {
+            query[6] = PrezzoFilter;
         }
-        if (CheckInFilter) {
-            query.push(CheckInFilter)
+        if (PathFilter ) {
+            query[7] = PathFilter;
         }
-        if (CheckOutFilter) {
-            query.push(CheckOutFilter)
+        if (IdFilter ) {
+            query[8] = IdFilter;
         }
-        if (nOspitiFilter) {
-            query.push(nOspitiFilter)
-        }
-        if (DescFilter) {
-            query.push(DescFilter)
-        }
-        if (PrezzoFilter) {
-            query.push(PrezzoFilter)
-        }
-        if (PathFilter) {
-            query.push(PathFilter)
-        }
-        query.push(IdFilter)
       };
 
     return query;
@@ -103,8 +105,8 @@ const visualizza_inserzioni_get = async (req,res) => {
         var lista = await Inserzione.processaLista(id_host);
         res.status(200).json({lista});
     } catch (err) {
-        const errors = errorsHandler(err);
-        res.status(400).json({errors});
+        const errors = errorsHandler(err); //
+        res.status(400).json({errors}); 
     }
 }
 
