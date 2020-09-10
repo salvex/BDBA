@@ -31,7 +31,7 @@ async function parseField(NomeFilter ,CittàFilter,CheckInFilter,CheckOutFilter,
     
     const query = [];
 
-    if (NomeFilter  || CittàFilter || CheckInFilter || CheckOutFilter || nOspitiFilter || PrezzoFilter || DescFilter || PathFilter  ) {
+    if (NomeFilter  || CittàFilter || CheckInFilter || CheckOutFilter || nOspitiFilter || PrezzoFilter || DescFilter || PathFilter || IdFilter  ) {
         if (NomeFilter  ) {
             query[0] = NomeFilter
         } 
@@ -112,9 +112,10 @@ const visualizza_inserzioni_get = async (req,res) => {
 const modifica_inserzione_put = async (req,res) => {
     try{
         const {id_inserzione,nome,citta,checkin,checkout,nospiti,desc,prezzo} = req.body;
-        var path = req.files['gallery'][0].path;
         const id_host = JwtToken.decodedId(req);
+        var path = "dummy";
         var fields = await parseField(nome,citta,checkin,checkout,nospiti,desc,prezzo,path,id_host);
+        console.log(fields); 
         var inserzione_m = await Inserzione.modificaInserzione(id_inserzione,fields);
         res.status(200).json({message: 'hai modificato questa inserzione con successo!', inserzione_m});
     } catch (err) {
@@ -122,6 +123,22 @@ const modifica_inserzione_put = async (req,res) => {
         res.status(400).json({errors});
     }
 }
+
+const modifica_inserzione_put_img = async (req,res) => { 
+    try{
+        const {id_inserzione} = req.body;
+        var path = req.files['gallery'][0].path;  
+        var inserzione_m = await Inserzione.modificaInserzione_img(id_inserzione,path);
+        res.status(200).json({message: 'hai modificato questa inserzione con successo!', inserzione_m});
+    } catch (err) {
+        const errors = errorsHandler(err);
+        res.status(400).json({errors});
+    }
+}
+
+
+
+
 
 const cancella_inserzione_delete = async (req,res) => {
     try{
@@ -135,4 +152,4 @@ const cancella_inserzione_delete = async (req,res) => {
 }
 
 
-module.exports = {become_host_get,aggiungi_inserzione_post,visualizza_inserzioni_get,modifica_inserzione_put,cancella_inserzione_delete}; // 
+module.exports = {become_host_get,aggiungi_inserzione_post,visualizza_inserzioni_get,modifica_inserzione_put,modifica_inserzione_put_img,cancella_inserzione_delete}; // 

@@ -7,8 +7,8 @@ var fs = require("fs-extra");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let type = req.params.type;
-
-    let path = "public/uploads" + "/" + type;
+    let id = req.params.id;
+    let path = "public/uploads" + "/" + type + "/" + id ;
     fs.mkdirSync(path, { recursive: true }); //crea il percorso qualora non ci fosse
     cb(null, path);
   },

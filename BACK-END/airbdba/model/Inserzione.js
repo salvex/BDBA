@@ -166,16 +166,36 @@ Inserzione.modificaInserzione = async (id_ins,query) => {
         if(query[6]) {
             ins_modifica.prezzo_base = query[6];    
         }
-        if(query[7]) {
-            ins_modifica.galleryPath = query[7];
-        }
        await ins_modifica.save();
        return ins_modifica;
     } else {
         throw new Error("query vuota");
-    }
-    
+    }    
 }
+
+
+Inserzione.modificaInserzione_img = async (id_ins,query) => {
+    
+    const ins_modifica = await Inserzione.findByPk(id_ins);
+    if(!ins_modifica) {
+        throw new Error("Nessuna inserzione");
+    }
+    console.log("modifica in corso");
+    
+    if(query) {
+        ins_modifica.galleryPath = query;
+        await ins_modifica.save();
+        return ins_modifica;
+    } else {
+        throw new Error("query vuota");
+    }    
+}
+
+
+
+
+
+
 
 Inserzione.cancellaInserzione = async (id_ins) => {
     const ins_cancella = await Inserzione.destroy({
