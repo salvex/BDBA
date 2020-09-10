@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-md navbar-light bg-light sticky-top shadow">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/"
+      ><img src="/assets/images/logo-xs.jpg" alt="logo"
+    /></a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarResponsive"
+      aria-controls="navbarResponsive"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <% if (user) { %>
+        <li class="nav-item active">
+          <a class="nav-link" id="profile" href="/user">Profilo</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" id="exit" href="/logout">Esci</a>
+        </li>
+        <% } else { %>
+        <li class="nav-item active">
+          <a class="nav-link" id="login" href="/login">Accedi</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" id="signup" href="/registrazione">Registrati</a>
+        </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>

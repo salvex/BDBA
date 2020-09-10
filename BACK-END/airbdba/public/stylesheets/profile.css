@@ -1,0 +1,27 @@
+#profile {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#profile-container {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+#middle-space {
+    flex: 5;
+    display: flex;
+}
+
+#profile-nav {
+    flex: 2;
+    display: flex;
+    background-color: greenyellow;
+}
+
+#overview {
+    flex: 5;
+    background-color: hotpink;
+}

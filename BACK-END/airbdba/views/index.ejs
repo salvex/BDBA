@@ -1,1 +1,114 @@
-<h1>Wellà</h1>
+<!DOCTYPE html>
+<html>
+    <!-- Head -->
+    <%- include("./partials/head.ejs", {style: "style.css", title: "Home"}) %>    
+    
+    <body>
+
+        <!-- Navbar -->
+        <%- include("./partials/nav.ejs") %>
+        
+        <!-- Info -->
+        <%- include("./partials/info.ejs") %>
+
+        <div id="home">
+
+            
+
+            <div id="home-container">
+                <!-- Overlay -->
+                <div id="overlay"></div>
+                
+                <div class="side-spacer"></div>
+
+                <!-- Content -->
+                <div id="home-center-space">
+                    <div class="center-spacer"></div>
+
+                    <div class="center-spacer home-content">
+                        <div class="center-spacer">
+                            <h1 id="home-title"><strong>Un'esperienza incredibile</strong></h1>
+                        </div>
+                        <div class="center-spacer">
+                            <form action="" class="home-form">
+                                <div id="form-fields">
+                                    <div class="form-item">
+                                        <input class="form-control form-input location" type="text" id="location" placeholder="Destinazione">
+                                    </div>
+                                    <div class="form-item">
+                                        <input type="text" autocomplete="off" id="check-in" class="form-control form-input" placeholder="Check-in" readonly>
+                                    </div>
+                                    <div class="form-item">
+                                        <input type="text" autocomplete="off" id="check-out" class="form-control form-input" placeholder="Check-out" readonly>
+                                    </div>
+                                    <div class="form-item">
+                                        <input class="form-control form-input form-select" name="addressnum" id="addressnum" type="number" min="1" max="50" size="4" maxlength="4" placeholder="Ospiti"/>
+                                    </div>
+                                </div>
+                                <div id="form-button">
+                                    <button><img src="/assets/icons/search_icon_white.png" alt="Cerca"></button>
+                                </div>                           
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="center-spacer"></div>
+                </div>
+
+                <div class="side-spacer"></div>
+            </div>
+
+            <div class="footer">
+                <!-- Footer -->
+                <%- include("./partials/footer.ejs") %>
+            </div>
+        </div>
+        
+        
+
+        <script>
+            // jquery code
+            // il metodo ready fa si che lo script venga eseguito solo
+            // quando il browser ha terminato il parsing della pagina.
+            $(document).ready( () => {
+                // infobox hide
+                $(".jumbotron").hide(0);
+
+                // infobox pop up
+                $(".jumbotron").slideDown(1000);
+                
+                // infobox closed
+                $("button.close").on("click", () => {
+                    $(".jumbotron").slideUp(1000);
+                });
+
+                // datepicker logic
+                $('#check-in').datepicker({
+                    'format': 'yyyy-mm-dd',
+                    'autoclose': true
+                });
+
+                $('#check-out').datepicker({
+                    'format': 'yyyy-mm-dd',
+                    'autoclose': true
+                });
+            })
+        </script>
+
+    </body>
+</html>
+
+
+<!-- <select class="form-control form-input form-select">
+    <option value="" disabled selected>Numero ospiti</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+    <option value="10">10</option>
+</select> -->

@@ -1,0 +1,125 @@
+#login {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#login-container {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.image-container {
+  margin-bottom: 50px;
+}
+
+#middle-space {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.center-login {
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.login-container {
+  flex: 2;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+#form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-button {
+  background-color: #286cff;
+  color: #ffffff;
+  padding: 10px;
+  border: 0;
+  border-radius: 5px;
+  width: 100%;
+}
+
+
+/* MEDIA QUERIES */
+@media (max-width: 992px) {
+  
+}
+
+@media (max-width: 768px) {
+  .form-item > p {
+    text-align: center;
+  }
+
+  .footer {
+    margin-top: 40px;
+  }
+}
+
+@media (max-width: 576px) {
+  img {
+    width: 250px;
+  }
+
+  input,
+  input::placeholder {
+    text-align: center;
+  }
+}
+  
+@media (max-height: 650px) {
+  .form-item {
+    margin: 5px;
+  }
+
+  .image-container {
+    margin-top: 40px;
+  }
+
+  .center-spacer {
+    flex: 0;
+  }
+}
+
+@media (max-height: 360px) {
+  .image-container {
+    margin-top: 100px;
+  }
+  .footer {
+    margin-top: 100px;
+  }
+}
+
+.disabled-btn {
+  cursor: not-allowed;
+  pointer-events: none;
+}

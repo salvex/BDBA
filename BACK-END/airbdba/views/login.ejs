@@ -1,17 +1,174 @@
-<h1>Login</h1>
-<% if (messages.error) { %>
-    <%= messages.error %>
-<% } %>
-<br>
-<form action="/login" method="POST">
-    <div>
-        <label for="mail">E-mail:</label><br>
-        <input type="text" id="mail" ><br>
+<!DOCTYPE html>
+<html>
+  <%- include('./partials/head.ejs', {style: "style.css", title: "Login"}) %>
+  <body>
+
+    <!-- CONTENT -->
+
+    <div id="login">
+      <div id="login-container">
+        <div class="side-spacer"></div>
+
+        <div id="middle-space">
+          <div class="center-spacer"></div>
+
+          <div class="center-login">
+            <div class="center-spacer image-container">
+              <a href="/"><img src="/assets/images/logo-sm.jpg" alt=""></a>
+            </div>
+
+            <div class="login-container">
+              <div class="side-spacer"></div>
+              <div id="middle-space">
+                <form action="/login" id="form-container">
+                  <div class="form-item">
+                    <div class="form-item">
+                      <input type="text" class="form-control" id="email" placeholder="Email" autocomplete="false">
+                    </div>
+                    <div class="form-item">
+                      <small id="emailHelp" class="text-danger"></small>
+                    </div>
+                  </div>
+                  <div class="form-item">
+                    <div class="form-item">
+                      <input type="password" class="form-control" id="password" placeholder="Password">
+                    </div>
+                    <div class="form-item">
+                      <small id="passwordHelp" class="text-danger"></small>
+                    </div>
+                  </div>
+                  <div class="form-item">
+                    <button class="login-button">Accedi</button>
+                  </div>
+                  <div class="form-item"><p>Non hai un account? <a href="/signup">Registrati</a></p></div>
+                </form>
+              </div>
+              <div class="side-spacer"></div>
+            </div> 
+          </div>
+          
+
+          <div class="center-spacer"></div>
+        </div>
+
+        <div class="side-spacer"></div>
+      </div>
+
+      <div class="footer">
+        <!-- FOOTER -->
+        <%- include('./partials/footer.ejs') %> 
+      </div>
     </div>
-    <div>
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" minlength="8"><br>
-        <button type="submit">Entra</button>
-    </div>
-</form>
-<a href="/registrazione">registrazione</a>
+
+
+
+    
+
+    <script>
+      $(document).ready(function(){
+        
+        /* $(".form-control").on("focusout", () => {
+          if($(".form-control").val() === "") {
+            $(".form-control").removeClass("is-valid");
+            $(".form-control").addClass("is-invalid");
+          } else {
+            $(".form-control").removeClass("is-invalid");
+            $(".form-control").addClass("is-valid");
+          }
+        }) */
+
+        // e-mail regex
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        // controllo mail
+        $("#email").on("focusout", () => {
+          if($("#email").val() === "") {
+            $("#email").removeClass("is-valid");
+            $("#email").addClass("is-invalid");
+            $("#emailHelp").text("Inserisci una mail!");
+          } else {
+            if( re.test($("#email").val()) ) {
+              $("#email").removeClass("is-invalid");
+              $("#email").addClass("is-valid");
+              $("#emailHelp").text("");
+            } else {
+              $("#email").removeClass("is-valid");
+              $("#email").addClass("is-invalid");
+              $("#emailHelp").text("Formato email errata");
+            }
+          }
+        })
+
+        // controllo password
+        $("#password").on("focusout", () => {
+          if($("#password").val() === "") {
+            $("#password").addClass("is-invalid");
+            $("#passwordHelp").text("Inserisci una password!");
+          } else {
+            $("#password").removeClass("is-invalid");
+            $("#passwordHelp").text("");
+          }
+        })
+
+
+        const $form = $("form");
+        const $emailError = $("#emailHelp");
+        const $passwordError = $("#passwordHelp");
+
+        $form.on("submit", (e) => {
+          e.preventDefault();
+
+          // controllo sui campi vuoti o errati
+          // in queste circostanze l'evento submit
+          // viene fermato
+          let flag = true;
+
+          $("input").each( (index, element) => {
+            if( $( element ).attr("class").includes("is-invalid") || $( element ).val() === "" ) {
+              flag = false;
+              return;
+            }
+          });
+
+          if (!flag) {
+            return;
+          }
+          // ---------------------------
+
+          
+          // reset errors
+          $emailError.text("");
+          $passwordError.text("");
+
+          // get values
+          const email = $("#email").val();
+          const password = $("#password").val();
+
+          fetch("/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password }),
+            headers: { "Content-Type": "application/json" },
+          })
+            .then( async (res) => {
+              const response = await res.json();
+              if (response.errors) {
+                $emailError.text(response.errors.email);
+                $passwordError.text(response.errors.password);
+              }
+              if (response.user) {
+                location.assign("/");
+              }
+            })
+            .catch( err => {
+              console.log("Errore: ", err);
+            })
+        })
+          
+        const $input = $(".form-input-logi");
+        $input.on("focusout", () => {
+          $input.tooltip('show')
+        })
+      })
+    </script>
+  </body>
+</html>

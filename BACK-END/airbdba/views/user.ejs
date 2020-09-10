@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <!-- Head -->
+  <%- include("./partials/head.ejs", {style: "style.css", title: "Profile"}) %> 
+
+  <body>
+    <!-- Navbar -->
+    <%- include("./partials/nav.ejs") %>
+
+    <div id="profile">
+      <div id="profile-container">
+        <div class="side-spacer"></div>
+
+        <div id="middle-space">
+          <div id="profile-nav">
+
+          </div>
+          <div id="overview">
+            
+          </div>
+        </div>
+
+        <div class="side-spacer"></div>
+      </div>
+      <div id="footer">
+        <!-- FOOTER -->
+        <%- include('./partials/footer.ejs') %> 
+      </div>
+    </div>
+
+    <script>
+      $(document).ready( () => {
+        
+        // modifico la navbar eliminando l'opzione profilo
+        // ridondante in quanto riporta alla stessa pagina
+        // e la sostituisco con l'opzione "Home".
+        $("#profile").attr("href", "/").text("Home");
+
+
+      });
+    </script>
+  </body>
+</html>
