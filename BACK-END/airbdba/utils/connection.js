@@ -2,7 +2,8 @@ const Sequelize = require("sequelize");
 const dotenv = require("dotenv");
 dotenv.config();
 const db = {};
-const sequelize = new Sequelize("new_airbdba", "root", "", {
+// PER SALVO: "ricordati di cambiare da new_airbdba a airbdba"
+const sequelize = new Sequelize("airbdba", "root", "", {
   host: "127.0.0.1",
   dialect: "mysql",
 

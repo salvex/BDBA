@@ -20,7 +20,7 @@ router.get(
   HostControl.visualizza_inserzioni_get
 );
 router.put(
-  "/modifica/:type/",
+  "/modifica/:type",
   [JwtToken.verifyToken],
   [JwtToken.verifyHost],
   FileUpload.upFiles,

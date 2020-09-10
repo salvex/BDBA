@@ -137,10 +137,12 @@ Inserzione.processaLista = async (id_host) => {
 }
 
 Inserzione.modificaInserzione = async (id_ins,query) => {
+    
     const ins_modifica = await Inserzione.findByPk(id_ins);
-    if(!modifica) {
+    if(!ins_modifica) {
         throw new Error("Nessuna inserzione");
     }
+    console.log("modifica in corso");
 
     if(query) {
         if(query[0]) { //nome inserzione
@@ -178,7 +180,7 @@ Inserzione.modificaInserzione = async (id_ins,query) => {
 Inserzione.cancellaInserzione = async (id_ins) => {
     const ins_cancella = await Inserzione.destroy({
         where: {
-            id_inserzione: id
+            id_inserzione: id_ins
         }
     });
     if(!ins_cancella) {

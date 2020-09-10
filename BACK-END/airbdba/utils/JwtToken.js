@@ -40,19 +40,9 @@ const verifyHost = (req,res,next) => {
         isHost: false,
         message: 'Errore autenticazione ' + err
       });
-    } else {
-      var user = await Utente.findByPk(decodedId(req));
-      if(user.isHost == decoded.isHost && user.id == decoded.id ) {
-        next(); 
-      } else {
-        return res.status(500).send({
-          isHost: false,
-          message: 'Errore autenticazione ' + err
-        })
-      }
-    }  
+    }
+    next(); 
   })
-
 }
 
 const decodedId = (req) => {

@@ -10,7 +10,7 @@ const maxAge = 60 * 60 * 24;
 
 
 var errorsHandler = (err) => {
-    let errors = {  email: "", query: ""};
+    let errors = {  email: "", query: "", ins: ""};
   
     if (err.message === "Utente non aggiornato" ) {
       errors.email = 
@@ -19,7 +19,7 @@ var errorsHandler = (err) => {
         errors.query = 
         "L'inserimento non è andato a buon termine"
     } else if (err.message === "Nessuna inserzione") {
-        errors.query =
+        errors.ins =
         "Nessuna inserzione creata"
     }
   
@@ -90,7 +90,6 @@ const aggiungi_inserzione_post = async (req,res) => {
         const id_host = JwtToken.decodedId(req);
         var path = req.files['gallery'][0].path;
         var fields = await parseField(nome,citta,checkin,checkout,nospiti,desc,prezzo,path,id_host);
-        //console.log(fields);
         var inserzione = await Inserzione.aggiungiInserzione(fields);
         res.status(200).json({message: 'Inserzione creata con successo!', new_insertion: inserzione});
     } catch (err) {
@@ -112,8 +111,10 @@ const visualizza_inserzioni_get = async (req,res) => {
 
 const modifica_inserzione_put = async (req,res) => {
     try{
-        const {id_inserzione,nome,citta,checkin,checkout,nospiti,desc} = req.body;
-        var fields = await parseField(nome,citta,checkin,checkout,nospiti,desc,id_inserzione);
+        const {id_inserzione,nome,citta,checkin,checkout,nospiti,desc,prezzo} = req.body;
+        var path = req.files['gallery'][0].path;
+        const id_host = JwtToken.decodedId(req);
+        var fields = await parseField(nome,citta,checkin,checkout,nospiti,desc,prezzo,path,id_host);
         var inserzione_m = await Inserzione.modificaInserzione(id_inserzione,fields);
         res.status(200).json({message: 'hai modificato questa inserzione con successo!', inserzione_m});
     } catch (err) {
@@ -125,12 +126,11 @@ const modifica_inserzione_put = async (req,res) => {
 const cancella_inserzione_delete = async (req,res) => {
     try{
         const {id_inserzione} = req.body;
-        var fields = await parseField(id_inserzione);
-        var inserzione_d = await Inserzione.cancellaInserzione(fields);
-        res.status(200).json({message: 'hai cancellato questa inserzione con successo!', inserzione_d});
+        var deleteFlag = await Inserzione.cancellaInserzione(id_inserzione);
+        res.status(200).json({message: 'hai cancellato questa inserzione con successo!', deleteFlag});
     } catch (err) {
         const errors = errorsHandler(err);
-        res.satus(400).json({errors});
+        res.status(400).json({errors});
     }
 }
 
