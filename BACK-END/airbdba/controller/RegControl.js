@@ -47,7 +47,9 @@ const registrazione_post = (req, res) => {
     .then((utente) => {
       if (utente) {
         res.cookie("jwt", "", { maxAge: 1 });
-        return res.status(400).send("questa email è già stata utilizzata");
+        return res
+          .status(400)
+          .json({ errors: "questa email è già stata utilizzata" });
       } else {
         Utente.create({
           email: req.body.email,
@@ -64,10 +66,11 @@ const registrazione_post = (req, res) => {
               httpOnly: true,
               expiresIn: maxAge * 1000,
             });
-            return res.status(200).send("account registrato con successo!");
+            req.session.utente = utente;
+            return res.status(200).json("account registrato con successo!");
           })
           .catch((err) => {
-            return res.status(500).send("Errore! -> " + err);
+            return res.status(500).json("Errore! -> " + err);
           });
       }
     })

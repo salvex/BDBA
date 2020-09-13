@@ -2,7 +2,6 @@
 <html>
   <%- include('./partials/head.ejs', {style: "style.css", title: "Login"}) %>
   <body>
-
     <!-- CONTENT -->
 
     <div id="login">
@@ -14,7 +13,7 @@
 
           <div class="center-login">
             <div class="center-spacer image-container">
-              <a href="/"><img src="/assets/images/logo-sm.jpg" alt=""></a>
+              <a href="/"><img src="/assets/images/logo-sm.jpg" alt="" /></a>
             </div>
 
             <div class="login-container">
@@ -23,7 +22,13 @@
                 <form action="/login" id="form-container">
                   <div class="form-item">
                     <div class="form-item">
-                      <input type="text" class="form-control" id="email" placeholder="Email" autocomplete="false">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="email"
+                        placeholder="Email"
+                        autocomplete="false"
+                      />
                     </div>
                     <div class="form-item">
                       <small id="emailHelp" class="text-danger"></small>
@@ -31,7 +36,12 @@
                   </div>
                   <div class="form-item">
                     <div class="form-item">
-                      <input type="password" class="form-control" id="password" placeholder="Password">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        placeholder="Password"
+                      />
                     </div>
                     <div class="form-item">
                       <small id="passwordHelp" class="text-danger"></small>
@@ -40,13 +50,14 @@
                   <div class="form-item">
                     <button class="login-button">Accedi</button>
                   </div>
-                  <div class="form-item"><p>Non hai un account? <a href="/signup">Registrati</a></p></div>
+                  <div class="form-item">
+                    <p>Non hai un account? <a href="/signup">Registrati</a></p>
+                  </div>
                 </form>
               </div>
               <div class="side-spacer"></div>
-            </div> 
+            </div>
           </div>
-          
 
           <div class="center-spacer"></div>
         </div>
@@ -56,17 +67,12 @@
 
       <div class="footer">
         <!-- FOOTER -->
-        <%- include('./partials/footer.ejs') %> 
+        <%- include('./partials/footer.ejs') %>
       </div>
     </div>
 
-
-
-    
-
     <script>
-      $(document).ready(function(){
-        
+      $(document).ready(function () {
         /* $(".form-control").on("focusout", () => {
           if($(".form-control").val() === "") {
             $(".form-control").removeClass("is-valid");
@@ -82,12 +88,12 @@
 
         // controllo mail
         $("#email").on("focusout", () => {
-          if($("#email").val() === "") {
+          if ($("#email").val() === "") {
             $("#email").removeClass("is-valid");
             $("#email").addClass("is-invalid");
             $("#emailHelp").text("Inserisci una mail!");
           } else {
-            if( re.test($("#email").val()) ) {
+            if (re.test($("#email").val())) {
               $("#email").removeClass("is-invalid");
               $("#email").addClass("is-valid");
               $("#emailHelp").text("");
@@ -97,19 +103,18 @@
               $("#emailHelp").text("Formato email errata");
             }
           }
-        })
+        });
 
         // controllo password
         $("#password").on("focusout", () => {
-          if($("#password").val() === "") {
+          if ($("#password").val() === "") {
             $("#password").addClass("is-invalid");
             $("#passwordHelp").text("Inserisci una password!");
           } else {
             $("#password").removeClass("is-invalid");
             $("#passwordHelp").text("");
           }
-        })
-
+        });
 
         const $form = $("form");
         const $emailError = $("#emailHelp");
@@ -123,8 +128,11 @@
           // viene fermato
           let flag = true;
 
-          $("input").each( (index, element) => {
-            if( $( element ).attr("class").includes("is-invalid") || $( element ).val() === "" ) {
+          $("input").each((index, element) => {
+            if (
+              $(element).attr("class").includes("is-invalid") ||
+              $(element).val() === ""
+            ) {
               flag = false;
               return;
             }
@@ -135,7 +143,6 @@
           }
           // ---------------------------
 
-          
           // reset errors
           $emailError.text("");
           $passwordError.text("");
@@ -149,26 +156,26 @@
             body: JSON.stringify({ email, password }),
             headers: { "Content-Type": "application/json" },
           })
-            .then( async (res) => {
+            .then(async (res) => {
               const response = await res.json();
               if (response.errors) {
                 $emailError.text(response.errors.email);
                 $passwordError.text(response.errors.password);
               }
-              if (response.user) {
+              if (response.success) {
                 location.assign("/");
               }
             })
-            .catch( err => {
+            .catch((err) => {
               console.log("Errore: ", err);
-            })
-        })
-          
+            });
+        });
+
         const $input = $(".form-input-logi");
         $input.on("focusout", () => {
-          $input.tooltip('show')
-        })
-      })
+          $input.tooltip("show");
+        });
+      });
     </script>
   </body>
 </html>

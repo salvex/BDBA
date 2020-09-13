@@ -68,7 +68,8 @@ const login_post = async (req, res) => {
         expiresIn: maxAge * 1000,
       });
     }
-    res.status(200).json({ message: "Login effettuato con successo!" });
+    req.session.utente = utente;
+    res.status(200).json({ success: true });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });

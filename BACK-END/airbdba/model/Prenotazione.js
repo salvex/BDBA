@@ -1,39 +1,47 @@
-const {Sequelize, DataTypes} = require("sequelize");
-const db = require('../utils/connection');
+const { Sequelize, DataTypes } = require("sequelize");
+const db = require("../utils/connection");
 //TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 
-
-
-const Prenotazione = db.sequelize.define("prenotazione", {
+const Prenotazione = db.sequelize.define(
+  "prenotazione",
+  {
     id_prenotazione: {
-        type: DataTypes.INTEGER(11),
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
     },
     ref_host: {
-        type: DataTypes.INTEGER(11),
-        allowNull: false,
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
     },
     ref_utente: {
-        type: DataTypes.INTEGER(11),
-        allowNull: false,
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
     },
     stato_ordine: {
-        type: DataTypes.INTEGER(11),
-        allowNull: false,
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
     },
     ref_inserzione: {
-        type: DataTypes.INTEGER(11),
-        allowNull: false
-    }
-}, {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+    },
+    check_in: {
+      type: DataTypes.DATE(),
+      allowNull: false,
+    },
+    check_out: {
+      type: DataTypes.DATE(),
+      allowNull: false,
+    },
+  },
+  {
     freezeTableName: true,
-    timestamps: false
-});
+    timestamps: false,
+  }
+);
 
 module.exports = Prenotazione;
 
-Prenotazione.checkPermanenza = async () => {
-    
-}
+Prenotazione.checkPermanenza = async () => {};
