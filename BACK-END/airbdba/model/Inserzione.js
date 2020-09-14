@@ -92,8 +92,8 @@ Inserzione.aggiungiInserzione = async (query) => {
     const newIns = await Inserzione.create({
       nome_inserzione: query[0],
       citta: query[1],
-      check_in: query[2],
-      check_out: query[3],
+      inizioDisponibilita: query[2],
+      fineDisponibilita: query[3],
       n_ospiti: query[4],
       descrizione: query[5],
       prezzo_base: query[6],
@@ -124,8 +124,8 @@ Inserzione.processaLista = async (id_host) => {
       "id_inserzione",
       "nome_inserzione",
       "citta",
-      "check_in",
-      "check_out",
+      "inizioDisponibilita",
+      "fineDisponibilita",
       "n_ospiti",
       "descrizione",
       "prezzo_base",
@@ -162,10 +162,10 @@ Inserzione.modificaInserzione = async (id_ins, query) => {
       ins_modifica.citta = query[1];
     }
     if (query[2]) {
-      ins_modifica.check_in = query[2];
+      ins_modifica.inizioDisponibilita = query[2];
     }
     if (query[3]) {
-      ins_modifica.check_out = query[3];
+      ins_modifica.fineDisponibilita = query[3];
     }
     if (query[4]) {
       ins_modifica.n_ospiti = query[4];

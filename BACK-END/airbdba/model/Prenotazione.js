@@ -1,5 +1,6 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { Sequelize, DataTypes, Op } = require("sequelize");
 const db = require("../utils/connection");
+const moment = require("moment");
 //TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 
 const Prenotazione = db.sequelize.define(
@@ -42,6 +43,35 @@ const Prenotazione = db.sequelize.define(
   }
 );
 
-module.exports = Prenotazione;
+Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
+  const result = await Prenotazione.findAll({
+    attributes: ["check_in", "check_out"],
+    where: {
+      ref_utente: id_ut,
+      ref_inserzione: id_ins,
+      check_in: {
+        [Op.gte]: Date.parse(moment() - 1),
+        [Op.lte]: Date.parse(moment()),
+      },
+      check_out: {
+        [Op.lte]: Date.parse(moment()),
+        [Op.gte]: Date.parse(moment().format("YYYY") - 1),
+      },
+    },
+  });
 
-Prenotazione.checkPermanenza = async () => {};
+  if (!result) {
+    throw new Error("prenotazione inesistente");
+  } else {
+    result.filter((date) => {
+      return (
+        moment(date.check_in).format("YYYY") == moment().format("YYYY") ||
+        moment(date.check_in).format("YYYY") == moment().format("YYYY") - 1
+      );
+    });
+    console.log(result);
+    return result;
+  }
+};
+
+module.exports = Prenotazione;

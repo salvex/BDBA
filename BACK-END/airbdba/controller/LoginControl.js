@@ -69,6 +69,7 @@ const login_post = async (req, res) => {
       });
     }
     req.session.utente = utente;
+    console.log(req.session.utente);
     res.status(200).json({ success: true });
   } catch (err) {
     const errors = errorsHandler(err);

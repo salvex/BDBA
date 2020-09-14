@@ -1,12 +1,15 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const JwtToken = require('../utils/JwtToken');
-const ShowInsControl = require('../controller/ShowInsControl');
-const PrenotazioneControl = require('../controller/PrenotazioneControl')
+const JwtToken = require("../utils/JwtToken");
+const ShowInsControl = require("../controller/ShowInsControl");
+const PrenotazioneControl = require("../controller/PrenotazioneControl");
 
-router.get('/res', ShowInsControl.mostra_get);
+router.get("/res", ShowInsControl.mostra_get);
 
-router.post('/res/prenota', [JwtToken.verifyToken], PrenotazioneControl.effettua_pren_post);
-
+router.get(
+  "/prenota/:id",
+  [JwtToken.verifyToken],
+  PrenotazioneControl.effettua_pren_get
+);
 
 module.exports = router;

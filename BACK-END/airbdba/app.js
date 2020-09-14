@@ -60,11 +60,14 @@ app.use("*", checkUser);
 app.use("/", indexRouter);
 app.use(authRouter);
 
-app.get("/prenotazione/check", async (req, res) => {
+/*app.get("/prenotazione/check/:id", async (req, res) => {
   try {
     const result = await Prenotazione.findAll({
       attributes: ["check_in", "check_out"],
-      where: { ref_utente: 1, ref_inserzione: 1 },
+      where: {
+        ref_utente: req.session.utente.id,
+        ref_inserzione: req.params.id,
+      },
     });
     if (result == false) {
       console.log("nessuna prenotazione");
@@ -90,6 +93,12 @@ app.get("/prenotazione/check", async (req, res) => {
     console.log(err);
     res.status(400).end();
   }
+}); */
+app.get("/data", (req, res) => {
+  var annoCorrente = moment().format("YYYY");
+  console.log(typeof (annoCorrente - 1));
+
+  res.status(200).end();
 });
 app.use("/user", utenteRouter);
 app.use("/registrazione", regRouter);
