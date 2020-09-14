@@ -55,7 +55,7 @@ Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
       },
       check_out: {
         [Op.lte]: Date.parse(moment()),
-        [Op.gte]: Date.parse(moment().format("YYYY") - 1),
+        [Op.gte]: Date.parse(moment().format("YYYY")),
       },
     },
   });
