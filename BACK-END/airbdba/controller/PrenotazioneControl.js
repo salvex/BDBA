@@ -1,5 +1,6 @@
 const db = require("../utils/connection.js");
 const Prenotazione = require("../model/Prenotazione");
+const Ospite = require("../model/Ospite");
 const Inserzione = require("../model/Inserzione");
 const moment = require("moment");
 const { Op } = require("sequelize");

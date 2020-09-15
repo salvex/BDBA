@@ -1,5 +1,6 @@
 const {Sequelize, DataTypes} = require("sequelize");
 const db = require('../utils/connection');
+const Utente = require('../model/Utente');
 //TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 
 
@@ -30,5 +31,14 @@ const MetodoPagamento = db.sequelize.define("metodo_pagamento", {
     freezeTableName: true,
     timestamps: false
 });
+
+//--ASSOCIAZIONE [1-1] Utente - MetodoPagamento
+Utente.hasOne(MetodoPagamento, {
+    foreignKey : 'ref_utente'
+})
+MetodoPagamento.belongsTo(Utente, {
+    foreignKey: 'ref_utente'
+})
+
 
 module.exports = MetodoPagamento;

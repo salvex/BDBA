@@ -1,6 +1,8 @@
 const { Sequelize, DataTypes, Op } = require("sequelize");
 const db = require("../utils/connection");
 const moment = require("moment");
+const Utente = require("../model/Utente");
+const Inserzione = require("../model/Inserzione");
 //TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 
 const Prenotazione = db.sequelize.define(
@@ -42,6 +44,31 @@ const Prenotazione = db.sequelize.define(
     timestamps: false,
   }
 );
+
+//-------ASSOCIAZIONE [1-N] UTENTE-PRENOTAZIONE----------/
+Utente.hasMany(Prenotazione, {
+  as: 'utente',
+  foreignKey: 'ref_utente'
+});
+Prenotazione.belongsTo(Utente, {
+  foreignKey: 'ref_utente'
+});
+//-------ASSOCIAZIONE [1-N] HOST-PRENOTAZIONE----------/
+Utente.hasMany(Prenotazione, {
+  as: 'host',
+  foreignKey: 'ref_host'
+});
+Prenotazione.belongsTo(Utente, {
+  foreignKey: 'ref_host'
+});
+//-------ASSOCIAZIONE [1-N] HOST-PRENOTAZIONE----------/
+Inserzione.hasMany(Prenotazione, {
+  foreignKey: 'ref_inserzione'
+});
+Prenotazione.belongsTo(Inserzione, {
+  foreignKey: 'ref_inserzione'
+})
+
 
 Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
   const result = await Prenotazione.findAll({
