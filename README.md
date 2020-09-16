@@ -1,9 +1,10 @@
 # INFORMAZIONI UTILI
 
 ### PORTE SCELTE
-- **Front-end**: `3000`
-- **Back-end**: `3001`
+- **Front-end**/**Back-end**: `3000`
 
+### MOTORE DI RENDERIZZAZZIONE PAGINE
+- **ejs**
 
 
 # BDBA
