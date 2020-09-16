@@ -8,10 +8,11 @@ const verifyToken = (req, res, next) => {
   let token = req.cookies.jwt;
 
   if (!token) {
-    return res.status(403).send({
+    /*return res.status(403).send({
       auth: false,
       message: "Nessun token fornito",
-    });
+    });*/
+    res.redirect("/login");
   }
 
   jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {

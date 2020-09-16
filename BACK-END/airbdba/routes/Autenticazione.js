@@ -9,6 +9,5 @@ const JwtToken = require("../utils/JwtToken");
 router.get("/login", LoginControl.login_get);
 router.post("/login", LoginControl.login_post);
 router.get("/logout", [JwtToken.verifyToken], LogoutControl.logout_get);
-//router.get('/logout', logout)
 
 module.exports = router;

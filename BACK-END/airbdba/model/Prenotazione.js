@@ -47,41 +47,42 @@ const Prenotazione = db.sequelize.define(
 
 //-------ASSOCIAZIONE [1-N] UTENTE-PRENOTAZIONE----------/
 Utente.hasMany(Prenotazione, {
-  as: 'utente',
-  foreignKey: 'ref_utente'
+  as: "utente",
+  foreignKey: "ref_utente",
 });
 Prenotazione.belongsTo(Utente, {
-  foreignKey: 'ref_utente'
+  foreignKey: "ref_utente",
 });
 //-------ASSOCIAZIONE [1-N] HOST-PRENOTAZIONE----------/
 Utente.hasMany(Prenotazione, {
-  as: 'host',
-  foreignKey: 'ref_host'
+  as: "host",
+  foreignKey: "ref_host",
 });
 Prenotazione.belongsTo(Utente, {
-  foreignKey: 'ref_host'
+  foreignKey: "ref_host",
 });
 //-------ASSOCIAZIONE [1-N] HOST-PRENOTAZIONE----------/
 Inserzione.hasMany(Prenotazione, {
-  foreignKey: 'ref_inserzione'
+  foreignKey: "ref_inserzione",
 });
 Prenotazione.belongsTo(Inserzione, {
-  foreignKey: 'ref_inserzione'
-})
-
+  foreignKey: "ref_inserzione",
+});
 
 Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
+  var yearBefore = moment().format("YYYY") - 1;
+  var yearFuture = moment().format("YYYY") + 1;
   const result = await Prenotazione.findAll({
     attributes: ["check_in", "check_out"],
     where: {
       ref_utente: id_ut,
       ref_inserzione: id_ins,
       check_in: {
-        [Op.gte]: Date.parse(moment() - 1),
-        [Op.lte]: Date.parse(moment()),
+        [Op.gte]: Date.parse(yearBefore),
+        [Op.lte]: Date.parse(moment().endOf("year")),
       },
       check_out: {
-        [Op.lte]: Date.parse(moment()),
+        [Op.lte]: Date.parse(moment().add(1, "y").endOf("year")),
         [Op.gte]: Date.parse(moment().format("YYYY")),
       },
     },
@@ -90,13 +91,6 @@ Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
   if (!result) {
     throw new Error("prenotazione inesistente");
   } else {
-    result.filter((date) => {
-      return (
-        moment(date.check_in).format("YYYY") == moment().format("YYYY") ||
-        moment(date.check_in).format("YYYY") == moment().format("YYYY") - 1
-      );
-    });
-    console.log(result);
     return result;
   }
 };

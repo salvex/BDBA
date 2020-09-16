@@ -63,20 +63,6 @@ const Utente = db.sequelize.define(
   }
 );
 
-/*
-Utente.Autentica = async (EmailUtente, password) => {
-    const user = await Utente.findOne({ where: { email: EmailUtente } });
-    if (user) {
-      const auth = await bcrypt.compare(password, user.password);
-      if (auth) {
-        return user;
-      }
-      throw new Error("password errata");
-    }
-    throw new Error("email errata");
-  };
-*/
-
 Utente.Autentica = async (emailutente, password) => {
   console.log("Login in corso..");
   const utente = await Utente.findOne({ where: { email: emailutente } });
@@ -124,30 +110,5 @@ Utente.diventaHost = async (user_id) => {
 
   return host;
 };
-
-/*Utente.Autentica = async (emailutente, password) => {
-    console.log('Login in corso');
-    
-    Utente.findOne({
-        where: {
-            email: emailutente
-        }
-    }).then(utente => {
-        if(!utente) {
-            throw new Error("email errata");;
-        }
-
-        var passwordIsValid = bcrypt.compareSync(password,utente.password);
-        if(!passwordIsValid) {
-            throw new Error("password errata");
-        }
-        return utente;
-
-       
-    }).catch(err => {
-        return err;
-    })
-
-};*/
 
 module.exports = Utente;

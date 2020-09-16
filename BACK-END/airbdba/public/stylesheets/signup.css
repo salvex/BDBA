@@ -62,8 +62,6 @@
   margin: 5px;
 }
 
-
-
 .signup-button {
   background-color: #286cff;
   color: #ffffff;
@@ -79,36 +77,33 @@
 
 /* PASS COLOR SCHEMES */
 .strongPass {
-  border: 1px solid #5cb85c ;
+  border: 1px solid #5cb85c;
 }
 
 .mediumPass {
-  border: 1px solid #f0ad4e  ;
+  border: 1px solid #f0ad4e;
 }
 
 .weakPass {
-  border: 1px solid #d9534f   ;
+  border: 1px solid #d9534f;
 }
 
 .strongPassHelp {
-  color: #5cb85c ;
+  color: #5cb85c;
 }
-  
+
 .mediumPassHelp {
-  color: #f0ad4e  ;
+  color: #f0ad4e;
 }
 
 .weakPassHelp {
-  color: #d9534f   ;
+  color: #d9534f;
 }
-
-
 
 /* ----------------- */
 
 /* MEDIA QUERIES */
 @media (max-width: 992px) {
-  
 }
 
 @media (max-width: 768px) {
@@ -130,7 +125,6 @@
   input::placeholder {
     text-align: center;
   }
-
 }
 
 @media (max-height: 650px) {

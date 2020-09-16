@@ -1,7 +1,8 @@
 /* MODIFICHE GENERALI E PARTIALS */
-html, body {
+html,
+body {
   font-family: Arial, Helvetica, sans-serif;
-  margin: 0; 
+  margin: 0;
   height: 100%;
   width: 100%;
   color: #000000;
@@ -74,11 +75,19 @@ html, body {
 }
 /* ---------------------------------- */
 
+.spinner-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+}
 
 /* MEDIA QUERIES */
 
 @media (max-width: 992px) {
-  
 }
 
 @media (max-width: 768px) {

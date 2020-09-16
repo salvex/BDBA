@@ -313,6 +313,12 @@
           const email = $("#email").val();
           const password = $("#password").val();
 
+          // simulo un caricamento mediante uno spinner
+          const $signup = $("#signup");
+          $signup.append(
+            "<div class='spinner-container'><div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div></div>"
+          );
+
           // eseguo una POST
           fetch("/registrazione", {
             method: "POST",
@@ -322,6 +328,7 @@
             .then(async (res) => {
               const response = await res.json();
               if (response.errors) {
+                $(".spinner-container").remove();
                 $("#emailHelp").text("L'email inserita è già registrata!");
               } else {
                 location.assign("/");

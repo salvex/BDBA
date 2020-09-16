@@ -8,10 +8,11 @@ const dotenv = require("dotenv");
 var moment = require("moment");
 var session = require("express-session");
 var sessionStore = require("./utils/sessionStore");
+
 dotenv.config();
 const PORT = process.env.PORT || 3001;
 //AUTH MIDDLEWARE
-const { checkUser, verifyToken } = require("./utils/JwtToken");
+const { checkUser, verifyToken, verifyHost } = require("./utils/JwtToken");
 //Router init
 var indexRouter = require("./routes/index");
 var authRouter = require("./routes/Autenticazione");
@@ -49,7 +50,7 @@ app.use(
     saveUninitialized: false,
     unset: "destroy",
     cookie: {
-      maxAge: 60 * 60 * 24,
+      maxAge: 60 * 60 * 24 * 1000,
     },
   })
 );
@@ -60,50 +61,23 @@ app.use("*", checkUser);
 app.use("/", indexRouter);
 app.use(authRouter);
 
-/*app.get("/prenotazione/check/:id", async (req, res) => {
-  try {
-    const result = await Prenotazione.findAll({
-      attributes: ["check_in", "check_out"],
-      where: {
-        ref_utente: req.session.utente.id,
-        ref_inserzione: req.params.id,
-      },
-    });
-    if (result == false) {
-      console.log("nessuna prenotazione");
-      res.status(400).end();
-    } else {
-      var giorniTotali = 0;
-      result.forEach((date) => {
-        giorniTotali += moment(date.check_out).diff(
-          moment(date.check_in),
-          "days"
-        );
-      });
-      console.log(giorniTotali);
-
-      if (giorniTotali < 28) {
-        console.log("procedi con la prenotazione");
-      } else {
-        console.log("impossibile procedere con la prenotazione");
-      }
-      res.status(200).end();
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(400).end();
-  }
-}); */
 app.get("/data", (req, res) => {
   var annoCorrente = moment().format("YYYY");
-  console.log(typeof (annoCorrente - 1));
+  console.log(typeof moment().format("YYYY"));
 
   res.status(200).end();
 });
-app.use("/user", utenteRouter);
+app.get("/prova", (req, res) => {
+  if (req.session.utente) {
+    res.send(req.session.utente);
+  } else {
+    res.send("nessuno utente loggato");
+  }
+});
+app.use("/user", verifyToken, utenteRouter);
 app.use("/registrazione", regRouter);
-app.use("/host", hostRouter);
-app.use("/inserzione", insRouter);
+app.use("/host", verifyToken, verifyHost, hostRouter);
+app.use("/inserzione", verifyToken, insRouter);
 app.use("/recovery", recRouter);
 app.use("/search", searchRouter);
 
@@ -123,6 +97,6 @@ app.use(function (err, req, res, next) {
   //res.render('error');
 });
 
-app.listen(PORT, () => console.log("Server startato..porta: " + PORT));
+app.listen(PORT, () => console.log("Server in ascolto sulla porta: " + PORT));
 
 module.exports = app;

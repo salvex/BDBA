@@ -81,11 +81,7 @@ async function parseField(
 const become_host_get = async (req, res) => {
   try {
     const id = JwtToken.decodedId(req);
-    var user = await Utente.diventaHost(id); //test
-    //distruggo cookie + token attuale
-    //res.cookie("jwt", "", { maxAge: 1 });
-    //--------------------/
-    //ricreo cookie + token
+    var jwt = await Utente.diventaHost(id); //test
     var token_host = JwtToken.createTokenHost(id);
     res.cookie("host", token_host, {
       httpOnly: true,
@@ -126,12 +122,10 @@ const aggiungi_inserzione_post = async (req, res) => {
       id_host
     );
     var inserzione = await Inserzione.aggiungiInserzione(fields);
-    res
-      .status(200)
-      .json({
-        message: "Inserzione creata con successo!",
-        new_insertion: inserzione,
-      });
+    res.status(200).json({
+      message: "Inserzione creata con successo!",
+      new_insertion: inserzione,
+    });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });
@@ -179,12 +173,10 @@ const modifica_inserzione_put = async (req, res) => {
       id_inserzione,
       fields
     );
-    res
-      .status(200)
-      .json({
-        message: "hai modificato questa inserzione con successo!",
-        inserzione_m,
-      });
+    res.status(200).json({
+      message: "hai modificato questa inserzione con successo!",
+      inserzione_m,
+    });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });
@@ -199,12 +191,10 @@ const modifica_inserzione_put_img = async (req, res) => {
       id_inserzione,
       path
     );
-    res
-      .status(200)
-      .json({
-        message: "hai modificato questa inserzione con successo!",
-        inserzione_m,
-      });
+    res.status(200).json({
+      message: "hai modificato questa inserzione con successo!",
+      inserzione_m,
+    });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });
@@ -215,12 +205,10 @@ const cancella_inserzione_delete = async (req, res) => {
   try {
     const { id_inserzione } = req.body;
     var deleteFlag = await Inserzione.cancellaInserzione(id_inserzione);
-    res
-      .status(200)
-      .json({
-        message: "hai cancellato questa inserzione con successo!",
-        deleteFlag,
-      });
+    res.status(200).json({
+      message: "hai cancellato questa inserzione con successo!",
+      deleteFlag,
+    });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });

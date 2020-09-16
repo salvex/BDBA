@@ -1,7 +1,5 @@
-const db = require("../utils/connection.js");
 const Utente = require("../model/Utente");
 const JwtToken = require("../utils/JwtToken");
-var jwt = require("jsonwebtoken");
 var bcrypt = require("bcrypt");
 
 const maxAge = 60 * 60 * 24;
@@ -33,7 +31,11 @@ var errorsHandler = (err) => {
 };
 
 const registrazione_get = (req, res) => {
-  res.render("signup");
+  if (req.session.utente) {
+    res.redirect("/");
+  } else {
+    res.render("signup");
+  }
 };
 
 const registrazione_post = (req, res) => {
@@ -47,9 +49,7 @@ const registrazione_post = (req, res) => {
     .then((utente) => {
       if (utente) {
         res.cookie("jwt", "", { maxAge: 1 });
-        return res
-          .status(400)
-          .json({ errors: "questa email è già stata utilizzata" });
+        res.status(400).json({ errors: "questa email è già stata utilizzata" });
       } else {
         Utente.create({
           email: req.body.email,
@@ -67,10 +67,10 @@ const registrazione_post = (req, res) => {
               expiresIn: maxAge * 1000,
             });
             req.session.utente = utente;
-            return res.status(200).json("account registrato con successo!");
+            res.status(200).json({ utente });
           })
           .catch((err) => {
-            return res.status(500).json("Errore! -> " + err);
+            res.status(500).json("Errore! -> " + err);
           });
       }
     })

@@ -51,7 +51,10 @@
                     <button class="login-button">Accedi</button>
                   </div>
                   <div class="form-item">
-                    <p>Non hai un account? <a href="/signup">Registrati</a></p>
+                    <p>
+                      Non hai un account?
+                      <a href="/registrazione">Registrati</a>
+                    </p>
                   </div>
                 </form>
               </div>
@@ -151,6 +154,12 @@
           const email = $("#email").val();
           const password = $("#password").val();
 
+          // simulo un caricamento
+          const $login = $("#login");
+          $login.append(
+            "<div class='spinner-container'><div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div></div>"
+          );
+
           fetch("/login", {
             method: "POST",
             body: JSON.stringify({ email, password }),
@@ -159,6 +168,7 @@
             .then(async (res) => {
               const response = await res.json();
               if (response.errors) {
+                $(".spinner-container").remove();
                 $emailError.text(response.errors.email);
                 $passwordError.text(response.errors.password);
               }

@@ -1,7 +1,4 @@
-const db = require("../utils/connection.js");
 const Prenotazione = require("../model/Prenotazione");
-const Ospite = require("../model/Ospite");
-const Inserzione = require("../model/Inserzione");
 const moment = require("moment");
 const { Op } = require("sequelize");
 
@@ -19,6 +16,7 @@ const effettua_pren_get = async (req, res) => {
     );
     var giorniTotali = 0;
     var annoCorrente = moment().format("YYYY");
+    var annoSuccessivo = moment().add(1, "y").format("YYYY");
     result.forEach((date) => {
       if (
         moment(date.check_in).format("YYYY") == annoCorrente - 1 &&
@@ -28,7 +26,18 @@ const effettua_pren_get = async (req, res) => {
           moment().startOf("year"),
           "days"
         );
-      } else {
+      } else if (
+        moment(date.check_in).format("YYYY") == annoCorrente &&
+        moment(date.check_out).format("YYYY") == annoSuccessivo
+      ) {
+        giorniTotali += moment("2020-12-31").diff(
+          moment(date.check_in),
+          "days"
+        );
+      } else if (
+        moment(date.check_in).format("YYYY") == annoCorrente &&
+        moment(date.check_out).format("YYYY") == annoCorrente
+      ) {
         giorniTotali += moment(date.check_out).diff(
           moment(date.check_in),
           "days"
@@ -48,26 +57,5 @@ const effettua_pren_get = async (req, res) => {
     res.status(400).end();
   }
 };
-//var prova = req.body.prova;
-
-//console.log(prova);
 
 module.exports = { effettua_pren_get };
-
-/*      var giorniTotali = 0;
-      result.forEach((date) => {
-        giorniTotali += moment(date.check_out).diff(
-          moment(date.check_in),
-          "days"
-        );
-      });
-      console.log(giorniTotali);
-
-      if (giorniTotali < 28) {
-        console.log("procedi con la prenotazione");
-      } else {
-        console.log("impossibile procedere con la prenotazione");
-      }
-      res.status(200).end();
-    }
-*/
