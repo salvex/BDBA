@@ -75,7 +75,7 @@ app.get("/prova", (req, res) => {
   }
 });
 app.use("/user", verifyToken, utenteRouter);
-app.use("/registrazione", regRouter);
+app.use("/signup", regRouter);
 app.use("/host", verifyToken, verifyHost, hostRouter);
 app.use("/inserzione", verifyToken, insRouter);
 app.use("/recovery", recRouter);
