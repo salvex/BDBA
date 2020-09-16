@@ -65,8 +65,7 @@
                   <div class="form-item">
                     <input
                       class="form-control form-input form-select"
-                      name="addressnum"
-                      id="addressnum"
+                      id="guestNum"
                       type="number"
                       min="1"
                       max="50"
@@ -125,6 +124,52 @@
         $("#check-out").datepicker({
           format: "yyyy-mm-dd",
           autoclose: true,
+        });
+
+        // fetch
+        $(".home-form").on("submit", (e) => {
+          e.preventDefault();
+
+          try {
+            // salvo i parametri del form
+            const citta = $("#location").val();
+            const checkin = $("#check-in").val();
+            const checkout = $("#check-out").val();
+            const nospiti = $("#guestNum").val();
+
+            // eseguo una fetch
+            /* fetch(
+              `/search?citta=${citta}&checkin=${checkin}&checkout=${checkout}&nospiti=${nospiti}`,
+              {
+                method: "POST",
+                redirect: "follow",
+              }
+            )
+              .then((res) => {
+                if (res.redirected) {
+                  window.location.href = `/search/res?citta=${citta}&checkin=${checkin}&checkout=${checkout}&nospiti=${nospiti}`;
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              }); */
+            window.location.href = `/search?citta=${citta}&checkin=${checkin}&checkout=${checkout}&nospiti=${nospiti}`;
+          } catch (e) {
+            console.log(e);
+          }
+
+          /*fetch("/search", {
+            method: "POST",
+            body: JSON.stringify({ citta, checkin, checkout, nospiti }),
+            headers: { "Content-Type": "application/json" },
+          })
+            .then(async (res) => {
+              const response = await res.json();
+              if (response.error) {
+                alert("nessuna inserzione");
+              }
+            })
+            .catch((err) => console.log("Errore: ", err)); */
         });
       });
     </script>

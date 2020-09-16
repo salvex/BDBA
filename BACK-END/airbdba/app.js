@@ -10,7 +10,7 @@ var session = require("express-session");
 var sessionStore = require("./utils/sessionStore");
 
 dotenv.config();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 //AUTH MIDDLEWARE
 const { checkUser, verifyToken, verifyHost } = require("./utils/JwtToken");
 //Router init

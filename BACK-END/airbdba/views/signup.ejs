@@ -320,7 +320,7 @@
           );
 
           // eseguo una POST
-          fetch("/registrazione", {
+          fetch("/signup", {
             method: "POST",
             body: JSON.stringify({ nome, cognome, email, password }),
             headers: { "Content-Type": "application/json" },

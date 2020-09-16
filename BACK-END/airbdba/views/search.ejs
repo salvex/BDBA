@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <%- include("./partials/head", {style: "style.css", title: "Search"}) %>
+  <body>
+    <script>
+      $("document").ready(() => {
+        console.log(`/search/res${window.location.search}`);
+
+        fetch(`/search/res${window.location.search}`)
+          .then(async (res) => {
+            const response = await res.json();
+            response.search_list.forEach((element) => {
+              $("body").append(`<p>${element.citta}</p>`);
+            });
+          })
+          .catch((err) => console.log(err));
+      });
+    </script>
+  </body>
+</html>

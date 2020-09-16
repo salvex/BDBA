@@ -11,17 +11,27 @@ const errorsHandler = (err) => {
 
 const ricerca_post = async (req, res, next) => {
   try {
-    var nomeCittà = req.body.citta;
+    res.status(200).redirect("/search/res");
+  } catch (err) {
+    const error = errorsHandler(err);
+    res.status(404).json({ error });
+  }
+};
+
+const ricerca_get = async (req, res, next) => {
+  try {
+    var nomeCittà = req.query.citta;
     nomeCittà = nomeCittà.toLowerCase();
     console.log("Ricerca in corso..");
     const format_fields = await parseField(
       nomeCittà,
-      req.body.checkin,
-      req.body.checkout,
-      req.body.nospiti
+      req.query.checkin,
+      req.query.checkout,
+      req.query.nospiti
     );
     console.log(format_fields);
     const search_list = await Inserzione.verRicerca(format_fields);
+    //res.status(200).render("search", {search_list});
     res.status(200).json({ search_list });
   } catch (err) {
     const error = errorsHandler(err);
@@ -38,34 +48,32 @@ async function parseField(
   const query = {};
 
   if (CittàFilter || CheckInFilter || CheckOutFilter || nOspitiFilter) {
-    query[Op.or] = [];
+    query[Op.and] = [];
     if (CittàFilter) {
-      query[Op.or].push({
+      query[Op.and].push({
         citta: {
           [Op.like]: `%${CittàFilter}%`, //`%${CittàFilter}%`
         },
       });
     }
     if (CheckInFilter) {
-      query[Op.or].push({
-        check_in: {
-          [Op.like]: `%${CheckInFilter}%`,
-          [Op.gte]: `%${CheckInFilter}%`,
+      query[Op.and].push({
+        inizioDisponibilita: {
+          [Op.gte]: `${CheckInFilter}`,
         },
       });
     }
     if (CheckOutFilter) {
-      query[Op.or].push({
-        check_out: {
-          [Op.like]: `%${CheckOutFilter}%`,
-          [Op.lte]: `%${CheckOutFilter}%`,
+      query[Op.and].push({
+        fineDisponibilita: {
+          [Op.lte]: `${CheckOutFilter}`,
         },
       });
     }
     if (nOspitiFilter) {
-      query[Op.or].push({
+      query[Op.and].push({
         n_ospiti: {
-          [Op.like]: `%${nOspitiFilter}%`,
+          [Op.gte]: `${nOspitiFilter}`,
         },
       });
     }
@@ -74,4 +82,4 @@ async function parseField(
   return query;
 }
 
-module.exports = { ricerca_post };
+module.exports = { ricerca_post, ricerca_get };
