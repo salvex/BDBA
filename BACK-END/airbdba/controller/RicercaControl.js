@@ -21,13 +21,11 @@ const ricerca_post = async (req, res, next) => {
 const ricerca_get = async (req, res, next) => {
   try {
     const nomeCittà = req.query.citta.toLowerCase();
-    const checkin = new Date(req.query.checkin);
-    const checkout = new Date(req.query.checkout);
     console.log("Ricerca in corso..");
     const format_fields = await parseField(
       nomeCittà,
-      checkin,
-      checkout,
+      req.query.checkin,
+      req.query.checkout,
       req.query.nospiti
     );
     console.log(format_fields);
@@ -60,14 +58,30 @@ async function parseField(
     if (CheckInFilter) {
       query[Op.and].push({
         inizioDisponibilita: {
-          [Op.between]: [`${CheckInFilter}`,`${CheckOutFilter}`]
+          [Op.lte]: `%${CheckInFilter}%`,
+        },
+        fineDisponibilita: {
+          [Op.gte]: `%${CheckInFilter}%`,
         },
       });
     }
     if (CheckOutFilter) {
       query[Op.and].push({
+        inizioDisponibilita: {
+          [Op.lte]: `%${CheckOutFilter}%`,
+        },
         fineDisponibilita: {
-          [Op.between]: [`${CheckInFilter}`,`${CheckOutFilter}`]
+          [Op.gte]: `%${CheckOutFilter}%`,
+        },
+      });
+    }
+    if (CheckInFilter && CheckOutFilter) {
+      query[Op.and].push({
+        inizioDisponibilita: {
+          [Op.lte]: `%${CheckInFilter}%`,
+        },
+        fineDisponibilita: {
+          [Op.gte]: `%${CheckOutFilter}%`,
         },
       });
     }

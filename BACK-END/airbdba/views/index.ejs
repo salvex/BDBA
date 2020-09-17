@@ -103,6 +103,9 @@
       // Il metodo ready fa si che lo script venga eseguito solo
       // quando il browser ha terminato il parsing della pagina.
       $(document).ready(() => {
+        // Azzero i campi del form al riavvio della pagina
+        $("input").val("");
+
         // Nascondo l'infobox al caricamento della pagina
         $(".jumbotron").hide(0);
 
