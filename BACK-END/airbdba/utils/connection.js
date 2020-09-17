@@ -6,6 +6,7 @@ const db = {};
 const sequelize = new Sequelize("new_airbdba", "root", "", {
   host: "127.0.0.1",
   dialect: "mysql",
+  timezone: "Europe/Rome",
 
   pool: {
     max: 5,

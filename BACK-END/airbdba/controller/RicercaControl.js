@@ -20,13 +20,14 @@ const ricerca_post = async (req, res, next) => {
 
 const ricerca_get = async (req, res, next) => {
   try {
-    var nomeCittà = req.query.citta;
-    nomeCittà = nomeCittà.toLowerCase();
+    const nomeCittà = req.query.citta.toLowerCase();
+    const checkin = new Date(req.query.checkin);
+    const checkout = new Date(req.query.checkout);
     console.log("Ricerca in corso..");
     const format_fields = await parseField(
       nomeCittà,
-      req.query.checkin,
-      req.query.checkout,
+      checkin,
+      checkout,
       req.query.nospiti
     );
     console.log(format_fields);
@@ -59,14 +60,14 @@ async function parseField(
     if (CheckInFilter) {
       query[Op.and].push({
         inizioDisponibilita: {
-          [Op.gte]: `${CheckInFilter}`,
+          [Op.lte]: `${CheckInFilter}`,
         },
       });
     }
     if (CheckOutFilter) {
       query[Op.and].push({
         fineDisponibilita: {
-          [Op.lte]: `${CheckOutFilter}`,
+          [Op.gte]: `${CheckOutFilter}`,
         },
       });
     }

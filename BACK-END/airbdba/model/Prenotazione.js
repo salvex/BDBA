@@ -70,8 +70,8 @@ Prenotazione.belongsTo(Inserzione, {
 });
 
 Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
-  var yearBefore = moment().format("YYYY") - 1;
-  var yearFuture = moment().format("YYYY") + 1;
+  let yearBefore = moment().format("YYYY") - 1;
+  let yearFuture = moment().format("YYYY") + 1;
   const result = await Prenotazione.findAll({
     attributes: ["check_in", "check_out"],
     where: {
