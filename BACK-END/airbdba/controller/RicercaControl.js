@@ -60,14 +60,14 @@ async function parseField(
     if (CheckInFilter) {
       query[Op.and].push({
         inizioDisponibilita: {
-          [Op.lte]: `${CheckInFilter}`,
+          [Op.between]: [`${CheckInFilter}`,`${CheckOutFilter}`]
         },
       });
     }
     if (CheckOutFilter) {
       query[Op.and].push({
         fineDisponibilita: {
-          [Op.gte]: `${CheckOutFilter}`,
+          [Op.between]: [`${CheckInFilter}`,`${CheckOutFilter}`]
         },
       });
     }
