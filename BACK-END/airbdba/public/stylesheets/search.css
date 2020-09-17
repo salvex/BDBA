@@ -1,0 +1,90 @@
+#search-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+#search-content {
+  height: 100%;
+  flex: 100;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.side {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#center {
+  flex: 5;
+  display: flex;
+  justify-content: center;
+}
+
+#content {
+  width: 100%;
+  display: flex;
+  flex-flow: column wrap;
+  padding: 20px;
+}
+
+.card {
+  width: 100%;
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.card:not(:last-child) {
+  margin-bottom: 40px;
+}
+
+.card-header {
+  text-align: center;
+  width: 100%;
+}
+
+.card-body-container {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.img-container {
+  flex: 1;
+}
+
+.card-body {
+  flex: 1;
+}
+
+.card-img-top {
+  width: 100%;
+  border-radius: 2px 0 0 0;
+}
+
+.card-footer {
+  display: flex;
+  flex-flow: row wrap;
+  background-color: rgb(223, 243, 223);
+  align-items: center;
+}
+
+.btn-container {
+  flex: 1;
+}
+
+.price {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 10px;
+}
+
+@media (max-width: 1110px) {
+  .card-body-container {
+    flex-flow: column wrap;
+  }
+}

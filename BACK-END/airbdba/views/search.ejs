@@ -1,16 +1,72 @@
 <!DOCTYPE html>
 <html>
-  <%- include("./partials/head", {style: "style.css", title: "Search"}) %>
+  <%- include("./partials/head", {title: "Search"}) %>
   <body>
+    <div id="search-wrapper">
+      <%- include("./partials/nav.ejs") %>
+      <div id="search-content">
+        <div class="side"></div>
+        <div id="center">
+          <div id="content"></div>
+        </div>
+        <div class="side"></div>
+      </div>
+      <div id="footer"><%- include("./partials/footer.ejs") %></div>
+    </div>
+
     <script>
       $("document").ready(() => {
-        console.log(`/search/res${window.location.search}`);
+        // Creo una variabile che mantiene la lista con le inserzioni
+        let response_list;
 
         fetch(`/search/res${window.location.search}`)
           .then(async (res) => {
             const response = await res.json();
-            response.search_list.forEach((element) => {
-              $("body").append(`<p>${element.citta}</p>`);
+
+            // Salvo la lista nella variabile
+            response_list = response.search_list;
+
+            // Itero la lista e per ogni inserzione creo una card
+            response_list.forEach((element) => {
+              // Creo un card generica che mi mantiene le informazioni
+              const card = `
+                <div class="card">
+                  <div class="card-body-container">
+                    <div class="img-container">
+                      <img class="card-img-top" src="${element.galleryPath}" alt="Card image cap">
+                    </div>
+                    <div class="card-body">
+                      <div class="title">
+                        <h2>
+                          ${element.nome_inserzione}
+                        </h2>
+                      </div>
+                      <div class="citta">
+                        <h4>
+                          ${element.citta}
+                        </h4>
+                      </div>
+                      <div class="descrizione">
+                        <p>${element.descrizione}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer text-success">
+                    <div class="btn-container">
+                      <button id="${element.id_inserzione}" class="btn btn-primary">Visita inserzione</button>
+                    </div>
+                    <div class="price">
+                      <i>${element.prezzo_base} &euro;</i>
+                    </div>
+                  </div>
+                </div>
+              `;
+
+              // Inserisco la card nel contenitore
+              $("#content").append(card);
+              $(`#${element.id_inserzione}`).on("click", () => {
+                window.location.href = "/";
+              });
             });
           })
           .catch((err) => console.log(err));

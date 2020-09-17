@@ -14,7 +14,9 @@
 
 #home-container {
   flex: 20;
-  background: url("../assets/images/homePage.jpg") no-repeat center center;
+  /* background-image: url("../assets/images/homePage1.jpg"); */
+  background-repeat: no-repeat;
+  background-position: center center;
   position: relative;
   background-size: cover;
   display: flex;
