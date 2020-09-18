@@ -35,6 +35,93 @@ body {
 }
 /* ---------------------------------- */
 
+/* SEARCHBAR */
+.search-form {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 35px;
+  border: 5px solid #286cff;
+}
+
+#form-fields {
+  flex: 14;
+  display: flex;
+}
+
+.form-item:not(:last-child) > .form-input {
+  padding: 30px;
+}
+
+.form-input {
+  border: 0;
+  border-radius: 30px;
+  color: #000000;
+}
+
+.form-input:read-only {
+  background-color: #ffffff;
+}
+
+.form-input:hover {
+  background-color: #d4d4d4;
+}
+
+.form-input:focus {
+  outline: 0px !important;
+  -webkit-appearance: none;
+  box-shadow: none !important;
+  background-color: #d4d4d4;
+}
+
+.form-input::placeholder {
+  color: #000000;
+}
+
+.form-select {
+  border: 0;
+  height: 60px;
+  border-radius: 30px;
+
+  /* Rimuovo la freccietta laterale */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-indent: 1px;
+  text-overflow: "";
+}
+
+.form-select::-ms-expand {
+  display: none;
+}
+
+#form-button {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#form-button > button {
+  border: 0;
+  border-radius: 50%;
+  background-color: #286cff;
+  color: #ffffff;
+}
+
+#form-button > button:hover {
+  background-color: #000000;
+}
+
+#form-button > button > img {
+  width: 43px;
+  height: 43px;
+}
+
+.form-item {
+  flex: 1;
+}
+/* --------- */
+
 /* INFO */
 .jumbotron {
   margin: 0;
@@ -92,6 +179,35 @@ body {
 
 @media (max-width: 768px) {
   .jumbotron {
+    text-align: center;
+  }
+
+  .search-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #form-fields {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #form-button {
+    display: flex;
+    justify-content: center;
+  }
+
+  #form-button > button {
+    border-radius: 0 0 30px 30px;
+    width: 100%;
+  }
+
+  select,
+  .form-input {
+    text-align: center;
+  }
+
+  .form-input::placeholder {
     text-align: center;
   }
 }

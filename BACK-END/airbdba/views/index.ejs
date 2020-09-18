@@ -32,58 +32,7 @@
               </h1>
             </div>
             <div class="center-spacer">
-              <form action="" class="home-form">
-                <div id="form-fields">
-                  <div class="form-item">
-                    <input
-                      class="form-control form-input location"
-                      type="text"
-                      id="location"
-                      placeholder="Destinazione"
-                    />
-                  </div>
-                  <div class="form-item">
-                    <input
-                      type="text"
-                      autocomplete="off"
-                      id="check-in"
-                      class="form-control form-input"
-                      placeholder="Check-in"
-                      readonly
-                    />
-                  </div>
-                  <div class="form-item">
-                    <input
-                      type="text"
-                      autocomplete="off"
-                      id="check-out"
-                      class="form-control form-input"
-                      placeholder="Check-out"
-                      readonly
-                    />
-                  </div>
-                  <div class="form-item">
-                    <input
-                      class="form-control form-input form-select"
-                      id="guestNum"
-                      type="number"
-                      min="1"
-                      max="50"
-                      size="4"
-                      maxlength="4"
-                      placeholder="Ospiti"
-                    />
-                  </div>
-                </div>
-                <div id="form-button">
-                  <button>
-                    <img
-                      src="/assets/icons/search_icon_white.png"
-                      alt="Cerca"
-                    />
-                  </button>
-                </div>
-              </form>
+              <%- include("./partials/searchBar.ejs") %>
             </div>
           </div>
 
@@ -138,7 +87,7 @@
         });
 
         // Metodo di ricerca sul submit del form
-        $(".home-form").on("submit", (e) => {
+        $(".search-form").on("submit", (e) => {
           e.preventDefault();
 
           try {

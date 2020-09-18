@@ -83,6 +83,19 @@
   padding-right: 10px;
 }
 
+@media (max-width: 576px) {
+  .title > h2 {
+    font-size: 20px;
+  }
+  .citta > h6,
+  .descrizione > p {
+    font-size: 15px;
+  }
+  button.btn {
+    font-size: 13px;
+  }
+}
+
 @media (max-width: 1110px) {
   .card-body-container {
     flex-flow: column wrap;
