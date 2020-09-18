@@ -4,6 +4,10 @@ const JwtToken = require("../utils/JwtToken");
 const ShowInsControl = require("../controller/ShowInsControl");
 const PrenotazioneControl = require("../controller/PrenotazioneControl");
 
+router.get("/", (req, res) => {
+  res.render("insertion");
+});
+
 router.get("/res", ShowInsControl.mostra_get);
 
 router.get(

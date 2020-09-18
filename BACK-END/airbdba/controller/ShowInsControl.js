@@ -10,7 +10,7 @@ const errorsHandler = (err) => {
 
 const mostra_get = async (req, res) => {
   try {
-    const show = await Inserzione.mostra(req.body.id_inserzione);
+    const show = await Inserzione.mostra(req.query.id);
     res.status(200).json({ show });
   } catch (err) {
     const error = errorsHandler(err);

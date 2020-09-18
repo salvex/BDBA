@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <%- include("./partials/head.ejs", {title: "Insertion"}) %>
+  <body>
+    Ciao
+    <script>
+      fetch(`/inserzione/res${window.location.search}`)
+        .then(async (res) => {
+          const response = await res.json();
+          $("body").append(`<div>${response.show.citta}</div>`);
+        })
+        .catch((err) => console.log(err));
+    </script>
+  </body>
+</html>

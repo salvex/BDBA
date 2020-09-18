@@ -27,7 +27,7 @@
             response_list = response.search_list;
 
             // Itero la lista e per ogni inserzione creo una card
-            response_list.forEach((element) => {
+            response_list.forEach((element, index) => {
               // Creo un card generica che mi mantiene le informazioni
               const card = `
                 <div class="card">
@@ -65,7 +65,7 @@
               // Inserisco la card nel contenitore
               $("#content").append(card);
               $(`#${element.id_inserzione}`).on("click", () => {
-                window.location.href = "/";
+                window.location.href = `/inserzione?id=${element.id_inserzione}`;
               });
             });
           })
