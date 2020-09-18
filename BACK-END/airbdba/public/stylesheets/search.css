@@ -22,7 +22,12 @@
 #center {
   flex: 5;
   display: flex;
+  flex-flow: column wrap;
   justify-content: center;
+}
+
+#search {
+  margin-top: 20px;
 }
 
 #content {

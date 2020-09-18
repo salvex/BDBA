@@ -7,6 +7,7 @@
       <div id="search-content">
         <div class="side"></div>
         <div id="center">
+          <div id="search"><%- include("./partials/searchBar.ejs") %></div>
           <div id="content"></div>
         </div>
         <div class="side"></div>
@@ -74,6 +75,36 @@
             });
           })
           .catch((err) => console.log(err));
+
+        // datepicker logic
+        $("#check-in").datepicker({
+          format: "yyyy-mm-dd",
+          autoclose: true,
+        });
+
+        $("#check-out").datepicker({
+          format: "yyyy-mm-dd",
+          autoclose: true,
+        });
+
+        // Search logic
+        $(".search-form").on("submit", (e) => {
+          e.preventDefault();
+
+          try {
+            // Memorizzo i parametri del form in apposite variabili
+            const citta = $("#location").val();
+            const checkin = $("#check-in").val();
+            const checkout = $("#check-out").val();
+            const nospiti = $("#guestNum").val();
+
+            // Reindirizzo alla pagina di ricerca, passando una query
+            // nel URL con tutti i relativi parametri di ricerca
+            window.location.href = `/search?citta=${citta}&checkin=${checkin}&checkout=${checkout}&nospiti=${nospiti}`;
+          } catch (e) {
+            console.log(e);
+          }
+        });
       });
     </script>
   </body>
