@@ -19,11 +19,43 @@
 
 #left {
   position: absolute;
+  overflow-y: scroll;
   width: 75%;
   height: 100%;
+  padding: 30px;
   display: flex;
   flex-flow: column;
 }
+
+/* LEFT CONTENT */
+#insertion-heading > h1 {
+  text-align: center;
+  margin: 35px 0 65px 0;
+  font-weight: bolder;
+}
+
+#showcase {
+  display: flex;
+  flex-flow: row wrap;
+  margin-bottom: 100px;
+}
+
+#carousel-container {
+  width: 60%;
+}
+
+#description {
+  width: 40%;
+  padding-left: 30px;
+  display: flex;
+  flex-flow: column wrap;
+}
+
+#citta > h3 {
+  font-weight: bold;
+}
+
+/* ------------ */
 
 #right {
   position: absolute;
