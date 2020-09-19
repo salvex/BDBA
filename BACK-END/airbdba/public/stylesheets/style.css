@@ -36,6 +36,12 @@ body {
 /* ---------------------------------- */
 
 /* SEARCHBAR */
+#search-box {
+  display: flex;
+  flex-flow: column wrap;
+  margin-top: 40px;
+}
+
 .search-form {
   display: flex;
   flex-direction: row;
@@ -120,6 +126,14 @@ body {
 .form-item {
   flex: 1;
 }
+
+#filters {
+  margin: 20px 0 40px 0;
+}
+
+#plus-btn {
+  margin-right: 5px;
+}
 /* --------- */
 
 /* INFO */
@@ -161,6 +175,31 @@ body {
   background-color: #111111;
 }
 /* ---------------------------------- */
+
+/* ROTATE ANIMATION */
+@keyframes rotation-right {
+  from {
+    transform: rotateY(0deg) rotate(0deg);
+  }
+  to {
+    transform: rotateY(0deg) rotate(45deg);
+  }
+}
+
+@keyframes rotation-left {
+  from {
+    transform: rotate(45deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.rotate-right {
+  transform: rotate(45deg);
+}
+
+/* ---------------- */
 
 .spinner-container {
   width: 100%;

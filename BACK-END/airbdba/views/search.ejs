@@ -7,7 +7,7 @@
       <div id="search-content">
         <div class="side"></div>
         <div id="center">
-          <div id="search"><%- include("./partials/searchBar.ejs") %></div>
+          <%- include("./partials/searchBox.ejs") %>
           <div id="content"></div>
         </div>
         <div class="side"></div>
@@ -75,6 +75,15 @@
             });
           })
           .catch((err) => console.log(err));
+
+        // Filter button animation
+        $("#filter-btn").on("click", () => {
+          if ($("#filter-btn > img").hasClass("rotate-right")) {
+            $("#filter-btn > img").removeClass("rotate-right");
+          } else {
+            $("#filter-btn > img").addClass("rotate-right");
+          }
+        });
 
         // datepicker logic
         $("#check-in").datepicker({

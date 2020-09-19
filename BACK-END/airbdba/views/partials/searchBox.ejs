@@ -1,0 +1,106 @@
+<div id="search-box">
+  <div id="search">
+    <form action="" class="search-form">
+      <div id="form-fields">
+        <div class="form-item">
+          <input
+            class="form-control form-input location"
+            type="text"
+            id="location"
+            placeholder="Destinazione"
+          />
+        </div>
+        <div class="form-item">
+          <input
+            type="text"
+            autocomplete="off"
+            id="check-in"
+            class="form-control form-input"
+            placeholder="Check-in"
+            readonly
+          />
+        </div>
+        <div class="form-item">
+          <input
+            type="text"
+            autocomplete="off"
+            id="check-out"
+            class="form-control form-input"
+            placeholder="Check-out"
+            readonly
+          />
+        </div>
+        <div class="form-item">
+          <input
+            class="form-control form-input form-select"
+            id="guestNum"
+            type="number"
+            min="1"
+            max="50"
+            size="4"
+            maxlength="4"
+            placeholder="Ospiti"
+          />
+        </div>
+      </div>
+      <div id="form-button">
+        <button>
+          <img src="/assets/icons/search_icon_white.png" alt="Cerca" />
+        </button>
+      </div>
+    </form>
+  </div>
+  <div id="filters">
+    <p>
+      <a
+        id="filter-btn"
+        data-toggle="collapse"
+        href="#collapseExample"
+        role="button"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+      >
+        <img
+          id="plus-btn"
+          src="/assets/icons/add.png"
+          style="width: 16px; height: 16px"
+        />
+      </a>
+      <i><strong>filtri</strong></i>
+    </p>
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body">
+        <form>
+          <div class="check"><input type="checkbox" /> <label>WiFi</label></div>
+          <div class="check">
+            <input type="checkbox" /> <label>Riscaldamento</label>
+          </div>
+          <div class="check">
+            <input type="checkbox" /> <label>Frigorifero</label>
+          </div>
+          <div class="check"><input type="checkbox" /> <label>WiFi</label></div>
+          <div class="check">
+            <input type="checkbox" /> <label>Riscaldamento</label>
+          </div>
+          <div class="check">
+            <input type="checkbox" /> <label>Frigorifero</label>
+          </div>
+          <div class="check"><input type="checkbox" /> <label>WiFi</label></div>
+          <div class="check">
+            <input type="checkbox" /> <label>Riscaldamento</label>
+          </div>
+          <div class="check">
+            <input type="checkbox" /> <label>Frigorifero</label>
+          </div>
+          <div class="check"><input type="checkbox" /> <label>WiFi</label></div>
+          <div class="check">
+            <input type="checkbox" /> <label>Riscaldamento</label>
+          </div>
+          <div class="check">
+            <input type="checkbox" /> <label>Frigorifero</label>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

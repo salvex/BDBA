@@ -46,6 +46,10 @@
   flex: 1;
 }
 
+#filters > p {
+  color: #ffffff;
+}
+
 /* MEDIA QUERIES */
 
 @media (max-width: 1150px) {

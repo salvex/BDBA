@@ -32,7 +32,7 @@
               </h1>
             </div>
             <div class="center-spacer">
-              <%- include("./partials/searchBar.ejs") %>
+              <%- include("./partials/searchBox.ejs") %>
             </div>
           </div>
 
@@ -54,6 +54,9 @@
       $(document).ready(() => {
         // Azzero i campi del form al riavvio della pagina
         $("input").val("");
+
+        // filter button color
+        $("#filter-btn > img").attr("src", "assets/icons/add-white.png");
 
         // Seleziono un'immagine casuale per lo sfondo
         $("#home-container").css(
@@ -84,6 +87,15 @@
         $("#check-out").datepicker({
           format: "yyyy-mm-dd",
           autoclose: true,
+        });
+
+        // Filter button animation
+        $("#filter-btn").on("click", () => {
+          if ($("#filter-btn > img").hasClass("rotate-right")) {
+            $("#filter-btn > img").removeClass("rotate-right");
+          } else {
+            $("#filter-btn > img").addClass("rotate-right");
+          }
         });
 
         // Metodo di ricerca sul submit del form

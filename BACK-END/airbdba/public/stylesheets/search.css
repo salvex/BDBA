@@ -26,10 +26,6 @@
   justify-content: center;
 }
 
-#search {
-  margin-top: 20px;
-}
-
 #content {
   width: 100%;
   display: flex;
