@@ -114,7 +114,6 @@ Inserzione.mostra = async (idInserzione) => {
     },
   });
   if (risultato) {
-    console.log(risultato);
     return risultato;
   }
   throw new Error("Inserzione inesistente");

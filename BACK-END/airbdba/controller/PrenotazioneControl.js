@@ -46,8 +46,9 @@ const effettua_pren_get = async (req, res) => {
     });
     console.log(giorniTotali);
     if (giorniTotali < 28) {
+      /*riepilogo*/
+      res.render("identify");
       console.log("procedi con la prenotazione");
-      res.status(200).end();
     } else {
       console.log("impossibile procedere con la prenotazione");
       res.status(400).end();
@@ -58,6 +59,28 @@ const effettua_pren_get = async (req, res) => {
   }
 };
 
+const identifica_ospiti_post =  (req,res) => {
+  try {
+    const ospiti = req.body.ospiti;
+    console.log(ospiti);
+    req.session.ospiti = ospiti;
+    res.status(200).json(req.session.ospiti); 
+  } catch (err) {
+    console.log(err);
+    res.status(400).end();
+  }
+}
+
+const pagamento_get = (req,res) => {
+  try{
+    res.render("riepilogo");
+  } catch (err) {
+    console.log(err);
+    res.status(400).end();
+  }
+}
+
+
 //PIPPO
 
-module.exports = { effettua_pren_get };
+module.exports = { effettua_pren_get,identifica_ospiti_post,pagamento_get };

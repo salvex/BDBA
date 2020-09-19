@@ -18,6 +18,10 @@ const Ospite = db.sequelize.define("ospite", {
         type: DataTypes.INTEGER(11),
         allowNull: false,
         primaryKey: true
+    },
+    isEsente: {
+        type: DataTypes.INTEGER(1),
+        defaultValue: 0,
     }
 }, {
     freezeTableName: true,
