@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const db = require("../utils/connection");
-const Utente = require("./Utente");
+const Utente = require("./Utente"); 
+
 
 //TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 const Inserzione = db.sequelize.define(
@@ -71,7 +72,7 @@ Inserzione.belongsTo(Utente, {
   foreignKey: "ref_host_ins",
 });
 
-//--------------------------------//
+
 
 Inserzione.verRicerca = async (query) => {
   const lista = await Inserzione.findAll({ where: query });

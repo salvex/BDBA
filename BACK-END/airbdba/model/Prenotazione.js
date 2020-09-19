@@ -61,13 +61,15 @@ Utente.hasMany(Prenotazione, {
 Prenotazione.belongsTo(Utente, {
   foreignKey: "ref_host",
 });
-//-------ASSOCIAZIONE [1-N] HOST-PRENOTAZIONE----------/
+
+//---------ASSOCIAZIONE [1-N] // INSERZIONE-PRENOTAZIONE-------------------//
 Inserzione.hasMany(Prenotazione, {
   foreignKey: "ref_inserzione",
 });
 Prenotazione.belongsTo(Inserzione, {
   foreignKey: "ref_inserzione",
 });
+
 
 Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
   let yearBefore = moment().format("YYYY") - 1;
@@ -95,7 +97,7 @@ Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
   }
 };
 
-Prenotazione.mostraPrenAss = async (idInserzione) => {
+/*Prenotazione.mostraPrenAss = async (idInserzione) => {
   const risultato = await Prenotazione.findOne({
     attributes: ["id_prenotazione", "check_in", "check_out"],
     include: {
@@ -109,11 +111,11 @@ Prenotazione.mostraPrenAss = async (idInserzione) => {
   if (risultato) {
     return risultato;
   } else {
-  /*  const risultato2 = await Inserzione.mostra(idInserzione);
-    return risultato2; */
-    throw new Error("inserzione inesistente");
+    const risultato2 = await Inserzione.mostra(idInserzione);
+    return risultato2; 
+    //throw new Error("inserzione inesistente");
   }
-};
+};*/
 
 
 
