@@ -12,9 +12,14 @@ const errorsHandler = (err) => {
 const mostra_get = async (req, res) => {
   try {
     const show = await Inserzione.mostra(req.query.id);
-  /*  const show2 = await Inserzione.mostra(req.query.id);*/
-  /*  console.log(show2); */ 
-    res.status(200).json({ show });
+    const date = await Prenotazione.findAll({
+      attributes: ["check_in", "check_out"],
+      where: {
+        ref_inserzione: req.query.id,
+      },
+    });
+  
+    res.status(200).json({ show, date });
   } catch (err) {
     const error = errorsHandler(err);
     res.status(404).json({ error });

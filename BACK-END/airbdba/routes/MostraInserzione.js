@@ -10,8 +10,10 @@ router.get("/", (req, res) => {
 
 router.get("/res", ShowInsControl.mostra_get);
 
+
+
 router.get(
-  "/prenota/:id",
+  "/prenota",
   [JwtToken.verifyToken],
   PrenotazioneControl.effettua_pren_get
 );

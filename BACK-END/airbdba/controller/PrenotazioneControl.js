@@ -12,7 +12,7 @@ const effettua_pren_get = async (req, res) => {
   try {
     const result = await Prenotazione.getCheckInCheckOut(
       req.session.utente.id,
-      req.params.id
+      req.query.id
     );
     var giorniTotali = 0;
     var annoCorrente = moment().format("YYYY");

@@ -89,13 +89,13 @@ Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
       },
     },
   });
-
   if (!result) {
     throw new Error("prenotazione inesistente");
   } else {
     return result;
   }
 };
+
 
 /*Prenotazione.mostraPrenAss = async (idInserzione) => {
   const risultato = await Prenotazione.findOne({
