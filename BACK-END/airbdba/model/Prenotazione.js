@@ -95,4 +95,23 @@ Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
   }
 };
 
+Prenotazione.mostraPrenAss = async (idInserzione) => {
+  const risultato = await Prenotazione.findOne({
+    attributes: ["id_prenotazione", "check_in", "check_out"],
+    where: {
+      ref_inserzione: idInserzione,
+    },
+    include: {
+      model: Inserzione,
+      required: true
+    }
+  });
+  if (risultato) {
+    return risultato;
+  }
+  throw new Error("Inserzione inesistente");
+};
+
+
+
 module.exports = Prenotazione;
