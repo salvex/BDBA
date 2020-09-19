@@ -177,30 +177,12 @@ body {
 /* ---------------------------------- */
 
 /* ROTATE ANIMATION */
-@keyframes rotation-right {
-  from {
-    transform: rotateY(0deg) rotate(0deg);
-  }
-  to {
-    transform: rotateY(0deg) rotate(45deg);
-  }
-}
-
-@keyframes rotation-left {
-  from {
-    transform: rotate(45deg);
-  }
-  to {
-    transform: rotate(0deg);
-  }
-}
-
 .rotate-right {
   transform: rotate(45deg);
 }
-
 /* ---------------- */
 
+/* SPINNER */
 .spinner-container {
   width: 100%;
   height: 100%;
@@ -210,9 +192,9 @@ body {
   align-items: center;
   background-color: #ffffff;
 }
+/* -------- */
 
 /* MEDIA QUERIES */
-
 @media (max-width: 992px) {
 }
 

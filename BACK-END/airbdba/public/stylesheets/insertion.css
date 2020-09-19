@@ -1,0 +1,46 @@
+#insertion-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+#insertion-content {
+  height: 100%;
+  flex: 100;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+#left {
+  flex: 9;
+  border: 1px solid black;
+  display: flex;
+  flex-flow: column wrap;
+}
+
+#content {
+  padding: 0 !important;
+  height: 100%;
+}
+
+#showcase {
+  flex: 1;
+  border: 1px solid black;
+}
+#info {
+  flex: 1;
+  border: 1px solid black;
+}
+
+#right {
+  flex: 3;
+  border: 1px solid black;
+}
+
+#content {
+  width: 100%;
+  display: flex;
+  flex-flow: column wrap;
+  padding: 20px;
+}

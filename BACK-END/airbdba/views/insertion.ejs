@@ -1,48 +1,75 @@
 <!DOCTYPE html>
 <html>
   <%- include("./partials/head.ejs", {title: "Insertion"}) %>
-  <body style="padding: 100px">
-    <form action="">
-      <label class="mandatory" for="region">Regione *</label>
-      <select id="region" name="region" required>
-        <option data-tassa="1" value="-1" selected></option>
-        <option data-tassa="10" value="0">Abruzzo</option>
-        <option data-tassa="9" value="1">Basilicata</option>
-        <option data-tassa="10" value="2">Calabria</option>
-        <option data-tassa="10" value="3">Campania</option>
-        <option data-tassa="10" value="4">Emilia-Romagna</option>
-        <option data-tassa="10" value="5">Friuli-Venezia Giulia</option>
-        <option data-tassa="10" value="6">Lazio</option>
-        <option data-tassa="10" value="7">Liguria</option>
-        <option data-tassa="10" value="8">Lombardia</option>
-        <option data-tassa="10" value="9">Marche</option>
-        <option data-tassa="10" value="10">Molise</option>
-        <option data-tassa="10" value="11">Piemonte</option>
-        <option data-tassa="10" value="12">Puglia</option>
-        <option data-tassa="10" value="13">Sardegna</option>
-        <option data-tassa="10" value="14">Sicilia</option>
-        <option data-tassa="10" value="15">Toscana</option>
-        <option data-tassa="10" value="16">Trentino-Alto Adige</option>
-        <option data-tassa="10" value="17">Umbria</option>
-        <option data-tassa="10" value="18">Valle d'Aosta</option>
-        <option data-tassa="10" value="19">Veneto</option>
-      </select>
-    </form>
-    <script>
-      /* fetch(`/inserzione/res${window.location.search}`)
-        .then(async (res) => {
-          const response = await res.json();
-          $("body").append(`<div>${response.show.citta}</div>`);
-        })
-        .catch((err) => console.log(err)); */
+  <body>
 
+    <div id="insertion-wrapper">
+      <%- include("./partials/nav.ejs") %>
+      <div id="insertion-content">
+        <div id="left">
+          <div id="content">
+            <div id="showcase">
+              
+            </div>
+            <div id="info"></div>
+          </div>
+        </div>
+        <div id="right">
+        </div>
+      </div>
+      <div id="footer"><%- include("./partials/footer.ejs") %></div>
+    </div>
+
+    <script>
       $("document").ready(function (e) {
-        $("select").on("change", () => {
-          $("body").append(
-            `<div>${$("select option:selected").data("tassa")}</div>`
-          );
-        });
+        
+
+        // Fetch insertion information
+        let inserzione;
+
+        fetch(`/inserzione/res${window.location.search}`)
+          .then(async (res) => {
+            const response = await res.json();
+            inserzione = response.show;
+            $("#showcase").append(`<div>${response.show.citta}</div>`);
+          })
+          .catch((err) => console.log(err));
+
+        
       });
+    </script>
+      
     </script>
   </body>
 </html>
+
+<!-- <form action="">
+  <label class="mandatory" for="region">Regione *</label>
+  <select id="region" name="region" required>
+    <option data-tassa="1" value="-1" selected></option>
+    <option data-tassa="10" value="0">Abruzzo</option>
+    <option data-tassa="9" value="1">Basilicata</option>
+    <option data-tassa="10" value="2">Calabria</option>
+    <option data-tassa="10" value="3">Campania</option>
+    <option data-tassa="10" value="4">Emilia-Romagna</option>
+    <option data-tassa="10" value="5">Friuli-Venezia Giulia</option>
+    <option data-tassa="10" value="6">Lazio</option>
+    <option data-tassa="10" value="7">Liguria</option>
+    <option data-tassa="10" value="8">Lombardia</option>
+    <option data-tassa="10" value="9">Marche</option>
+    <option data-tassa="10" value="10">Molise</option>
+    <option data-tassa="10" value="11">Piemonte</option>
+    <option data-tassa="10" value="12">Puglia</option>
+    <option data-tassa="10" value="13">Sardegna</option>
+    <option data-tassa="10" value="14">Sicilia</option>
+    <option data-tassa="10" value="15">Toscana</option>
+    <option data-tassa="10" value="16">Trentino-Alto Adige</option>
+    <option data-tassa="10" value="17">Umbria</option>
+    <option data-tassa="10" value="18">Valle d'Aosta</option>
+    <option data-tassa="10" value="19">Veneto</option>
+  </select>
+</form> -->
+
+<!-- $("select").on("change", () => { $("body").append( `
+<div>${$("select option:selected").data("tassa")}</div>
+` ); }); -->
