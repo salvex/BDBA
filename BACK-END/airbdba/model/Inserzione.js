@@ -106,7 +106,7 @@ Inserzione.aggiungiInserzione = async (query) => {
 };
 
 //Funzione temporanea
-/*Inserzione.mostra = async (idInserzione) => {
+Inserzione.mostra = async (idInserzione) => {
   const risultato = await Inserzione.findOne({
     where: {
       id_inserzione: idInserzione,
@@ -117,7 +117,7 @@ Inserzione.aggiungiInserzione = async (query) => {
     return risultato;
   }
   throw new Error("Inserzione inesistente");
-};*/
+};
 
 Inserzione.processaLista = async (id_host) => {
   const lista = await Inserzione.findAll({
