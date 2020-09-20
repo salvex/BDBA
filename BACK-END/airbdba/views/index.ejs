@@ -98,6 +98,8 @@
           }
         });
 
+        // Controllo campi form ricerca
+
         // Metodo di ricerca sul submit del form
         $(".search-form").on("submit", (e) => {
           e.preventDefault();
@@ -108,6 +110,11 @@
             const checkin = $("#check-in").val();
             const checkout = $("#check-out").val();
             const nospiti = $("#guestNum").val();
+
+            /* if (citta === "") {
+              $("#check-in").focus();
+              return;
+            } */
 
             // Reindirizzo alla pagina di ricerca, passando una query
             // nel URL con tutti i relativi parametri di ricerca

@@ -5,7 +5,7 @@
 
     <div id="insertion-wrapper">
       <%- include("./partials/nav.ejs") %>
-      <div id="back-btn" class="btn btn-primary">Indietro</div>
+      <div id="back-btn" class="btn btn-primary">&#8617; Indietro</div>
       <div id="insertion-content">
         <div id="left">
           <div id="insertion-heading">
@@ -36,27 +36,31 @@
               </div>
             </div>
             <div id="description">
-              <div id="citta">
-                <h3></h3>
+              <div id="typografy">
+                <div id="citta">
+                  <h3></h3>
+                </div>
+                <div id="desc">
+                  <p></p>
+                </div>
+                <div id="desc-rooms">
+                  <p></p>
+                </div>
               </div>
-              <div id="desc">
-                <p></p>
+              <div id="map">
+                <iframe  
+                  width="100%"
+                  height="100%"
+                  frameborder="0" style="border:0"
+                  src="" allowfullscreen>
+                </iframe>
               </div>
-              <div id="desc-rooms">
-                <p></p>
-              </div>
-              <iframe
-                id="map"  
-                width="100%"
-                height="220"
-                frameborder="0" style="border:0"
-                src="" allowfullscreen>
-              </iframe>
             </div>
           </div>
           <div>asdasdasda</div>
         </div>
         <div id="right">
+          asdasd
         </div>
       </div>
       <div id="footer"><%- include("./partials/footer.ejs") %></div>
@@ -65,6 +69,17 @@
     <script>
       $("document").ready(function (e) {
         
+        // Back button
+        // Uso go(-2) e non back() perché devo andare indietro di
+        // due posizioni per tornare alla pagina di ricerca.
+        // Questo è causato dal fatto che prima io apro una pagina
+        // con le informazioni del db. Poi viene fatta una fetch
+        // ai server google per ottenere la minimappa che ricarica la pagina.
+        // Quindi andando indietro di 1 pagina oscurerei solo la mappa,
+        // senza tornare indietro.
+        $("#back-btn").on("click", () => {
+          window.history.go(-2);
+        });
 
         // Fetch insertion information
         let inserzione;
@@ -86,7 +101,7 @@
             $("#desc > p").append(response.show.descrizione);
             $("#desc-rooms > p").append(`${response.show.n_ospiti} ospiti &#8226; 3 stanze da letto`).addClass("text-muted");
             // -- Map
-            $("#map").attr("src", `https://www.google.com/maps/embed/v1/place?key=AIzaSyDS70zwyWHYnuia677DVOj8CRqfAzI00Qo
+            $("#map > iframe").attr("src", `https://www.google.com/maps/embed/v1/place?key=AIzaSyDS70zwyWHYnuia677DVOj8CRqfAzI00Qo
                 &q=${response.show.citta}`);
           })
           .catch((err) => console.log(err));
