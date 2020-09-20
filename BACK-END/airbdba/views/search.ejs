@@ -97,7 +97,20 @@
           }
         });
 
-        // datepicker logic
+        // Data format func
+        function formatDate(date) {
+          var d = new Date(date),
+            month = "" + (d.getMonth() + 1),
+            day = "" + d.getDate(),
+            year = d.getFullYear();
+
+          if (month.length < 2) month = "0" + month;
+          if (day.length < 2) day = "0" + day;
+
+          return [year, month, day].join("-");
+        }
+
+        // Datepicker logic
         $("#check-in").datepicker({
           format: "yyyy-mm-dd",
           autoclose: true,
@@ -108,16 +121,88 @@
           autoclose: true,
         });
 
-        // Search logic
+        // Datepicker date control
+        $("#check-out").on("change", () => {
+          const checkin = $("#check-in").val();
+          const checkout = $("#check-out").val();
+
+          // Controllo se il campo check in è vuoto
+          if (checkin === "") {
+            $("#check-out").val("");
+            $("#check-in").focus();
+          } else {
+            const checkinDate = new Date(checkin);
+            const checkoutDate = new Date(checkout);
+            if (checkoutDate < checkinDate) {
+              $("#check-out").val(checkin);
+            }
+          }
+        });
+
+        // Datepicker focus
+        $("#check-in").on("change", () => {
+          $("#check-out").focus();
+        });
+
+        // Controllo campi form ricerca
+        $("#location").on("focusout input", () => {
+          if ($("#location").val() === "") {
+            $("#location").addClass("is-invalid");
+          } else {
+            $("#location").removeClass("is-invalid");
+          }
+        });
+
+        // Metodo di ricerca sul submit del form
         $(".search-form").on("submit", (e) => {
           e.preventDefault();
 
           try {
+            // controllo sui campi vuoti o errati
+            // in queste circostanze l'evento submit
+            // viene fermato
+            let flag = true;
+
+            if (
+              $("#location").attr("class").includes("is-invalid") ||
+              $("#location").val() === ""
+            ) {
+              flag = false;
+              $("#location").addClass("is-invalid");
+              return;
+            }
+
+            if (!flag) {
+              return;
+            }
+            // ---------------------------
+
             // Memorizzo i parametri del form in apposite variabili
             const citta = $("#location").val();
-            const checkin = $("#check-in").val();
-            const checkout = $("#check-out").val();
+            let checkin = $("#check-in").val();
+            let checkout = $("#check-out").val();
             const nospiti = $("#guestNum").val();
+
+            if (checkin === "" && $("#check-in").hasClass("isEmpty")) {
+              $("#check-in").removeClass("isEmpty");
+              $("#check-in").focus();
+              return;
+            } else if (
+              checkin !== "" &&
+              checkout === "" &&
+              $("#check-out").hasClass("isEmpty")
+            ) {
+              $("#check-out").removeClass("isEmpty");
+              $("#check-out").focus();
+              return;
+            }
+
+            // Se dopo vari tentativi il checkout rimane vuoto, il
+            // suo valore viene impostato a quello del checkin
+
+            if (checkin !== "" && checkout === "") {
+              checkout = checkin;
+            }
 
             // Reindirizzo alla pagina di ricerca, passando una query
             // nel URL con tutti i relativi parametri di ricerca

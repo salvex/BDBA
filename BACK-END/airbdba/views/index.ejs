@@ -78,6 +78,15 @@
           $(".jumbotron").slideUp(1000);
         });
 
+        // Filter button animation
+        $("#filter-btn").on("click", () => {
+          if ($("#filter-btn > img").hasClass("rotate-right")) {
+            $("#filter-btn > img").removeClass("rotate-right");
+          } else {
+            $("#filter-btn > img").addClass("rotate-right");
+          }
+        });
+
         // Data format func
         function formatDate(date) {
           var d = new Date(date),
@@ -123,15 +132,6 @@
         // Datepicker focus
         $("#check-in").on("change", () => {
           $("#check-out").focus();
-        });
-
-        // Filter button animation
-        $("#filter-btn").on("click", () => {
-          if ($("#filter-btn > img").hasClass("rotate-right")) {
-            $("#filter-btn > img").removeClass("rotate-right");
-          } else {
-            $("#filter-btn > img").addClass("rotate-right");
-          }
         });
 
         // Controllo campi form ricerca
