@@ -23,7 +23,7 @@ const mostra_get = async (req, res) => {
 
     req.session.inserzione = inserzione;
     console.log(req.session.inserzione);
-    res.status(200).json({ inserzione, show });
+    res.status(200).json({ show, date });
   } catch (err) {
     const error = errorsHandler(err);
     res.status(404).json({ error });
