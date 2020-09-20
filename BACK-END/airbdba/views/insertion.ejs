@@ -60,7 +60,11 @@
           <div>asdasdasda</div>
         </div>
         <div id="right">
-          asdasd
+          <div id="form-container">
+            <div class="card">
+              <%- include("./partials/change-dates-guests.ejs") %> 
+            </div>
+          </div>
         </div>
       </div>
       <div id="footer"><%- include("./partials/footer.ejs") %></div>
@@ -81,8 +85,19 @@
           window.history.go(-2);
         });
 
+        // Datepicker logic
+        $("#check-in").datepicker({
+          format: "yyyy-mm-dd",
+          autoclose: true,
+        });
+
+        $("#check-out").datepicker({
+          format: "yyyy-mm-dd",
+          autoclose: true,
+        });
+
         // Fetch insertion information
-        let inserzione;
+        /* let inserzione; */
 
         fetch(`/inserzione/res${window.location.search}`)
           .then(async (res) => {
@@ -90,22 +105,31 @@
             inserzione = response.show;
             // Inserisco tutte le informazioni nei vari campi
             // Heading
-            $("#insertion-heading > h1").append(response.show.nome_inserzione);
+            $("#insertion-heading > h1").append(inserzione.nome_inserzione);
             // Showcase
             // -- Carousel
             $(".carousel-item > img").each((index, element) => {
-              $(element).attr("src", `${response.show.galleryPath}homePage${index + 1}.jpg`)
+              $(element).attr("src", `${inserzione.galleryPath}homePage${index + 1}.jpg`)
             });
             // -- Description
-            $("#citta > h3").append(response.show.citta);
-            $("#desc > p").append(response.show.descrizione);
-            $("#desc-rooms > p").append(`${response.show.n_ospiti} ospiti &#8226; 3 stanze da letto`).addClass("text-muted");
+            $("#citta > h3").append(inserzione.citta);
+            $("#desc > p").append(inserzione.descrizione);
+            $("#desc-rooms > p").append(`${inserzione.n_ospiti} ospiti &#8226; 3 stanze da letto`).addClass("text-muted");
             // -- Map
             $("#map > iframe").attr("src", `https://www.google.com/maps/embed/v1/place?key=AIzaSyDS70zwyWHYnuia677DVOj8CRqfAzI00Qo
-                &q=${response.show.citta}`);
+                &q=${inserzione.citta}`);
+            // Inserisco nel form di dx i dati relativi alla ricerca attuale
+            // Creo un URL che contenga i miei parametri
+            const params = new URLSearchParams(window.location.search);
+            // Inserisco i dati
+            $("#check-in").val(params.get("checkin"));
+            $("#check-out").val(params.get("checkout"));
+            $("#guestNum").val(params.get("nospiti")).attr("max", inserzione.n_ospiti);
           })
           .catch((err) => console.log(err));
 
+          
+          
         
       });
     </script>
