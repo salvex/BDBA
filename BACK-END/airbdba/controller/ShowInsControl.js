@@ -21,14 +21,14 @@ const mostra_get = async (req, res) => {
       },
     });
 
-    show.prenotazioni = date;
+    //show.prenotazioni = date;
 
-    const result = show.prenotazioni;
+    //const result = show.prenotazioni;
 
     req.session.inserzione = inserzione;
     //console.log(req.session.inserzione);
     console.log(result);
-    res.status(200).json({ result });
+    res.status(200).json({ show,date });
   } catch (err) {
     const error = errorsHandler(err);
     res.status(404).json({ error });
