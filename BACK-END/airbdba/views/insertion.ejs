@@ -72,6 +72,13 @@
 
     <script>
       $("document").ready(function (e) {
+        // Creo un URL che contenga i miei parametri
+        const params = new URLSearchParams(window.location.search);
+
+        /* $(".form-select").on("change", () => {
+          params.set("nospiti", $(".form-select").val());
+          history.pushState(null, null, window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + params.toString())
+        }); */
         
         // Back button
         // Uso go(-2) e non back() perché devo andare indietro di
@@ -85,16 +92,25 @@
           window.history.go(-2);
         });
 
+        let dates = "2020-09-29";
+
         // Datepicker logic
         $("#check-in").datepicker({
           format: "yyyy-mm-dd",
           autoclose: true,
+          todayHighlight: true,
+          startDate: new Date(),
+          daysOfWeekDisabled: [0, 6],
+          datesDisabled: dates,
         });
 
         $("#check-out").datepicker({
           format: "yyyy-mm-dd",
           autoclose: true,
+          todayHighlight: true,
+          startDate: new Date(),
         });
+
 
         // Fetch insertion information
         /* let inserzione; */
@@ -119,8 +135,6 @@
             $("#map > iframe").attr("src", `https://www.google.com/maps/embed/v1/place?key=AIzaSyDS70zwyWHYnuia677DVOj8CRqfAzI00Qo
                 &q=${inserzione.citta}`);
             // Inserisco nel form di dx i dati relativi alla ricerca attuale
-            // Creo un URL che contenga i miei parametri
-            const params = new URLSearchParams(window.location.search);
             // Inserisco i dati
             $("#check-in").val(params.get("checkin"));
             $("#check-out").val(params.get("checkout"));
