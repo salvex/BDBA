@@ -62,13 +62,6 @@ Prenotazione.belongsTo(Utente, {
   foreignKey: "ref_host",
 });
 
-//---------ASSOCIAZIONE [1-N] // INSERZIONE-PRENOTAZIONE-------------------//
-Inserzione.hasMany(Prenotazione, {
-  foreignKey: "ref_inserzione",
-});
-Prenotazione.belongsTo(Inserzione, {
-  foreignKey: "ref_inserzione",
-});
 
 
 Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {

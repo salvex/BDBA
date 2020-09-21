@@ -1,5 +1,6 @@
 const Prenotazione = require("../model/Prenotazione");
 const moment = require("moment");
+const Ospite = require("../model/Ospite");
 const { Op } = require("sequelize");
 
 //COSE DA FARE: CONTROLLO SE HAI FATTO LOGIN //FATTO!
@@ -73,7 +74,11 @@ const identifica_ospiti_post =  (req,res) => {
 
 const pagamento_get = (req,res) => {
   try{
-    res.render("riepilogo");
+    const riepilogo = {
+      inserzione: req.session.inserzione,
+      ospiti: req.session.ospiti
+    };
+    res.render("riepilogo", {riepilogo});
   } catch (err) {
     console.log(err);
     res.status(400).end();

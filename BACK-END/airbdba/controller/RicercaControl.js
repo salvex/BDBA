@@ -28,7 +28,6 @@ const ricerca_get = async (req, res, next) => {
       req.query.checkout,
       req.query.nospiti
     );
-    console.log(format_fields);
     const search_list = await Inserzione.verRicerca(format_fields);
     //res.status(200).render("search", {search_list});
     res.status(200).json({ search_list });
@@ -55,7 +54,7 @@ async function parseField(
         },
       });
     }
-    if (CheckInFilter) {
+    if (CheckInFilter && !CheckOutFilter) {
       query[Op.and].push({
         inizioDisponibilita: {
           [Op.lte]: `%${CheckInFilter}%`,
@@ -65,7 +64,7 @@ async function parseField(
         },
       });
     }
-    if (CheckOutFilter) {
+    if (CheckOutFilter && !CheckInFilter) {
       query[Op.and].push({
         inizioDisponibilita: {
           [Op.lte]: `%${CheckOutFilter}%`,

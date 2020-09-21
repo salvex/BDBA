@@ -30,8 +30,9 @@
         fetch(`/inserzione/res${window.location.search}`)
           .then(async (res) => {
             const response = await res.json();
+            console.log(response);
             inserzione = response.show;
-            $("#showcase").append(`<div>${response.show.citta}</div>`);
+            $("#showcase").append(`<div>${inserzione.citta}</div>`);
           })
           .catch((err) => console.log(err));
 

@@ -1,9 +1,12 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { Sequelize, DataTypes, Op } = require("sequelize");
 const db = require("../utils/connection");
 const Utente = require("./Utente"); 
+const Prenotazione = require("./Prenotazione");
 
 
 //TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
+
+
 const Inserzione = db.sequelize.define(
   "inserzione",
   {
@@ -62,6 +65,14 @@ const Inserzione = db.sequelize.define(
     timestamps: false,
   }
 );
+
+//---------ASSOCIAZIONE [1-N] // INSERZIONE-PRENOTAZIONE-------------------//
+Inserzione.hasMany(Prenotazione, {
+  foreignKey: "ref_inserzione",
+});
+Prenotazione.belongsTo(Inserzione, {
+  foreignKey: "ref_inserzione",
+});
 
 //ASSOCIAZIONE [1-MOLTI]-------
 Utente.hasMany(Inserzione, {
