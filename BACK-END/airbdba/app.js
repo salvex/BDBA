@@ -1,6 +1,7 @@
 //IMPORTANTE: I METODI D'INSERIMENTO O DI RICERCA CHE COINVOLGONO I DB ACCETTANO SOLO "POST" DA FETCH
 var createError = require("http-errors");
 var express = require("express");
+var favicon = require("serve-favicon");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
@@ -40,6 +41,8 @@ app.use(logger("dev"));
 //Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+//FAVICON
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 //Cookie parser
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
