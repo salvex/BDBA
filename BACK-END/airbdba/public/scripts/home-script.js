@@ -20,7 +20,7 @@ $(document).ready(() => {
   /* --------------------------------------------------------- */
 
   /* ON REFRESH */
-  // Azzero i campi del form al aggiorno della pagina
+  // Pulisci i campi del form al aggiorno della pagina
   $("input").val("");
 
   // Seleziono un'immagine casuale per lo sfondo
