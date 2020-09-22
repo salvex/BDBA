@@ -24,10 +24,12 @@
           .then(async (res) => {
             const response = await res.json();
 
-            if (false) {
+            if (response.search_list.length === 0) {
               // Se non ci sono stati risultati con la ricerca
               // Stampo un messaggio di errore.
-              $("#content").append(`<h1>OPS</h1>`);
+              $("#content").append(
+                `<h2 class="text-danger" style="text-align:center">OPS... Nessuna inserzione per la destinazione scelta!</h2>`
+              );
             } else {
               // Salvo la lista nella variabile
               response_list = response.search_list;
