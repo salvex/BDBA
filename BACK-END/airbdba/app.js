@@ -25,7 +25,7 @@ var regRouter = require("./routes/Registrazione");
 var searchRouter = require("./routes/Ricerca");
 var Prenotazione = require("./model/Prenotazione");
 //---------Database--------------//
-var mysql = require("mysql2"); 
+var mysql = require("mysql2");
 const db = require("./utils/connection");
 // CROSS-ORIGIN RESOURCE SHARING IMPORT
 var cors = require("cors");
@@ -42,7 +42,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //FAVICON
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
 //Cookie parser
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
@@ -79,23 +79,22 @@ app.get("/prova", (req, res) => {
     res.send("nessuno utente loggato");
   }
 });*/
-app.post("/prova", async (req,res) => {
+app.post("/prova", async (req, res) => {
   let bodyMail = {
     from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
     to: req.body.destinatario,
     subject: req.body.oggetto, // Subject line
     text: "Comunicazione", // plain text body
     html: "<b>Hello world?</b>", // html body
-  }
+  };
 
- await transporter.sendMail(bodyMail, (error,info) => {
-    if(error) {
+  await transporter.sendMail(bodyMail, (error, info) => {
+    if (error) {
       return console.log(error);
     }
-    console.log('Messaggio inviato: %s', info.messageId);
-  })
-
-})
+    console.log("Messaggio inviato: %s", info.messageId);
+  });
+});
 app.use("/user", verifyToken, utenteRouter);
 app.use("/signup", regRouter);
 app.use("/host", verifyToken, verifyHost, hostRouter);
