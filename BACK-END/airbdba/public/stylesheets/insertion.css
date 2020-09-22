@@ -10,37 +10,113 @@
   flex: 100;
   display: flex;
   flex-flow: row wrap;
+  position: relative;
 }
 
 #left {
-  flex: 9;
-  border: 1px solid black;
+  position: absolute;
+  overflow-y: scroll;
+  width: 75%;
+  height: 100%;
+  padding: 30px;
+  display: flex;
+  flex-flow: column;
+}
+
+/* LEFT CONTENT */
+#insertion-heading > h1 {
+  text-align: center;
+  margin: 35px 0 65px 0;
+  font-weight: bolder;
+}
+
+#showcase {
+  display: flex;
+  flex-flow: row wrap;
+  margin-bottom: 100px;
+}
+
+#carousel-container {
+  width: 60%;
+}
+
+#description {
+  width: 40%;
+  padding-left: 30px;
   display: flex;
   flex-flow: column wrap;
 }
 
-#content {
-  padding: 0 !important;
+#typografy {
+  flex: 1;
+}
+
+#map {
+  flex: 10;
+}
+
+#citta > h3 {
+  font-weight: bold;
+}
+
+/* ------------ */
+
+/* RIGHT */
+#right {
+  position: absolute;
+  overflow-y: scroll;
+  right: 0;
+  width: 25%;
   height: 100%;
 }
 
-#showcase {
-  flex: 1;
-  border: 1px solid black;
-}
-#info {
-  flex: 1;
-  border: 1px solid black;
+#form-container {
+  padding: 20px;
 }
 
-#right {
-  flex: 3;
-  border: 1px solid black;
+.card {
+  border-radius: 30px;
 }
 
-#content {
+#check-in {
+  border-radius: 30px 30px 0 0;
+}
+
+#check-out {
+  border-radius: 0;
+}
+
+#guestNum {
+  border-radius: 0 0 30px 30px;
+}
+
+.form-select {
+  padding: 30px;
+}
+
+/* #content {
   width: 100%;
   display: flex;
   flex-flow: column wrap;
   padding: 20px;
+} */
+
+#prenota > button {
+  border-radius: 0;
+  width: 100%;
+  bottom: 0;
+}
+/* --------------- */
+
+/* MEDIA QUERY */
+@media (max-width: 1090px) {
+  #right {
+    width: 0;
+  }
+  #left {
+    width: 100%;
+  }
+  #form-container {
+    display: none;
+  }
 }

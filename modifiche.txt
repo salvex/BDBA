@@ -1,0 +1,7 @@
+20/09 - 8.45
+- modificata posizione mappa
+- aggiunto bottone statico
+- modificare url pagina inserzione
+- aggiunti controlli form ricerca
+
+20/09 - 10.39
