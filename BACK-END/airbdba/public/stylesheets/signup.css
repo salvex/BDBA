@@ -1,5 +1,5 @@
 #signup {
-  height: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -110,7 +110,9 @@
   .form-item > p {
     text-align: center;
   }
-
+  .inside-spacer {
+    flex: 0;
+  }
   .footer {
     margin-top: 40px;
   }
@@ -132,9 +134,9 @@
     flex: 0;
   }
 
-  .footer {
+  /* .footer {
     margin-top: 200px;
-  }
+  } */
 }
 
 @media (max-height: 360px) {
@@ -142,9 +144,9 @@
     margin-top: 100px;
   }
 
-  .footer {
+  /* .footer {
     margin-top: 250px;
-  }
+  } */
 }
 
 .disabled-btn {

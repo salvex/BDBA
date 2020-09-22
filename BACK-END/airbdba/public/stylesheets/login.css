@@ -69,17 +69,17 @@
   width: 100%;
 }
 
-
 /* MEDIA QUERIES */
 @media (max-width: 992px) {
-  
 }
 
 @media (max-width: 768px) {
   .form-item > p {
     text-align: center;
   }
-
+  .inside-spacer {
+    flex: 0;
+  }
   .footer {
     margin-top: 40px;
   }
@@ -95,7 +95,7 @@
     text-align: center;
   }
 }
-  
+
 @media (max-height: 650px) {
   .form-item {
     margin: 5px;

@@ -9,6 +9,7 @@ body {
 }
 
 /* SPAZIATORI */
+.inside-spacer,
 .side-spacer {
   flex: 1;
 }
