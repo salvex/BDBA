@@ -108,6 +108,14 @@
 }
 /* --------------- */
 
+/* OVERRIDE COLORI DEL DATEPICKER */
+.datepicker table tr td.disabled,
+.datepicker table tr td.disabled:hover {
+  border: 1px solid red;
+  color: red;
+}
+/* --------------- */
+
 /* MEDIA QUERY */
 @media (max-width: 1090px) {
   #right {
