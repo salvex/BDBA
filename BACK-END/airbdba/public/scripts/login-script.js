@@ -63,7 +63,7 @@ $(document).ready(() => {
     if (!flag) {
       return;
     }
-    // ---------------------------
+    /* -------- */
 
     // Svuoto i small che contrassegnano gli errori
     // dei campi
