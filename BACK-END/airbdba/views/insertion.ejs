@@ -120,9 +120,6 @@
             const response = await res.json();
             console.log(response);
             inserzione = response.show;
-<<<<<<< HEAD
-            $("#showcase").append(`<div>${inserzione.citta}</div>`);
-=======
             // Inserisco tutte le informazioni nei vari campi
             // Heading
             $("#insertion-heading > h1").append(inserzione.nome_inserzione);
@@ -143,7 +140,6 @@
             $("#check-in").val(params.get("checkin"));
             $("#check-out").val(params.get("checkout"));
             $("#guestNum").val(params.get("nospiti")).attr("max", inserzione.n_ospiti);
->>>>>>> inserzione
           })
           .catch((err) => console.log(err));
 
