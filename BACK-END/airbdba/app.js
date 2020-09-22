@@ -24,12 +24,14 @@ var regRouter = require("./routes/Registrazione");
 var searchRouter = require("./routes/Ricerca");
 var Prenotazione = require("./model/Prenotazione");
 //---------Database--------------//
-var mysql = require("mysql2");
+var mysql = require("mysql2"); 
 const db = require("./utils/connection");
-// CROSS-ORIGIN RESOURCE SHARING
+// CROSS-ORIGIN RESOURCE SHARING IMPORT
 var cors = require("cors");
 var app = express();
-
+//NODEMAILER
+var transporter = require("./utils/mailSender");
+console.log(transporter);
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -54,14 +56,14 @@ app.use(
     },
   })
 );
-//Cors
+//Cors USE
 app.use(cors());
 //Router
 app.use("*", checkUser);
 app.use("/", indexRouter);
 app.use(authRouter);
 
-app.get("/data", (req, res) => {
+/*app.get("/data", (req, res) => {
   var annoCorrente = moment().format("YYYY");
   console.log(typeof moment().format("YYYY"));
 
@@ -73,7 +75,24 @@ app.get("/prova", (req, res) => {
   } else {
     res.send("nessuno utente loggato");
   }
-});
+});*/
+app.post("/prova", async (req,res) => {
+  let bodyMail = {
+    from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
+    to: req.body.destinatario,
+    subject: req.body.oggetto, // Subject line
+    text: "Comunicazione", // plain text body
+    html: "<b>Hello world?</b>", // html body
+  }
+
+ await transporter.sendMail(bodyMail, (error,info) => {
+    if(error) {
+      return console.log(error);
+    }
+    console.log('Messaggio inviato: %s', info.messageId);
+  })
+
+})
 app.use("/user", verifyToken, utenteRouter);
 app.use("/signup", regRouter);
 app.use("/host", verifyToken, verifyHost, hostRouter);
