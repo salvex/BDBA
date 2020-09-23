@@ -22,12 +22,7 @@ const mostra_get = async (req, res) => {
 
     let show = await Inserzione.mostra(req.query.id);
 
-    let dates = await Prenotazione.findAll({ //risultato dell'interrogazione che viene passato nel foreach
-      attributes: ["id_prenotazione","check_in", "check_out"],
-      where: {
-        ref_inserzione: req.query.id,
-      },
-    });
+    let dates = await Prenotazione.getPrenotazioni(req.query.id);
     
     dates.forEach(d => {
       let range = moment().range(d.check_in,d.check_out);

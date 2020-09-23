@@ -69,6 +69,7 @@ const Inserzione = db.sequelize.define(
 //---------ASSOCIAZIONE [1-N] // INSERZIONE-PRENOTAZIONE-------------------//
 Inserzione.hasMany(Prenotazione, {
   foreignKey: "ref_inserzione",
+  onDelete: "cascade",
 });
 Prenotazione.belongsTo(Inserzione, {
   foreignKey: "ref_inserzione",

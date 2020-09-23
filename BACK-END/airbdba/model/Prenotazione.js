@@ -38,6 +38,10 @@ const Prenotazione = db.sequelize.define(
       type: DataTypes.DATE(),
       allowNull: false,
     },
+    prezzo_finale: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+    }
   },
   {
     freezeTableName: true,
@@ -82,12 +86,18 @@ Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
       },
     },
   });
-  if (!result) {
-    throw new Error("prenotazione inesistente");
-  } else {
-    return result;
-  }
+  return result;
 };
+
+Prenotazione.getPrenotazioni = async (id_ins) => {
+  let result = await Prenotazione.findAll({ //risultato dell'interrogazione che viene passato nel foreach
+      attributes: ["id_prenotazione","check_in", "check_out"],
+      where: {
+        ref_inserzione: id_ins,
+      },
+    });
+  return result;
+}
 
 
 /*Prenotazione.mostraPrenAss = async (idInserzione) => {

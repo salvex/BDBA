@@ -18,7 +18,6 @@ router.get(
 
 router.post("/prenota/identify", [JwtToken.verifyToken],PrenotazioneControl.identifica_ospiti_post) 
 
-// IN QUESTA ROTTA BISOGNA RENDERIZZARE IL RIEPILOGO
 router.get("/prenota/summary", [JwtToken.verifyToken],PrenotazioneControl.pagamento_get)
 
 //router.get("")

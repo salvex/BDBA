@@ -85,7 +85,7 @@ app.post("/prova", async (req, res) => {
     to: req.body.destinatario,
     subject: req.body.oggetto, // Subject line
     text: "Comunicazione", // plain text body
-    html: "<b>Hello world?</b>", // html body
+    html: "<b>Hello ?</b>", // html body
   };
 
   await transporter.sendMail(bodyMail, (error, info) => {
