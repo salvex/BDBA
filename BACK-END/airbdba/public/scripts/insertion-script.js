@@ -5,13 +5,6 @@ $(document).ready(() => {
   /* --------------------------------------------------------- */
 
   /* BACK BTN */
-  // Uso go(-2) e non back() perché devo andare indietro di
-  // due posizioni per tornare alla pagina di ricerca.
-  // Questo è causato dal fatto che prima io apro una pagina
-  // con le informazioni del db. Poi viene fatta una fetch
-  // ai server google per ottenere la minimappa che ricarica la pagina.
-  // Quindi andando indietro di 1 pagina oscurerei solo la mappa,
-  // senza tornare indietro.
   $("#back-btn").on("click", () => {
     window.history.go(-2);
   });
@@ -19,8 +12,8 @@ $(document).ready(() => {
 
   /* BOOK BTN */
   $(window).resize(() => {
-    if ($("#book-btn").hasClass("toggled")) {
-      $("#book-btn").removeClass("toggled");
+    if ($("#book-menu").hasClass("toggled")) {
+      $("#book-menu").removeClass("toggled");
       if ($(window).width() > "1090") {
         $("#right").toggle("slide");
       }
@@ -52,9 +45,9 @@ $(document).ready(() => {
     }
   });
 
-  $("#book-btn").on("click", () => {
-    if ($("#book-btn").hasClass("toggled")) {
-      $("#book-btn").removeClass("toggled");
+  $("#book-menu").on("click", () => {
+    if ($("#book-menu").hasClass("toggled")) {
+      $("#book-menu").removeClass("toggled");
       if ($(window).width() <= "576") {
         $("#right").toggle("slide");
         $("#left").css("display", "flex");
@@ -63,7 +56,7 @@ $(document).ready(() => {
         $("#left").css("width", "100%");
       }
     } else {
-      $("#book-btn").addClass("toggled");
+      $("#book-menu").addClass("toggled");
       if ($(window).width() <= "576") {
         $("#right").toggle("slide");
         $("#left").css("display", "none");
@@ -72,6 +65,93 @@ $(document).ready(() => {
         $("#left").css("width", "50%");
       }
     }
+  });
+  /* --------------------------------------------------------- */
+
+  /* MODIFICO CHECKIN/OUT E NOSPITI */
+  // Se l'utente desidera può modificare le date di checkin e checkout
+  // e il numero degli ospiti, tramite un apposito form.
+  // CHECKIN
+  $("#check-in").on("change", () => {
+    params.set("checkin", $("#check-in").val());
+    window.history.pushState(
+      "",
+      "",
+      window.location.protocol +
+        "//" +
+        window.location.host +
+        window.location.pathname +
+        "?" +
+        params.toString()
+    );
+  });
+  // CHECKOUT
+  $("#check-out").on("change", () => {
+    // controllo sul campo di checkout
+    const checkin = $("#check-in").val();
+    const checkout = $("#check-out").val();
+
+    // Controllo se il campo check in è vuoto
+    // oppure se viene inserito un checkout
+    // inferiore al checkin
+    if (checkin === "") {
+      $("#check-out").val("");
+      $("#check-in").focus();
+    } else {
+      const checkinDate = new Date(checkin);
+      const checkoutDate = new Date(checkout);
+      if (checkoutDate < checkinDate) {
+        $("#check-out").datepicker("update", checkin);
+        params.set("checkout", $("#check-out").val());
+        window.history.pushState(
+          "",
+          "",
+          window.location.protocol +
+            "//" +
+            window.location.host +
+            window.location.pathname +
+            "?" +
+            params.toString()
+        );
+      } else {
+        params.set("checkout", $("#check-out").val());
+        window.history.pushState(
+          "",
+          "",
+          window.location.protocol +
+            "//" +
+            window.location.host +
+            window.location.pathname +
+            "?" +
+            params.toString()
+        );
+      }
+    }
+
+    window.history.pushState(
+      "",
+      "",
+      window.location.protocol +
+        "//" +
+        window.location.host +
+        window.location.pathname +
+        "?" +
+        params.toString()
+    );
+  });
+  // N_OSPITI
+  $("#guestNum").on("change", () => {
+    params.set("nospiti", $("#guestNum").val());
+    window.history.pushState(
+      "",
+      "",
+      window.location.protocol +
+        "//" +
+        window.location.host +
+        window.location.pathname +
+        "?" +
+        params.toString()
+    );
   });
   /* --------------------------------------------------------- */
 

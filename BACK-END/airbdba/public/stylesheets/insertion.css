@@ -23,14 +23,27 @@
   flex-flow: column;
 }
 
-/* BOOK-BTN */
-#book-btn {
+/* BOOK-MENU */
+#book-menu {
   display: none;
   position: fixed;
   right: 20px;
   top: 97px;
   z-index: 10;
   box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.15);
+}
+/* ------------ */
+
+/* BOOK-BTN */
+#change-data {
+  position: relative;
+  width: 100%;
+}
+.book-btn {
+  position: fixed;
+  bottom: 56px;
+  border-radius: 0;
+  width: 25%;
 }
 /* ------------ */
 
@@ -75,6 +88,7 @@
 /* RIGHT */
 #right {
   display: flex;
+  flex-flow: column wrap;
   position: absolute;
   overflow-y: scroll;
   right: 0;
@@ -113,6 +127,8 @@
 }
 /* --------------- */
 
+/*  */
+
 /* OVERRIDE COLORI DEL DATEPICKER */
 .datepicker table tr td.disabled,
 .datepicker table tr td.disabled:hover {
@@ -130,19 +146,30 @@
     display: none;
     width: 50%;
     background-color: #ffffff;
-    border-left: 1px solid #000000;
+    border-left: 1px solid #e4e4e4;
   }
   #form-container {
     margin-top: 57px;
   }
-  #book-btn {
+  #book-menu {
     display: block;
+  }
+  .book-btn {
+    width: 50%;
   }
   @media (max-width: 576px) {
     #right {
       display: none;
       width: 100%;
       border: 0;
+    }
+    .book-btn {
+      width: 100%;
+    }
+  }
+  @media (max-height: 450px) {
+    #form-container {
+      margin-bottom: 57px;
     }
   }
 }

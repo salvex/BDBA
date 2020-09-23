@@ -67,6 +67,8 @@ $(document).ready(() => {
     const checkout = $("#check-out").val();
 
     // Controllo se il campo check in è vuoto
+    // oppure se viene inserito un checkout
+    // inferiore al checkin
     if (checkin === "") {
       $("#check-out").val("");
       $("#check-in").focus();
