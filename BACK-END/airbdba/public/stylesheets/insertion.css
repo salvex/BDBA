@@ -88,7 +88,7 @@
 /* RIGHT */
 #right {
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column;
   position: absolute;
   overflow-y: scroll;
   right: 0;
@@ -124,6 +124,16 @@
   border-radius: 0;
   width: 100%;
   bottom: 0;
+}
+
+#recap-container {
+  padding: 30px;
+  margin-bottom: 50px;
+}
+
+#recap {
+  background-color: rgb(223, 243, 223);
+  border: 1px dashed rgb(131, 153, 131);
 }
 /* --------------- */
 
