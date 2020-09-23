@@ -29,8 +29,6 @@ const mostra_get = async (req, res) => {
       },
     });
     
-    console.log(dates);
-
     dates.forEach(d => {
       let range = moment().range(d.check_in,d.check_out);
       let array = Array.from(range.by("days"));

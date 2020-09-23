@@ -10,6 +10,7 @@ const transporter = nodemailer.createTransport({
     auth: {
       user: testAccount.user, // generated ethereal user
       pass: testAccount.pass, // generated ethereal password */
+    pool: true,
     service: 'gmail',
     auth: {
         user: process.env.MAIL_ACCOUNT,
