@@ -23,6 +23,17 @@
   flex-flow: column;
 }
 
+/* BOOK-BTN */
+#book-btn {
+  display: none;
+  position: fixed;
+  right: 20px;
+  top: 97px;
+  z-index: 10;
+  box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.15);
+}
+/* ------------ */
+
 /* LEFT CONTENT */
 #insertion-heading > h1 {
   text-align: center;
@@ -63,6 +74,7 @@
 
 /* RIGHT */
 #right {
+  display: flex;
   position: absolute;
   overflow-y: scroll;
   right: 0;
@@ -94,13 +106,6 @@
   padding: 30px;
 }
 
-/* #content {
-  width: 100%;
-  display: flex;
-  flex-flow: column wrap;
-  padding: 20px;
-} */
-
 #prenota > button {
   border-radius: 0;
   width: 100%;
@@ -118,13 +123,26 @@
 
 /* MEDIA QUERY */
 @media (max-width: 1090px) {
-  #right {
-    width: 0;
-  }
   #left {
     width: 100%;
   }
-  #form-container {
+  #right {
     display: none;
+    width: 50%;
+    background-color: #ffffff;
+    border-left: 1px solid #000000;
+  }
+  #form-container {
+    margin-top: 57px;
+  }
+  #book-btn {
+    display: block;
+  }
+  @media (max-width: 576px) {
+    #right {
+      display: none;
+      width: 100%;
+      border: 0;
+    }
   }
 }

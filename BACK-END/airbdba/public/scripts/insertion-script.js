@@ -17,6 +17,64 @@ $(document).ready(() => {
   });
   /* --------------------------------------------------------- */
 
+  /* BOOK BTN */
+  $(window).resize(() => {
+    if ($("#book-btn").hasClass("toggled")) {
+      $("#book-btn").removeClass("toggled");
+      if ($(window).width() > "1090") {
+        $("#right").toggle("slide");
+      }
+    } else {
+      if ($(window).width() > "1090") {
+        $("#right").css({
+          display: "flex",
+          width: "25%",
+        });
+        $("#left").css({
+          display: "flex",
+          width: "75%",
+        });
+      } else if ($(window).width() > "576") {
+        $("#right").css({
+          display: "none",
+          width: "50%",
+        });
+        $("#left").css({
+          display: "flex",
+          width: "100%",
+        });
+      } else {
+        $("#right").css({
+          display: "none",
+          width: "100%",
+        });
+      }
+    }
+  });
+
+  $("#book-btn").on("click", () => {
+    if ($("#book-btn").hasClass("toggled")) {
+      $("#book-btn").removeClass("toggled");
+      if ($(window).width() <= "576") {
+        $("#right").toggle("slide");
+        $("#left").css("display", "flex");
+      } else if ($(window).width() <= "1090") {
+        $("#right").toggle("slide");
+        $("#left").css("width", "100%");
+      }
+    } else {
+      $("#book-btn").addClass("toggled");
+      if ($(window).width() <= "576") {
+        $("#right").toggle("slide");
+        $("#left").css("display", "none");
+      } else if ($(window).width() <= "1090") {
+        $("#right").toggle("slide");
+        $("#left").css("width", "50%");
+      }
+    }
+  });
+  /* --------------------------------------------------------- */
+
   /* OPERAZIONE DI FETCH */
   // Fetch insertion information
   fetch(`/inserzione/res${window.location.search}`)
