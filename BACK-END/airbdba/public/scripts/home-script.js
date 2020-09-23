@@ -4,21 +4,6 @@ $(document).ready(() => {
   /* LETs & CONSTs */
   /* --------------------------------------------------------- */
 
-  /* FUNCTIONS */
-  // Data format function
-  function formatDate(date) {
-    var d = new Date(date),
-      month = "" + (d.getMonth() + 1),
-      day = "" + d.getDate(),
-      year = d.getFullYear();
-
-    if (month.length < 2) month = "0" + month;
-    if (day.length < 2) day = "0" + day;
-
-    return [year, month, day].join("-");
-  }
-  /* --------------------------------------------------------- */
-
   /* ON REFRESH */
   // Pulisci i campi del form al aggiorno della pagina
   $("input").val("");
@@ -47,15 +32,6 @@ $(document).ready(() => {
   /* FILTER BTN */
   // filter button color
   $("#filter-btn > img").attr("src", "assets/icons/add-white.png");
-
-  // Filter button animation
-  $("#filter-btn").on("click", () => {
-    if ($("#filter-btn > img").hasClass("rotate-right")) {
-      $("#filter-btn > img").removeClass("rotate-right");
-    } else {
-      $("#filter-btn > img").addClass("rotate-right");
-    }
-  });
   /* --------------------------------------------------------- */
 
   /* FORM DI RICERCA */

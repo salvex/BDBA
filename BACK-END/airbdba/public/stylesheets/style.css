@@ -27,6 +27,7 @@ body {
 .navbar {
   display: flex;
   background-color: #ffffff;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
 }
 
 .navbar-light,
@@ -186,8 +187,9 @@ body {
 
 /* FOOTER */
 .page-footer {
-  color: #4b4b4b;
-  background-color: #111111;
+  color: #000000;
+  background-color: #ffffff;
+  box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.25);
 }
 /* ---------------------------------- */
 
