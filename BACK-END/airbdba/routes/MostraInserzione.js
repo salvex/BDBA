@@ -16,9 +16,13 @@ router.get(
   PrenotazioneControl.effettua_pren_get
 );
 
-router.post("/prenota/identify", [JwtToken.verifyToken],PrenotazioneControl.identifica_ospiti_post) 
+router.post("/prenota/identify", [JwtToken.verifyToken],PrenotazioneControl.identifica_ospiti_post); 
 
-router.get("/prenota/summary", [JwtToken.verifyToken],PrenotazioneControl.pagamento_get)
+router.get("/prenota/pagamento", [JwtToken.verifyToken],PrenotazioneControl.pagamento_get);
+
+router.post("/prenota/pagamento",[JwtToken.verifyToken],PrenotazioneControl.pagamento_post);
+
+router.get("/prenota/riepilogo",[JwtToken.verifyToken],PrenotazioneControl.riepilogo_get);
 
 //router.get("")
 

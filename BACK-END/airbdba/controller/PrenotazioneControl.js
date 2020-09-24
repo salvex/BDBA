@@ -82,9 +82,9 @@ const pagamento_get = async (req, res) => {
     var metodo_p = await MetodoPagamento.getPagamento(req.session.utente.id);
     var riepilogo = req.session.inserzione;
     if (metodo_p) {
-      res.render("pagamento", { metodo_p, riepilogo });
+      res.render("pagamento", { metodo_p});
     } else {
-      res.render("pagamento", { riepilogo });
+      res.render("pagamento", );
     }
   } catch (err) {
     console.log(err);
@@ -105,23 +105,7 @@ const pagamento_post = async (req, res) => {
         check_out: req.query.checkout,
         prezzo_finale: req.body.prezzo,
       });
-      // manda la mail
-      /*let host = await Utente.findByPk(req.session.inserzione.ref_host_ins);
-      let MailHost = host.email;
-      let bodyMail = {
-        from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
-        to: req.session.utente.email, MailHost,
-        subject: "Prenotazione ID " + prenotazione.id_prenotazione + "Creata", 
-        text: "Comunicazione", 
-        html: "<b>RIEPILOGO PLACEHOLDER</b>", 
-      };
-
-      await transporter.sendMail(bodyMail, (error, info) => {
-        if (error) {
-          return console.log(error);
-        }
-        console.log("Messaggio inviato: %s", info.messageId);
-      });*/
+      
     } else if (req.body.option == 2) {
       //SE IL METODO E' NUOVO
       const {
@@ -152,6 +136,8 @@ const pagamento_post = async (req, res) => {
         check_out: req.query.checkout,
         prezzo_finale: req.body.prezzo,
       });
+
+
     } else if (req.body.option == 3) {
       //PAGA IN LOCO
       // crea la prenotazione
@@ -170,6 +156,33 @@ const pagamento_post = async (req, res) => {
   }
 };
 
+const riepilogo_get = async (req,res) => {
+  try{
+    const riepilogo = req.session.inserzione
+    // manda la mail
+      /*let host = await Utente.findByPk(req.session.inserzione.ref_host_ins);
+      let MailHost = host.email;
+      let bodyMail = {
+        from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
+        to: req.session.utente.email, MailHost,
+        subject: "Prenotazione ID " + prenotazione.id_prenotazione + "Creata", 
+        text: "Comunicazione", 
+        html: "<b>RIEPILOGO PLACEHOLDER</b>", 
+      };
+
+      await transporter.sendMail(bodyMail, (error, info) => {
+        if (error) {
+          return console.log(error);
+        }
+        console.log("Messaggio inviato: %s", info.messageId);
+      });*/
+      res.render("riepilogo", {riepilogo})
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err });
+  }
+}
+
 //PIPPO
 
 module.exports = {
@@ -177,4 +190,5 @@ module.exports = {
   identifica_ospiti_post,
   pagamento_get,
   pagamento_post,
+  riepilogo_get
 };
