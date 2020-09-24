@@ -6,7 +6,6 @@ const MetodoPagamento = require("../model/MetodoPagamento");
 var transporter = require("../utils/mailSender");
 const Utente = require("../model/Utente");
 
-
 //COSE DA FARE: CONTROLLO SE HAI FATTO LOGIN //FATTO!
 //              CONTROLLO 28 GIORNI //FATTO!
 //              IDENTIFICAZIONE OSPITI
@@ -53,7 +52,7 @@ const effettua_pren_get = async (req, res) => {
     if (giorniTotali < 28) {
       /*riepilogo*/
       const prezzo = req.session.inserzione.prezzo;
-      res.render("identify", {prezzo});
+      res.render("identify", { prezzo });
       console.log("procedi con la prenotazione");
     } else {
       console.log("impossibile procedere con la prenotazione");
@@ -61,52 +60,53 @@ const effettua_pren_get = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(400).json({err});
+    res.status(400).json({ err });
   }
 };
 
-const identifica_ospiti_post =  (req,res) => {
+const identifica_ospiti_post = (req, res) => {
   try {
     const ospiti = req.body.ospiti;
     console.log(ospiti);
     req.session.ospiti = ospiti;
-    res.status(200).json(req.session.ospiti); 
+    res.status(200).json(req.session.ospiti);
   } catch (err) {
     console.log(err);
-    res.status(400).json({err});
+    res.status(400).json({ err });
   }
-}
+};
 
-const pagamento_get = async (req,res) => {
-  try{ //DA RIVEDERE
+const pagamento_get = async (req, res) => {
+  try {
+    //DA RIVEDERE
     var metodo_p = await MetodoPagamento.getPagamento(req.session.utente.id);
     var riepilogo = req.session.inserzione;
-    if(metodo_p){
-      res.render("pagamento",{metodo_p,riepilogo});
+    if (metodo_p) {
+      res.render("pagamento", { metodo_p, riepilogo });
     } else {
-      res.render("pagamento",{riepilogo});
+      res.render("pagamento", { riepilogo });
     }
   } catch (err) {
     console.log(err);
-    res.status(400).json({err});
+    res.status(400).json({ err });
   }
-}
+};
 
-
-
-const pagamento_post = async (req,res) => {  //PER DANIEL: devi inviarmi gli oggetti metodo_pagamento,option e prezzo
+const pagamento_post = async (req, res) => {
+  //PER DANIEL: devi inviarmi gli oggetti metodo_pagamento,option e prezzo
   try {
-    if(req.body.option == 1){ //SE IL METODO E' GIA' PREIMPOSTATO
+    if (req.body.option == 1) {
+      //SE IL METODO E' GIA' PREIMPOSTATO
       var prenotazione = await Prenotazione.create({
-        ref_host : req.session.inserzione.ref_host_ins,
-        ref_utente : req.session.utente.id,
-        stato_ordine : 0, //STATO ORDINE: CREATO (PAGA ONLINE)
-        check_in : req.query.checkin,
-        check_out : req.query.checkout,
-        prezzo_finale : req.body.prezzo
+        ref_host: req.session.inserzione.ref_host_ins,
+        ref_utente: req.session.utente.id,
+        stato_ordine: 0, //STATO ORDINE: CREATO (PAGA ONLINE)
+        check_in: req.query.checkin,
+        check_out: req.query.checkout,
+        prezzo_finale: req.body.prezzo,
       });
-    // manda la mail
-      let host = await Utente.findByPk(req.session.inserzione.ref_host_ins);
+      // manda la mail
+      /*let host = await Utente.findByPk(req.session.inserzione.ref_host_ins);
       let MailHost = host.email;
       let bodyMail = {
         from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
@@ -121,80 +121,60 @@ const pagamento_post = async (req,res) => {  //PER DANIEL: devi inviarmi gli ogg
           return console.log(error);
         }
         console.log("Messaggio inviato: %s", info.messageId);
-      });
-
-
-    }else if(req.body.option == 2) { //SE IL METODO E' NUOVO
-      const {intestatario,numero_carta,cvv,scadenza_mese,scadenza_anno} = req.body.metodo_pagamento;
+      });*/
+    } else if (req.body.option == 2) {
+      //SE IL METODO E' NUOVO
+      const {
+        intestatario,
+        numero_carta,
+        cvv,
+        scadenza_mese,
+        scadenza_anno,
+      } = req.body.metodo_pagamento;
       let scadenza = scadenza_mese + "/" + scadenza_anno;
-      const pagamento = await MetodoPagamento.SetOrUpdate(req.session.utente.id,intestatario,numero_carta,scadenza,cvv);
+      const pagamento = await MetodoPagamento.SetOrUpdate(
+        req.session.utente.id,
+        intestatario,
+        numero_carta,
+        scadenza,
+        cvv
+      );
 
       // PROCESSO DI PAGAMENTO : NON E' STATO IMPLEMENTATO IN QUANTO NON RICHIESTO //
 
       // crea la prenotazione
       var prenotazione = await Prenotazione.create({
-        ref_host : req.session.inserzione.ref_host_ins,
-        ref_utente : req.session.utente.id,
-        ref_inserzione : req.session.inserzione.id_inserzione,
-        stato_ordine : 0, //STATO ORDINE: CREATO (PAGA ONLINE)
-        check_in : req.query.checkin,
-        check_out : req.query.checkout,
-        prezzo_finale : req.body.prezzo
+        ref_host: req.session.inserzione.ref_host_ins,
+        ref_utente: req.session.utente.id,
+        ref_inserzione: req.session.inserzione.id_inserzione,
+        stato_ordine: 0, //STATO ORDINE: CREATO (PAGA ONLINE)
+        check_in: req.query.checkin,
+        check_out: req.query.checkout,
+        prezzo_finale: req.body.prezzo,
       });
-    // manda la mail
-      let host = await Utente.findByPk(req.session.inserzione.ref_host_ins);
-      let MailHost = host.email;
-      let bodyMail = {
-        from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
-        to: req.session.utente.email, MailHost,
-        subject: "Prenotazione ID " + prenotazione.id_prenotazione + "Creata", 
-        text: "Comunicazione", 
-        html: "<b>RIEPILOGO PLACEHOLDER</b>", 
-      };
-
-      await transporter.sendMail(bodyMail, (error, info) => {
-        if (error) {
-          return console.log(error);
-        }
-        console.log("Messaggio inviato: %s", info.messageId);
-      });
-
-
-    } else if(req.body.option == 3) { //PAGA IN LOCO
+    } else if (req.body.option == 3) {
+      //PAGA IN LOCO
       // crea la prenotazione
       var prenotazione = await Prenotazione.create({
-        ref_host : req.session.inserzione.ref_host_ins,
-        ref_utente : req.session.utente.id,
-        stato_ordine : 1, //STATO ORDINE: CREATO (PAGA IN LOCO)
-        check_in : req.query.checkin,
-        check_out : req.query.checkout,
-        prezzo_finale : req.body.prezzo
-      });
-    // manda la mail
-      let host = await Utente.findByPk(req.session.inserzione.ref_host_ins);
-      let MailHost = host.email;
-      let bodyMail = {
-        from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
-        to: req.session.utente.email, MailHost,
-        subject: "Prenotazione ID " + prenotazione.id_prenotazione + "Creata", // Subject line
-        text: "Comunicazione", // plain text body
-        html: "<b>RIEPILOGO PLACEHOLDER</b>", // html body
-      };
-
-      await transporter.sendMail(bodyMail, (error, info) => {
-        if (error) {
-          return console.log(error);
-        }
-        console.log("Messaggio inviato: %s", info.messageId);
+        ref_host: req.session.inserzione.ref_host_ins,
+        ref_utente: req.session.utente.id,
+        stato_ordine: 1, //STATO ORDINE: CREATO (PAGA IN LOCO)
+        check_in: req.query.checkin,
+        check_out: req.query.checkout,
+        prezzo_finale: req.body.prezzo,
       });
     }
   } catch (err) {
     console.log(err);
-    res.status(400).json({err});
+    res.status(400).json({ err });
   }
-}
-
+};
 
 //PIPPO
 
-module.exports = { effettua_pren_get,identifica_ospiti_post,pagamento_get,pagamento_post };
+module.exports = {
+  effettua_pren_get,
+  identifica_ospiti_post,
+  pagamento_get,
+  pagamento_post,
+};
