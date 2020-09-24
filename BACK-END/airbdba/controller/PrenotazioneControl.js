@@ -51,12 +51,11 @@ const effettua_pren_get = async (req, res) => {
     console.log(giorniTotali);
     if (giorniTotali < 28) {
       /*riepilogo*/
-      const prezzo = req.session.inserzione.prezzo;
-      res.render("identify", { prezzo });
       console.log("procedi con la prenotazione");
+      res.status(200).json({ success: true });
     } else {
       console.log("impossibile procedere con la prenotazione");
-      res.status(400).end();
+      res.status(400).json({ success: false });
     }
   } catch (err) {
     console.log(err);
@@ -82,9 +81,9 @@ const pagamento_get = async (req, res) => {
     var metodo_p = await MetodoPagamento.getPagamento(req.session.utente.id);
     var riepilogo = req.session.inserzione;
     if (metodo_p) {
-      res.render("pagamento", { metodo_p});
+      res.render("pagamento", { metodo_p });
     } else {
-      res.render("pagamento", );
+      res.render("pagamento");
     }
   } catch (err) {
     console.log(err);
@@ -105,7 +104,6 @@ const pagamento_post = async (req, res) => {
         check_out: req.query.checkout,
         prezzo_finale: req.body.prezzo,
       });
-      
     } else if (req.body.option == 2) {
       //SE IL METODO E' NUOVO
       const {
@@ -136,8 +134,6 @@ const pagamento_post = async (req, res) => {
         check_out: req.query.checkout,
         prezzo_finale: req.body.prezzo,
       });
-
-
     } else if (req.body.option == 3) {
       //PAGA IN LOCO
       // crea la prenotazione
@@ -156,11 +152,11 @@ const pagamento_post = async (req, res) => {
   }
 };
 
-const riepilogo_get = async (req,res) => {
-  try{
-    const riepilogo = req.session.inserzione
+const riepilogo_get = async (req, res) => {
+  try {
+    const riepilogo = req.session.inserzione;
     // manda la mail
-      /*let host = await Utente.findByPk(req.session.inserzione.ref_host_ins);
+    /*let host = await Utente.findByPk(req.session.inserzione.ref_host_ins);
       let MailHost = host.email;
       let bodyMail = {
         from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
@@ -176,12 +172,12 @@ const riepilogo_get = async (req,res) => {
         }
         console.log("Messaggio inviato: %s", info.messageId);
       });*/
-      res.render("riepilogo", {riepilogo})
+    res.render("riepilogo", { riepilogo });
   } catch (err) {
     console.log(err);
     res.status(400).json({ err });
   }
-}
+};
 
 //PIPPO
 
@@ -190,5 +186,5 @@ module.exports = {
   identifica_ospiti_post,
   pagamento_get,
   pagamento_post,
-  riepilogo_get
+  riepilogo_get,
 };

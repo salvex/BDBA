@@ -23,6 +23,10 @@
   flex-flow: column;
 }
 
+.modal-dialog {
+  z-index: 100;
+}
+
 /* BOOK-MENU */
 #book-menu {
   display: none;
@@ -40,10 +44,10 @@
   width: 100%;
 }
 .book-btn {
-  position: fixed;
-  bottom: 56px;
+  position: absolute;
+  bottom: 0;
   border-radius: 0;
-  width: 25%;
+  width: 100%;
 }
 /* ------------ */
 
@@ -87,8 +91,7 @@
 
 /* RIGHT */
 #right {
-  display: flex;
-  flex-flow: column;
+  display: block;
   position: absolute;
   overflow-y: scroll;
   right: 0;
@@ -96,11 +99,20 @@
   height: 100%;
 }
 
+#book-heading {
+  text-align: center;
+  margin-top: 20px;
+  font-weight: bolder;
+  text-decoration: underline;
+  font-style: italic;
+  padding: 10px;
+}
+
 #form-container {
   padding: 20px;
 }
 
-.card {
+.change-data {
   border-radius: 30px;
 }
 
@@ -120,6 +132,12 @@
   padding: 30px;
 }
 
+#book-help {
+  text-align: center;
+  font-style: italic;
+  margin-top: 15px;
+}
+
 #prenota > button {
   border-radius: 0;
   width: 100%;
@@ -127,8 +145,20 @@
 }
 
 #recap-container {
-  padding: 30px;
+  padding: 0 20px 20px 20px;
   margin-bottom: 50px;
+}
+
+.card-header {
+  background-color: rgb(223, 243, 223);
+  display: flex;
+  flex-flow: row;
+}
+
+#recap-heading {
+  text-align: center;
+  margin-bottom: 28px;
+  font-weight: 400;
 }
 
 #recap {
@@ -136,8 +166,6 @@
   border: 1px dashed rgb(131, 153, 131);
 }
 /* --------------- */
-
-/*  */
 
 /* OVERRIDE COLORI DEL DATEPICKER */
 .datepicker table tr td.disabled,
@@ -147,8 +175,16 @@
 }
 /* --------------- */
 
+/* COLORI DEI FORM */
+.invalid-field {
+  border: 1px solid #d9534f;
+}
+
 /* MEDIA QUERY */
 @media (max-width: 1090px) {
+  #book-heading {
+    margin-top: 70px;
+  }
   #left {
     width: 100%;
   }
@@ -158,14 +194,17 @@
     background-color: #ffffff;
     border-left: 1px solid #e4e4e4;
   }
-  #form-container {
+  /* #form-container {
     margin-top: 57px;
-  }
+  } */
   #book-menu {
     display: block;
   }
+  /* Specifico il valore della larghezza
+  In quanto il bottone lo erediterebbe
+  dal contenitore*/
   .book-btn {
-    width: 50%;
+    width: 100%;
   }
   @media (max-width: 576px) {
     #right {
@@ -173,13 +212,7 @@
       width: 100%;
       border: 0;
     }
-    .book-btn {
-      width: 100%;
-    }
   }
   @media (max-height: 450px) {
-    #form-container {
-      margin-bottom: 57px;
-    }
   }
 }

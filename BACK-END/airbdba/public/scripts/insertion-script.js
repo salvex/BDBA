@@ -2,11 +2,31 @@ $(document).ready(() => {
   /* LETs & CONSTs */
   // Creo un URL che contenga i miei parametri
   const params = new URLSearchParams(window.location.search);
+  const search = window.location.search;
+  /* --------------------------------------------------------- */
+
+  /* ON REFRESH */
+  // Inserisco nel form di dx i dati relativi alla ricerca attuale
+  $("#check-in").val(params.get("checkin"));
+  $("#check-out").val(params.get("checkout"));
+  $("#guestNum").val(params.get("nospiti"));
+
+  /* --------------------------------------------------------- */
+
+  /* MODAL */
+  $("#exampleModal").on("hide.bs.modal", () => {
+    $("#left").css("overflow", "scroll");
+  });
   /* --------------------------------------------------------- */
 
   /* BACK BTN */
   $("#back-btn").on("click", () => {
-    window.history.go(-2);
+    window.location.href =
+      window.location.protocol +
+      "//" +
+      window.location.host +
+      "/search" +
+      search;
   });
   /* --------------------------------------------------------- */
 
@@ -20,7 +40,7 @@ $(document).ready(() => {
     } else {
       if ($(window).width() > "1090") {
         $("#right").css({
-          display: "flex",
+          display: "block",
           width: "25%",
         });
         $("#left").css({
@@ -73,17 +93,52 @@ $(document).ready(() => {
   // e il numero degli ospiti, tramite un apposito form.
   // CHECKIN
   $("#check-in").on("change", () => {
-    params.set("checkin", $("#check-in").val());
-    window.history.pushState(
-      "",
-      "",
-      window.location.protocol +
-        "//" +
-        window.location.host +
-        window.location.pathname +
-        "?" +
-        params.toString()
-    );
+    const checkin = $("#check-in").val();
+    const checkout = $("#check-out").val();
+
+    if (checkout === "") {
+      params.set("checkin", $("#check-in").val());
+      window.history.pushState(
+        "",
+        "",
+        window.location.protocol +
+          "//" +
+          window.location.host +
+          window.location.pathname +
+          "?" +
+          params.toString()
+      );
+    } else {
+      const checkinDate = new Date(checkin);
+      const checkoutDate = new Date(checkout);
+
+      if (checkinDate > checkoutDate) {
+        $("#check-in").datepicker("update", checkout);
+        params.set("checkin", $("#check-out").val());
+        window.history.pushState(
+          "",
+          "",
+          window.location.protocol +
+            "//" +
+            window.location.host +
+            window.location.pathname +
+            "?" +
+            params.toString()
+        );
+      } else {
+        params.set("checkin", $("#check-in").val());
+        window.history.pushState(
+          "",
+          "",
+          window.location.protocol +
+            "//" +
+            window.location.host +
+            window.location.pathname +
+            "?" +
+            params.toString()
+        );
+      }
+    }
   });
   // CHECKOUT
   $("#check-out").on("change", () => {
@@ -155,8 +210,30 @@ $(document).ready(() => {
   });
   /* --------------------------------------------------------- */
 
+  /* CONTROLLI */
+  $("input").each((index, element) => {
+    $(element).on("focusout change input", () => {
+      if ($(element).val() === "") {
+        $(element).addClass("invalid-field is-invalid");
+        $("#book-help > small").text(
+          "Completa i campi per effettuare la prenotazione"
+        );
+      } else {
+        $(element).removeClass("invalid-field is-invalid");
+        if (
+          $("input").hasClass("invalid-field is-invalid") ||
+          $("input").val() === ""
+        ) {
+        } else {
+          $("#book-help > small").text("");
+        }
+      }
+    });
+  });
+  /* --------------------------------------------------------- */
+
   /* OPERAZIONE DI FETCH */
-  // Fetch insertion information
+  // Fetch informazioni generali dell'inserzione
   fetch(`/inserzione/res${window.location.search}`)
     .then(async (res) => {
       const response = await res.json();
@@ -184,13 +261,8 @@ $(document).ready(() => {
         `https://www.google.com/maps/embed/v1/place?key=AIzaSyDS70zwyWHYnuia677DVOj8CRqfAzI00Qo
         &q=${response.show.citta}`
       );
-      // Inserisco nel form di dx i dati relativi alla ricerca attuale
-      // Inserisco i dati
-      $("#check-in").val(params.get("checkin"));
-      $("#check-out").val(params.get("checkout"));
-      $("#guestNum")
-        .val(params.get("nospiti"))
-        .attr("max", response.show.n_ospiti);
+
+      $("#guestNum").attr("max", response.show.n_ospiti);
 
       // Datepicker logic
       $("#check-in").datepicker({
@@ -210,5 +282,50 @@ $(document).ready(() => {
       });
     })
     .catch((err) => console.log(err));
+
+  /* -------- */
+  /* -------- */
+
+  $(".book-btn").on("click", () => {
+    // controllo sui campi vuoti o errati
+    // in queste circostanze l'evento submit
+    // viene fermato
+    let flag = true;
+
+    $("input").each((index, element) => {
+      if (
+        $(element).attr("class").includes("is-invalid") ||
+        $(element).val() === ""
+      ) {
+        $(element).addClass("invalid-field is-invalid");
+        $("#book-help > small").text(
+          "Completa i campi per effettuare la prenotazione"
+        );
+        flag = false;
+        return;
+      }
+    });
+
+    if (!flag) {
+      return;
+    }
+    /* -------- */
+
+    // Aggiorno i form di input
+    $("input").removeClass("invalid-field is-invalid");
+    $("#book-help > small").text("");
+
+    fetch(`/inserzione/prenota?id=${params.get("id")}`)
+      .then(async (res) => {
+        const response = await res.json();
+        if (response.success) {
+          window.location.href = `/inserzione/prenota/identify${window.location.search}&price=`;
+        } else {
+          $("#exampleModal").modal("show");
+          $("#left").css("overflow", "hidden");
+        }
+      })
+      .catch((err) => console.log(err));
+  });
   /* --------------------------------------------------------- */
 });

@@ -3,7 +3,7 @@ const contattaQuestura_get = (req, res) => {
   // pagina contatta questura
 };
 
-const contattaQuestura_post = (req, res) => {
+const contattaQuestura_post = async (req, res) => {
   const data_arrivo = req.body.data_arrivo;
   const data_partenza = req.body.data_partenza;
   const ospiti = req.body.ospiti;
@@ -11,9 +11,9 @@ const contattaQuestura_post = (req, res) => {
   let bodyMail = {
     from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
     to: "questura@gmail.com",
-    subject: "Comunicazione presenza ospiti", 
-    text: "Comunicazione relativa alla presenza di ospiti presso una struttura", 
-    html: "<b>RIEPILOGO PLACEHOLDER</b>", 
+    subject: "Comunicazione presenza ospiti",
+    text: "Comunicazione relativa alla presenza di ospiti presso una struttura",
+    html: "<b>RIEPILOGO PLACEHOLDER</b>",
   };
 
   await transporter.sendMail(bodyMail, (error, info) => {

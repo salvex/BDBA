@@ -4,6 +4,9 @@
   <body>
     <div id="insertion-wrapper">
       <%- include("./partials/nav.ejs") %>
+      <!-- popup modal -->
+      <%- include("./partials/28-err-modal.ejs") %>
+
       <div id="back-btn" class="btn btn-primary">&#8617; Indietro</div>
       <div id="book-menu" class="btn btn-primary">&#9776;</div>
       <div id="insertion-content">
@@ -83,20 +86,14 @@
           <div>asdasdasda</div>
         </div>
         <div id="right">
+          <h4 id="book-heading">Dettaglio prenotazione</h4>
           <div id="form-container">
-            <div class="card">
+            <div class="card change-data">
               <%- include("./partials/change-dates-guests.ejs") %>
             </div>
+            <div id="book-help"><small class="text-danger"></small></div>
           </div>
-          <div id="recap-container">
-            <div id="recap">
-              <p>Prezzo per notte: 23&euro;</p>
-              <hr />
-              <p>Spese pulizia: 10&euro; a testa</p>
-              <hr />
-              <p>Prezzo totale: 10000&euro;</p>
-            </div>
-          </div>
+          <%- include("./partials/recap.ejs") %>
           <div id="change-data">
             <button class="book-btn btn btn-primary">Prenota</button>
           </div>
