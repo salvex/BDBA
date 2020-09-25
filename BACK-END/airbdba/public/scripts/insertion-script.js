@@ -3,6 +3,14 @@ $(document).ready(() => {
   // Creo un URL che contenga i miei parametri
   const params = new URLSearchParams(window.location.search);
   const search = window.location.search;
+  let prezzoBase,
+    nospiti,
+    checkin,
+    checkout,
+    checkinDate,
+    checkoutDate,
+    nights,
+    mapURL;
   /* --------------------------------------------------------- */
 
   /* ON REFRESH */
@@ -16,6 +24,16 @@ $(document).ready(() => {
   /* MODAL */
   $("#exampleModal").on("hide.bs.modal", () => {
     $("#left").css("overflow", "scroll");
+  });
+
+  $("#mapModal").on("hide.bs.modal", () => {
+    $("#left").css("overflow", "scroll");
+    $("#map").prepend("<div id='overlay'></div>");
+    $("#modal-map").attr("src", $("#map > iframe").attr("src"));
+    $("#overlay").on("click", () => {
+      $("#mapModal").modal("show");
+      $("#overlay").remove();
+    });
   });
   /* --------------------------------------------------------- */
 
@@ -36,6 +54,29 @@ $(document).ready(() => {
       $("#book-menu").removeClass("toggled");
       if ($(window).width() > "1090") {
         $("#right").toggle("slide");
+
+        // Aggiorno il contenuto del riquadro di sx
+        $("#showcase").css({
+          "flex-direction": "row",
+        });
+        $("#carousel-container").css({
+          width: "60%",
+        });
+        $("#description").css({
+          width: "40%",
+          "padding-left": "30px",
+          margin: "0",
+        });
+
+        // Aggiungo un overlay alla mappa
+        if ($("#overlay").length === 0) {
+          $("#map").prepend("<div id='overlay'></div>");
+          $("#modal-map").attr("src", $("#map > iframe").attr("src"));
+          $("#overlay").on("click", () => {
+            $("#mapModal").modal("show");
+            $("#overlay").remove();
+          });
+        }
       }
     } else {
       if ($(window).width() > "1090") {
@@ -47,6 +88,29 @@ $(document).ready(() => {
           display: "flex",
           width: "75%",
         });
+
+        // Aggiorno il contenuto del riquadro di sx
+        $("#showcase").css({
+          "flex-direction": "row",
+        });
+        $("#carousel-container").css({
+          width: "60%",
+        });
+        $("#description").css({
+          width: "40%",
+          "padding-left": "30px",
+          margin: "0",
+        });
+
+        // Aggiungo un overlay alla mappa
+        if ($("#overlay").length === 0) {
+          $("#map").prepend("<div id='overlay'></div>");
+          $("#modal-map").attr("src", $("#map > iframe").attr("src"));
+          $("#overlay").on("click", () => {
+            $("#mapModal").modal("show");
+            $("#overlay").remove();
+          });
+        }
       } else if ($(window).width() > "576") {
         $("#right").css({
           display: "none",
@@ -56,6 +120,24 @@ $(document).ready(() => {
           display: "flex",
           width: "100%",
         });
+
+        // Aggiorno il contenuto del riquadro di sx
+        $("#showcase").css({
+          "flex-direction": "column",
+        });
+        $("#carousel-container").css({
+          width: "100%",
+        });
+        $("#description").css({
+          width: "100%",
+          padding: "0",
+          "margin-top": "30px",
+        });
+
+        // Rimuovo l'overlay
+        if ($("#overlay").length > 0) {
+          $("#overlay").remove();
+        }
       } else {
         $("#right").css({
           display: "none",
@@ -88,13 +170,21 @@ $(document).ready(() => {
   });
   /* --------------------------------------------------------- */
 
+  /* INSERTION DETAIL SCREEN (LEFT) */
+  $(window).resize(() => {
+    if ($("#shocase").width() <= "768") {
+      alert("ciao");
+    }
+  });
+  /* --------------------------------------------------------- */
+
   /* MODIFICO CHECKIN/OUT E NOSPITI */
   // Se l'utente desidera può modificare le date di checkin e checkout
   // e il numero degli ospiti, tramite un apposito form.
   // CHECKIN
   $("#check-in").on("change", () => {
-    const checkin = $("#check-in").val();
-    const checkout = $("#check-out").val();
+    checkin = $("#check-in").val();
+    checkout = $("#check-out").val();
 
     if (checkout === "") {
       params.set("checkin", $("#check-in").val());
@@ -197,6 +287,7 @@ $(document).ready(() => {
   // N_OSPITI
   $("#guestNum").on("change", () => {
     params.set("nospiti", $("#guestNum").val());
+    nospiti = $("#guestNum").val();
     window.history.pushState(
       "",
       "",
@@ -232,12 +323,61 @@ $(document).ready(() => {
   });
   /* --------------------------------------------------------- */
 
+  /* RIEPILOGO/RECAP */
+  $("input").each((index, element) => {
+    $(element).on("focusout change input", () => {
+      if ($(element).attr("id") === "check-in") {
+        checkin = $("#check-in").val();
+      } else if ($(element).attr("id") === "check-out") {
+        checkout = $("#check-out").val();
+      } else {
+        nospiti = $("#guestNum").val();
+      }
+
+      $("#total").html(`
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      `);
+
+      setTimeout(() => {
+        if (checkin && checkout) {
+          checkinDate = new Date(checkin);
+          checkoutDate = new Date(checkout);
+
+          // Se prenoto per un giorno pagherò l'intera giornata
+          // come se pernottassi
+          if (checkin === checkout) {
+            nights = 1;
+          } else {
+            nights = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
+          }
+
+          $("#total").html(nights * prezzoBase + " &euro;");
+        } else {
+          $("#total").html("0 &euro;");
+        }
+      }, Math.floor(Math.random() * 2000) + 1);
+    });
+  });
+
+  $("input").on("focusout change input", () => {});
+  /* --------------------------------------------------------- */
+
   /* OPERAZIONE DI FETCH */
   // Fetch informazioni generali dell'inserzione
   fetch(`/inserzione/res${window.location.search}`)
     .then(async (res) => {
       const response = await res.json();
-      console.log(response);
+
+      /* checkin = $("#check-in").val();
+      checkout = $("#check-out").val();
+      nospiti = $("#guestNum").val(); */
+      checkin = params.get("checkin");
+      checkout = params.get("checkout");
+      nospiti = params.get("nospiti");
+      prezzoBase = response.show.prezzo_base;
+
       // Inserisco tutte le informazioni nei vari campi
       // Heading
       $("#insertion-heading > h1").append(response.show.nome_inserzione);
@@ -262,9 +402,11 @@ $(document).ready(() => {
         &q=${response.show.citta}`
       );
 
+      // Imposto il valore massimo dell'ìnput ospiti
       $("#guestNum").attr("max", response.show.n_ospiti);
 
-      // Datepicker logic
+      // Inserisco le date disabilitate, ossia quelle relative
+      // a giorni già prenotati da altri
       $("#check-in").datepicker({
         format: "yyyy-mm-dd",
         autoclose: true,
@@ -280,6 +422,48 @@ $(document).ready(() => {
         startDate: new Date(),
         datesDisabled: response.date,
       });
+
+      // Per rendere le cose graficamente mugliori
+      // inserisco uno spinner al posto del prezzo
+      // per simulare un caricamento
+      $("#total").html(`
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      `);
+
+      // Aggiungo un overlay alla mappa
+      if ($("#overlay").length === 0) {
+        $("#map").prepend("<div id='overlay'></div>");
+        $("#modal-map").attr("src", $("#map > iframe").attr("src"));
+        $("#overlay").on("click", () => {
+          $("#mapModal").modal("show");
+          $("#overlay").remove();
+        });
+      }
+
+      // Calcolo il prezzo totale in base ai giorni (-1)
+      // cioè calcolo il numero di notti. Tutto moltiplicato
+      // per il numero di ospiti. Lospinner viene rimosso
+      // da uno dei due metodi html
+      setTimeout(() => {
+        if (checkin && checkout) {
+          checkinDate = new Date(checkin);
+          checkoutDate = new Date(checkout);
+
+          // Se prenoto per un giorno pagherò l'intera giornata
+          // come se pernottassi
+          if (checkin === checkout) {
+            nights = 1;
+          } else {
+            nights = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
+          }
+
+          $("#total").html(nights * prezzoBase + " &euro;");
+        } else {
+          $("#total").html("0 &euro;");
+        }
+      }, Math.floor(Math.random() * 2000) + 1);
     })
     .catch((err) => console.log(err));
 
