@@ -6,6 +6,11 @@ const Prenotazione = require('../model/Prenotazione');
 
 
 const Ospite = db.sequelize.define("ospite", {
+    id_ospite: {
+        type: DataTypes.INTEGER(11),
+        allowNull: false,
+        primaryKey: true
+    },
     nome: {
         type: DataTypes.STRING(20),
         allowNull: false,
@@ -17,7 +22,6 @@ const Ospite = db.sequelize.define("ospite", {
     ref_prenotazione_u: {
         type: DataTypes.INTEGER(11),
         allowNull: false,
-        primaryKey: true
     },
     isEsente: {
         type: DataTypes.INTEGER(1),
