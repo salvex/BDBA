@@ -499,7 +499,10 @@ $(document).ready(() => {
     $("input").removeClass("invalid-field is-invalid");
     $("#book-help > small").text("");
 
-    fetch(`/inserzione/prenota?id=${params.get("id")}`)
+    fetch(`/inserzione/prenota?id=${params.get("id")}`, {
+      method: "GET",
+      redirect: "follow",
+    })
       .then(async (res) => {
         const response = await res.json();
         if (response.success) {
@@ -509,7 +512,9 @@ $(document).ready(() => {
           $("#left").css("overflow", "hidden");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        window.location.href = "/login";
+      });
   });
   /* --------------------------------------------------------- */
 });
