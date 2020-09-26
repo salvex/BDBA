@@ -30,10 +30,11 @@ const verifyHost = (req, res, next) => {
   let token = req.cookies.host;
 
   if (!token) {
-    return res.status(403).send({
+    /*return res.status(403).send({
       isHost: false,
       message: "Nessun token fornito",
-    });
+    });*/
+    res.redirect("/");
   }
 
   jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {

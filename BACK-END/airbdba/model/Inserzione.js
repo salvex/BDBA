@@ -2,7 +2,7 @@ const { Sequelize, DataTypes, Op } = require("sequelize");
 const db = require("../utils/connection");
 const Utente = require("./Utente"); 
 const Prenotazione = require("./Prenotazione");
-
+const Servizi = require("./Servizi");
 
 //TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 
@@ -84,6 +84,13 @@ Inserzione.belongsTo(Utente, {
   foreignKey: "ref_host_ins",
 });
 
+// ASSOCIAZIONE [1-1] 
+Inserzione.hasOne(Servizi, {
+  foreignKey: "ref_inserzione_s"
+})
+Servizi.belongsTo(Inserzione, {
+  foreignKet: "ref_inserzione_s"
+})
 
 
 Inserzione.verRicerca = async (query) => {
@@ -113,6 +120,20 @@ Inserzione.aggiungiInserzione = async (query) => {
       galleryPath: query[7],
       ref_host_ins: query[8],
     });
+    
+    const services = await Servizi.create({
+      ref_inserzione_s: newIns.id_inserzione,
+      wifiFlag: query[9]["wifi"],
+      riscaldamentoFlag: query[9]["riscaldamento"],
+      frigoriferoFlag: query[9]["frigorifero"],
+      casaFlag: query[9]["casa"],
+      bnbFlag: query[9]["bnb"],
+      parcheggioFlag: query[9]["parcheggio"],
+      ascensoreFlag: query[9]["ascensore"],
+      cucinaFlag: query[9]["cucina"],
+      essenzialiFlag: query[9]["essenziali"],
+      piscinaFlag: query[9]["piscina"],
+    })
     return newIns;
   }
   throw new Error("query vuota");
@@ -161,7 +182,8 @@ Inserzione.processaLista = async (id_host) => {
 
 Inserzione.modificaInserzione = async (id_ins, query) => {
   const ins_modifica = await Inserzione.findByPk(id_ins);
-  if (!ins_modifica) {
+  const ins_modifica_s = await Servizi.findByPk(id_ins);
+  if (!ins_modifica && !ins_modifica_s) {
     throw new Error("Nessuna inserzione");
   }
   console.log("modifica in corso");
@@ -189,7 +211,38 @@ Inserzione.modificaInserzione = async (id_ins, query) => {
     if (query[6]) {
       ins_modifica.prezzo_base = query[6];
     }
+    if (query[9]["wifi"] != ins_modifica_s.wifiFlag) {
+      ins_modifica_s.wifiFlag = query[9]["wifi"];
+    }
+    if (query[9]["riscaldamento"] != ins_modifica_s.riscaldamentoFlag) {
+      ins_modifica_s.riscaldamentoFlag = query[9]["riscaldamento"];
+    }
+    if (query[9]["frigorifero"] != ins_modifica_s.frigoriferoFlag) {
+      ins_modifica_s.frigoriferoFlag = query[9]["frigorifero"];
+    }
+    if (query[9]["casa"] != ins_modifica_s.casaFlag) {
+      ins_modifica_s.casaFlag = query[9]["casa"];
+    }
+    if (query[9]["bnb"] != ins_modifica_s.bnbFlag) {
+      ins_modifica_s.bnbFlag = query[9]["bnb"];
+    }
+    if (query[9]["parcheggio"] != ins_modifica_s.parcheggioFlag) {
+      ins_modifica_s.parcheggioFlag = query[9]["parcheggio"];
+    }
+    if (query[9]["ascensore"] != ins_modifica_s.ascensoreFlag) {
+      ins_modifica_s.ascensoreFlag = query[9]["ascensore"];
+    }
+    if (query[9]["cucina"] != ins_modifica_s.cucinaFlag) {
+      ins_modifica_s.cucinaFlag = query[9]["cucina"];
+    }
+    if (query[9]["essenziali"] != ins_modifica_s.essenzialiFlag) {
+      ins_modifica_s.essenzialiFlag = query[9]["essenziali"];
+    }
+    if (query[9]["piscina"] != ins_modifica_s.piscinaFlag) {
+      ins_modifica_s.piscinaFlag = query[9]["piscina"];
+    }
     await ins_modifica.save();
+    await ins_modifica_s.save();
     return ins_modifica;
   } else {
     throw new Error("query vuota");

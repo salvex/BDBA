@@ -31,7 +31,8 @@ async function parseField(
   DescFilter,
   PrezzoFilter,
   PathFilter,
-  IdFilter
+  IdFilter,
+  ServiziFilter
 ) {
   const query = [];
 
@@ -44,7 +45,8 @@ async function parseField(
     PrezzoFilter ||
     DescFilter ||
     PathFilter ||
-    IdFilter
+    IdFilter ||
+    ServiziFilter
   ) {
     if (NomeFilter) {
       query[0] = NomeFilter;
@@ -72,6 +74,21 @@ async function parseField(
     }
     if (IdFilter) {
       query[8] = IdFilter;
+    }
+    if(ServiziFilter) {
+      var filtri={
+        wifi: ServiziFilter.wifi,
+        riscaldamento: ServiziFilter.riscaldamento , 
+        frigorifero: ServiziFilter.frigorifero,
+        casa: ServiziFilter.casa,
+        bnb: ServiziFilter.bnb,
+        parcheggio: ServiziFilter.parcheggio,
+        ascensore: ServiziFilter.ascensore,
+        cucina: ServiziFilter.cucina,
+        essenziali:ServiziFilter.essenziali ,
+        piscina: ServiziFilter.piscina,
+      }
+      query[9] = filtri;
     }
   }
 
@@ -105,8 +122,9 @@ const aggiungi_inserzione_post = async (req, res) => {
       inizioDisp,
       fineDisp,
       nospiti,
-      desc,
+      desc, 
       prezzo,
+      servizi  
     } = req.body;
     const id_host = JwtToken.decodedId(req);
     var path = req.files["gallery"][0].path;
@@ -119,7 +137,8 @@ const aggiungi_inserzione_post = async (req, res) => {
       desc,
       prezzo,
       path,
-      id_host
+      id_host,
+      servizi
     );
     var inserzione = await Inserzione.aggiungiInserzione(fields);
     res.status(200).json({
@@ -154,6 +173,7 @@ const modifica_inserzione_put = async (req, res) => {
       nospiti,
       desc,
       prezzo,
+      servizi
     } = req.body;
     const id_host = JwtToken.decodedId(req);
     var path = "dummy";
@@ -166,7 +186,8 @@ const modifica_inserzione_put = async (req, res) => {
       desc,
       prezzo,
       path,
-      id_host
+      id_host,
+      servizi
     );
     console.log(fields);
     var inserzione_m = await Inserzione.modificaInserzione(
