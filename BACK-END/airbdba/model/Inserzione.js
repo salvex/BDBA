@@ -66,6 +66,16 @@ const Inserzione = db.sequelize.define(
   }
 );
 
+// ASSOCIAZIONE [1-1] 
+Inserzione.hasOne(Servizi, {
+  foreignKey: "ref_inserzione_s"
+})
+Servizi.belongsTo(Inserzione, {
+  foreignKet: "ref_inserzione_s"
+})
+
+
+
 //---------ASSOCIAZIONE [1-N] // INSERZIONE-PRENOTAZIONE-------------------//
 Inserzione.hasMany(Prenotazione, {
   foreignKey: "ref_inserzione",
@@ -84,17 +94,18 @@ Inserzione.belongsTo(Utente, {
   foreignKey: "ref_host_ins",
 });
 
-// ASSOCIAZIONE [1-1] 
-Inserzione.hasOne(Servizi, {
-  foreignKey: "ref_inserzione_s"
-})
-Servizi.belongsTo(Inserzione, {
-  foreignKet: "ref_inserzione_s"
-})
+
 
 
 Inserzione.verRicerca = async (query) => {
-  const lista = await Inserzione.findAll({ where: query });
+  const lista = await Inserzione.findAll({ 
+    where: query,
+    include: [{
+      model: Servizi,
+      required: false,
+      attributes: ['wifiFlag', 'riscaldamentoFlag','frigoriferoFlag','casaFlag','bnbFlag','parcheggioFlag','ascensoreFlag','cucinaFlag','essenzialiFlag', 'piscinaFlag']
+    }
+  ]});
   if (lista) {
     return lista;
   }

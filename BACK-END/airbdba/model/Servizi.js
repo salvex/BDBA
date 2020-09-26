@@ -40,8 +40,11 @@ const Servizi = db.sequelize.define(
         },
         pisicinaFlag : {
             type: DataTypes.INTEGER(11),
-        },      
-})
+        },
+    },
+    {
+        freezeTableName: true,
+    }   
+)
 
-
- 
+module.exports = Servizi;
