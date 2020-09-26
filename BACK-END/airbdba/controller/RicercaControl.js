@@ -26,7 +26,17 @@ const ricerca_get = async (req, res, next) => {
       nomeCittà,
       req.query.checkin,
       req.query.checkout,
-      req.query.nospiti
+      req.query.nospiti,
+    /*  req.query.wifi,
+      req.query.riscaldamento,
+      req.query.frigorifero,
+      req.query.casa,
+      req.query.bnb,
+      req.query.parcheggio,
+      req.query.ascensore,
+      req.query.cucina,
+      req.query.essenziali,
+      req.query.piscina*/
     );
     const search_list = await Inserzione.verRicerca(format_fields);
     //res.status(200).render("search", {search_list});

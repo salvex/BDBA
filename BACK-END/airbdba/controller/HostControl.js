@@ -138,7 +138,6 @@ const aggiungi_inserzione_post = async (req, res) => {
       prezzo,
       path,
       id_host,
-      servizi
     );
     var inserzione = await Inserzione.aggiungiInserzione(fields);
     res.status(200).json({
