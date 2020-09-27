@@ -99,6 +99,35 @@ Prenotazione.getPrenotazioni = async (id_ins) => {
   return result;
 }
 
+Prenotazione.getUserMailAndHostName = async (id_pren,id_host) => {
+  let result = await Prenotazione.findOne({
+    where: {
+      id_prenotazione: id_pren,
+      ref_host: id_host
+    },
+    include: {
+      model: Utente,
+      as: 'utente',
+      required: true,
+      attributes: ['email'],
+    },
+    include: {
+      model: Utente,
+      as: 'host',
+      required: true,
+      attributes: ['nome','cognome'],
+    },
+
+  })
+  if(result) {
+    return result;
+  } else {
+    throw new Error("nessun utente associato");
+  }
+}
+
+
+
 
 /*Prenotazione.mostraPrenAss = async (idInserzione) => {
   const risultato = await Prenotazione.findOne({

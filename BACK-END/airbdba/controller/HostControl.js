@@ -5,8 +5,14 @@ require("dotenv").config();
 const JwtToken = require("../utils/JwtToken");
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcrypt");
+const Prenotazione = require("../model/Prenotazione.js");
+var transporter = require("../utils/mailSender");
+
 
 const maxAge = 60 * 60 * 24;
+
+/* TO-DO: CONTATTA UTENTE */
+
 
 var errorsHandler = (err) => {
   let errors = { email: "", query: "", ins: "" };
@@ -85,7 +91,7 @@ async function parseField(
         parcheggio: ServiziFilter.parcheggio,
         ascensore: ServiziFilter.ascensore,
         cucina: ServiziFilter.cucina,
-        essenziali:ServiziFilter.essenziali ,
+        essenziali:ServiziFilter.essenziali,
         piscina: ServiziFilter.piscina,
       }
       query[9] = filtri;
@@ -97,9 +103,8 @@ async function parseField(
 
 const become_host_get = async (req, res) => {
   try {
-    const id = JwtToken.decodedId(req);
-    var jwt = await Utente.diventaHost(id); //test
-    var token_host = JwtToken.createTokenHost(id);
+    var jwt = await Utente.diventaHost(req.session.utente.id); //test
+    var token_host = JwtToken.createTokenHost(req.session.utente.id);
     res.cookie("host", token_host, {
       httpOnly: true,
       expiresIn: maxAge * 1000,
@@ -107,7 +112,7 @@ const become_host_get = async (req, res) => {
     //--------------------/
     res
       .status(200)
-      .json({ message: "Utente trasformato in Host con successo!", user });
+      .json({ message: "Utente trasformato in Host con successo!" });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });
@@ -235,6 +240,94 @@ const cancella_inserzione_delete = async (req, res) => {
   }
 };
 
+const accetta_prenotazione_get = async (req,res) => {
+  try {
+    var acceptPren = await Prenotazione.findByPk(req.params.id_pren);
+    if(acceptPren) {
+      acceptPren.stato_ordine = 2;
+      await acceptPren.save();
+    } else {
+      throw new Error("prenotazione inesistente");
+    }
+    res.status(200).json({
+      message: "hai accettato l'ordine con successo!",
+    });
+  } catch (err) {
+    const errors = errorsHandler(err);
+    res.status(400).json({errors});
+  }
+}
+
+const rifiuta_prenotazione_get = async (req,res) => {
+  try {
+    var refusePren = await Prenotazione.findByPk(req.params.id_pren);
+    if(refusePren) {
+      refusePren.stato_ordine = 0;
+      await refusePren.save();
+    } else {
+      throw new Error("prenotazione inesistente");
+    }
+    res.status(200).json({
+      message: "hai rifiutato l'ordine con successo!",
+    });
+  } catch (err) {
+    const errors = errorsHandler(err);
+    res.status(400).json({errors});
+  }
+}
+
+const cancella_prenotazione_delete = async (req,res) => {
+  try {
+    var deletePren = await Prenotazione.findByPk(req.params.id_pren);
+    if(deletePren) {
+      if(deletePren.stato_ordine == 2) {
+        await deletePren.destroy();
+      } else {
+        res.status(304).json({
+          message: "Non puoi cancellare questa prenotazione!",
+        })
+      }  
+      res.status(200).json({
+        message: "hai cancellato l'ordine con successo!",
+      });
+    } else {
+      throw new Error("prenotazione inesistente");
+    }
+    res.status(200).json({
+      message: "hai rifiutato l'ordine con successo!",
+    });
+  } catch (err) {
+    const errors = errorsHandler(err);
+    res.status(400).json({errors});
+  }
+}
+
+const contatta_utente_get = async (req,res) => {  //DA MODIFICARE CON GET
+  try{
+    const res = Prenotazione.getUserMailAndHostName(req.params.id_pren,req.session.utente.id);
+
+    /*let bodyMail = {
+      from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
+      to: res.email,
+      subject: "Comunicazione dall'Host " + "",
+      text: "Comunicazione relativa alla prenotazione ID " + req.params.id_pren,
+      html: "<b>RIEPILOGO PLACEHOLDER</b>",
+    };
+  
+    await transporter.sendMail(bodyMail, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log("Messaggio inviato: %s", info.messageId);
+    });*/
+    console.log(res);
+  } catch (err) {
+    const errors = errorsHandler(err);
+    res.status(400).json({errors});
+  }
+}
+
+
 module.exports = {
   become_host_get,
   aggiungi_inserzione_post,
@@ -242,4 +335,8 @@ module.exports = {
   modifica_inserzione_put,
   modifica_inserzione_put_img,
   cancella_inserzione_delete,
+  accetta_prenotazione_get,
+  rifiuta_prenotazione_get,
+  cancella_prenotazione_delete,
+  contatta_utente_get
 }; //

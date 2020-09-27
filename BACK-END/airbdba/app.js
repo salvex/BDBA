@@ -97,7 +97,7 @@ app.post("/prova", async (req, res) => {
 });
 app.use("/user", verifyToken, utenteRouter);
 app.use("/signup", regRouter);
-app.use("/host", verifyToken, verifyHost, hostRouter);
+app.use("/host", verifyToken, hostRouter);
 app.use("/inserzione", insRouter);
 app.use("/recovery", recRouter);
 app.use("/search", searchRouter);
