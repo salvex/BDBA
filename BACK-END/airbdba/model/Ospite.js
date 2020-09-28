@@ -19,6 +19,10 @@ const Ospite = db.sequelize.define("ospite", {
         type: DataTypes.STRING(20),
         allowNull: false,
     },
+    sesso: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+    },
     ref_prenotazione_u: {
         type: DataTypes.INTEGER(11),
         allowNull: false,
