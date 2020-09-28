@@ -302,14 +302,14 @@ const cancella_prenotazione_delete = async (req,res) => {
   }
 }
 
-const contatta_utente_get = async (req,res) => {  //DA MODIFICARE CON GET
+const contatta_utente_post = async (req,res) => {  //DA MODIFICARE CON GET
   try{
-    const res = Prenotazione.getUserMailAndHostName(req.params.id_pren,req.session.utente.id);
+    const res = await Prenotazione.getUserMail(req.params.id_pren,req.session.utente.id);
 
-    /*let bodyMail = {
-      from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
-      to: res.email,
-      subject: "Comunicazione dall'Host " + "",
+    let bodyMail = {
+      from: '"Sistema AIRBDBA" <bdba_services@gmail.com>',
+      to: res.utente.email,
+      subject: "Comunicazione dall'Host " + req.session.utente.nome + " " + req.session.utente.cognome + " relativa alla Prenotazione ID " + req.params.id_pren ,
       text: "Comunicazione relativa alla prenotazione ID " + req.params.id_pren,
       html: "<b>RIEPILOGO PLACEHOLDER</b>",
     };
@@ -319,8 +319,7 @@ const contatta_utente_get = async (req,res) => {  //DA MODIFICARE CON GET
         return console.log(error);
       }
       console.log("Messaggio inviato: %s", info.messageId);
-    });*/
-    console.log(res);
+    });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({errors});
@@ -338,5 +337,5 @@ module.exports = {
   accetta_prenotazione_get,
   rifiuta_prenotazione_get,
   cancella_prenotazione_delete,
-  contatta_utente_get
+  contatta_utente_post
 }; //

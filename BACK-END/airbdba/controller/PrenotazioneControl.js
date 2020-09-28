@@ -91,7 +91,7 @@ const pagamento_get = async (req, res) => {
   }
 };
 
-const pagamento_post = async (req, res) => {
+/*const pagamento_post = async (req, res) => {
   //PER DANIEL: devi inviarmi gli oggetti metodo_pagamento,option e prezzo
   try {
     if (req.body.option == 1) {
@@ -150,9 +150,9 @@ const pagamento_post = async (req, res) => {
     console.log(err);
     res.status(400).json({ err });
   }
-};
+};*/
 
-const riepilogo_get = async (req, res) => {
+/*const riepilogo_get = async (req, res) => {
   try {
     const riepilogo = req.session.inserzione;
     // manda la mail
@@ -171,15 +171,74 @@ const riepilogo_get = async (req, res) => {
           return console.log(error);
         }
         console.log("Messaggio inviato: %s", info.messageId);
-      });*/
+      });
     res.render("riepilogo", { riepilogo });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err });
+  }
+};*/
+
+
+const pagamento_post = async (req, res) => {
+  //PER DANIEL: devi inviarmi gli oggetti metodo_pagamento,option e prezzo
+  try {
+    if (req.body.option == 1) {
+      //SE IL METODO E' GIA' PREIMPOSTATO
+      var metodo_pagamento = await MetodoPagamento.findOne({
+        where: { ref_utente: req.session.utente.id },
+      });
+  
+    } else if (req.body.option == 2) {
+      //SE IL METODO E' NUOVO
+      const {
+        intestatario,
+        numero_carta,
+        cvv,
+        scadenza_mese,
+        scadenza_anno,
+      } = req.body.metodo_pagamento;
+      let scadenza = scadenza_mese + "/" + scadenza_anno;
+      var metodo_pagamento = await MetodoPagamento.SetOrUpdate(
+        req.session.utente.id,
+        intestatario,
+        numero_carta,
+        scadenza,
+        cvv
+      );
+      // PROCESSO DI PAGAMENTO : NON E' STATO IMPLEMENTATO IN QUANTO NON RICHIESTO //
+
+    } else if (req.body.option == 3) {
+      //PAGA IN LOCO
+      var metodo_pagamento = {option: "paga in struttura"};
+    }
+    var prenotazione = {
+      ref_host: req.session.inserzione.ref_host_ins,
+      ref_utente: req.session.utente.id,
+      stato_ordine: 1, //STATO ORDINE: CREATO (PAGA IN LOCO)
+      check_in: req.query.checkin,
+      check_out: req.query.checkout,
+      prezzo_finale: req.body.prezzo,
+    };
+    req.session.metodo_pagamento = metodo_pagamento;
+    req.session.prenotazione = prenotazione;
+    res.status(200).json({ success: true });
   } catch (err) {
     console.log(err);
     res.status(400).json({ err });
   }
 };
 
-//PIPPO
+const riepilogo_get = (req, res) => {
+  res
+    .status(200)
+    .json([
+      req.session.inserzione,
+      req.session.prenotazione,
+      req.session_metodo_pagamento,
+      req.session.ospiti,
+    ]);
+};
 
 module.exports = {
   effettua_pren_get,

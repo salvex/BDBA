@@ -71,7 +71,7 @@ Inserzione.hasOne(Servizi, {
   foreignKey: "ref_inserzione_s"
 })
 Servizi.belongsTo(Inserzione, {
-  foreignKet: "ref_inserzione_s"
+  foreignKey: "ref_inserzione_s"
 })
 
 

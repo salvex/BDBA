@@ -34,7 +34,7 @@ router.get("/rifiuta/:id_pren", [JwtToken.verifyHost], HostControl.rifiuta_preno
 
 router.delete("/delete_pren/:id_pren", [JwtToken.verifyHost], HostControl.cancella_prenotazione_delete);
 
-router.get("/contact/:id_pren", [JwtToken.verifyHost], HostControl.contatta_utente_get);
+router.post("/contact/:id_pren", [JwtToken.verifyHost], HostControl.contatta_utente_post);  
 
 
 router.get("", ContattaQuesturaControl.contattaQuestura_get);

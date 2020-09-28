@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 //TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 
 const Utente = db.sequelize.define(
-  "utente",
+  'utente',
   {
     id: {
       type: DataTypes.INTEGER(50),
@@ -62,6 +62,16 @@ const Utente = db.sequelize.define(
     timestamps: false,
   }
 );
+
+//-------ASSOCIAZIONE [1-N] UTENTE-PRENOTAZIONE----------/
+/*Utente.hasMany(Prenotazione, {
+  //as: 'user',
+  foreignKey: "ref_utente",
+});
+Prenotazione.belongsTo(Utente, {
+  foreignKey: "ref_utente",
+});*/
+
 
 Utente.Autentica = async (emailutente, password) => {
   console.log("Login in corso..");

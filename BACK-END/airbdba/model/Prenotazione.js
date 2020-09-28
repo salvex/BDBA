@@ -1,8 +1,7 @@
 const { Sequelize, DataTypes, Op } = require("sequelize");
 const db = require("../utils/connection");
 const moment = require("moment");
-const Utente = require("../model/Utente");
-const Inserzione = require("../model/Inserzione");
+const Utente = require("./Utente");
 //TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 
 const Prenotazione = db.sequelize.define(
@@ -51,20 +50,22 @@ const Prenotazione = db.sequelize.define(
 
 //-------ASSOCIAZIONE [1-N] UTENTE-PRENOTAZIONE----------/
 Utente.hasMany(Prenotazione, {
-  as: "utente",
+  //as: 'user',
   foreignKey: "ref_utente",
 });
 Prenotazione.belongsTo(Utente, {
   foreignKey: "ref_utente",
 });
 //-------ASSOCIAZIONE [1-N] HOST-PRENOTAZIONE----------/
-Utente.hasMany(Prenotazione, {
-  as: "host",
-  foreignKey: "ref_host",
+/*Prenotazione.hasOne(Utente, {
+  as: 'host',
+  foreignKey: "id",
 });
-Prenotazione.belongsTo(Utente, {
-  foreignKey: "ref_host",
-});
+Utente.belongsTo(Prenotazione, {
+  foreignKey: "id",
+});*/
+
+
 
 
 
@@ -99,25 +100,14 @@ Prenotazione.getPrenotazioni = async (id_ins) => {
   return result;
 }
 
-Prenotazione.getUserMailAndHostName = async (id_pren,id_host) => {
+Prenotazione.getUserMail = async (id_pren,id_host) => {
   let result = await Prenotazione.findOne({
     where: {
       id_prenotazione: id_pren,
       ref_host: id_host
     },
-    include: {
-      model: Utente,
-      as: 'utente',
-      required: true,
-      attributes: ['email'],
-    },
-    include: {
-      model: Utente,
-      as: 'host',
-      required: true,
-      attributes: ['nome','cognome'],
-    },
-
+    include: [
+      {model: Utente, required: true, attributes: ['email']},]
   })
   if(result) {
     return result;
