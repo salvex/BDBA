@@ -38,12 +38,13 @@ const Servizi = db.sequelize.define(
         essenzialiFlag : {
             type: DataTypes.INTEGER(11),
         },
-        pisicinaFlag : {
+        piscinaFlag : {
             type: DataTypes.INTEGER(11),
         },
     },
     {
         freezeTableName: true,
+        timestamps: false,
     }   
 )
 

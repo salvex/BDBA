@@ -3,6 +3,10 @@ const db = require("../utils/connection");
 const Utente = require("./Utente"); 
 const Prenotazione = require("./Prenotazione");
 const Servizi = require("./Servizi");
+const Moment = require('moment');
+const MomentRange = require('moment-range');
+
+const moment = MomentRange.extendMoment(Moment);
 
 //TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 
@@ -78,6 +82,7 @@ Servizi.belongsTo(Inserzione, {
 
 //---------ASSOCIAZIONE [1-N] // INSERZIONE-PRENOTAZIONE-------------------//
 Inserzione.hasMany(Prenotazione, {
+  as: 'prenotazioni',
   foreignKey: "ref_inserzione",
   onDelete: "cascade",
 });
@@ -97,17 +102,65 @@ Inserzione.belongsTo(Utente, {
 
 
 
-Inserzione.verRicerca = async (query) => {
+Inserzione.verRicerca = async (query,checkin,checkout) => {
+  
   const lista = await Inserzione.findAll({ 
     where: query,
     include: [{
       model: Servizi,
       required: false,
-      attributes: ['wifiFlag', 'riscaldamentoFlag','frigoriferoFlag','casaFlag','bnbFlag','parcheggioFlag','ascensoreFlag','cucinaFlag','essenzialiFlag', 'piscinaFlag']
+      //attributes: ['wifiFlag', 'riscaldamentoFlag','frigoriferoFlag','casaFlag','bnbFlag','parcheggioFlag','ascensoreFlag','cucinaFlag','essenzialiFlag', 'piscinaFlag']
+    },{
+      model: Prenotazione,
+      as: 'prenotazioni',
+      required: true,
+      attributes: ['ref_inserzione','check_in', 'check_out']
     }
   ]});
+
+  //console.log(typeof checkin);
+  //console.log(typeof checkout);
+  
   if (lista) {
-    return lista;
+    
+    // PROVA 2
+    let outsideRangeList = [];
+    let insideRangeList = [];
+
+    lista.forEach(elem => {
+      elem.prenotazioni.forEach(pren =>{
+        let checkinPren = Date.parse(pren.check_in);
+        let checkoutPren = Date.parse(pren.check_out);
+        let checkinComp = Date.parse(checkin);
+        let checkoutComp = Date.parse(checkout);
+        let range = moment().range(checkinPren,checkoutPren);
+        if(((range.contains(checkinComp) == false) && (range.contains(checkoutComp) == false))) {
+          outsideRangeList = outsideRangeList.concat(elem);
+        } else if(((range.contains(checkinComp) == true) || (range.contains(checkoutComp) == true))) {
+          insideRangeList = insideRangeList.concat(elem);
+        }
+      }) 
+    })
+    //console.log(outsideRangeList);
+    //console.log("LUNGHEZZA ARRAY DI DATE ESTERNE " + outsideRangeList.length);
+    //console.log("LUNGHEZZA ARRAY DI DATE INTERNE " + insideRangeList.length);
+    let uniqueOutsideList = Array.from(new Set(outsideRangeList));
+    let uniqueInsideList = Array.from(new Set(insideRangeList));
+    /*console.log("LUNGHEZZA ARRAY DI DATE ESTERNE " + uniqueOutsideList.length);
+    console.log(uniqueOutsideList);
+    console.log("LUNGHEZZA ARRAY DI DATE INTERNE " + uniqueInsideList.length);
+    console.log(uniqueInsideList);*/
+
+    let diffList = uniqueOutsideList.filter(a1 => {
+      return !uniqueInsideList.some(a2 => {
+        return a2.id_inserzione == a1.id_inserzione;
+      })
+    });
+
+
+    
+    return diffList;
+    
   }
   throw new Error("Nessuna inserzione");
 };
