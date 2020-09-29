@@ -1,5 +1,16 @@
 $("document").ready(() => {
   /* LETs & CONSTs */
+  const params = new URLSearchParams(window.location.search);
+  /* --------------------------------------------------------- */
+
+  /* ON RELOAD */
+  $("#location").val(params.get("citta"));
+  $("#check-in").val(params.get("checkin"));
+  $("#check-out").val(params.get("checkout"));
+  $("#guestNum").val(params.get("nospiti"));
+
+  /* TOOLTIP */
+  $("#location").tooltip("disable");
   /* --------------------------------------------------------- */
 
   /* DATEPICKER */
@@ -47,8 +58,10 @@ $("document").ready(() => {
   $("#location").on("focusout input", () => {
     if ($("#location").val() === "") {
       $("#location").addClass("is-invalid");
+      $("#location").tooltip("enable").tooltip("show");
     } else {
       $("#location").removeClass("is-invalid");
+      $("#location").tooltip("disable");
     }
   });
   /* --------------------------------------------------------- */

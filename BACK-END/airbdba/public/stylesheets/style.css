@@ -14,6 +14,13 @@ body {
   flex: 1;
 }
 
+.side {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .center-spacer {
   flex: 1;
   display: flex;

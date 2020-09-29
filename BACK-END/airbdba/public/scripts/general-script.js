@@ -2,6 +2,10 @@ $(document).ready(() => {
   /* LETs & CONSTs */
   /* --------------------------------------------------------- */
 
+  /* ENABLE TOOLTIPS */
+  $('[data-toggle="tooltip"]').tooltip();
+  /* --------------------------------------------------------- */
+
   /* FUNCTIONS */
   // Data format function
   function formatDate(date) {

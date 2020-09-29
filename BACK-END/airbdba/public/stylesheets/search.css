@@ -12,13 +12,6 @@
   flex-flow: row wrap;
 }
 
-.side {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 #center {
   flex: 5;
   display: flex;

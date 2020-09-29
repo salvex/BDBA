@@ -4,6 +4,10 @@ $(document).ready(() => {
   /* LETs & CONSTs */
   /* --------------------------------------------------------- */
 
+  /* TOOLTIP */
+  $("#location").tooltip("disable");
+  /* --------------------------------------------------------- */
+
   /* ON REFRESH */
   // Pulisci i campi del form al aggiorno della pagina
   $("input").val("");
@@ -39,8 +43,10 @@ $(document).ready(() => {
   $("#location").on("focusout input", () => {
     if ($("#location").val() === "") {
       $("#location").addClass("is-invalid");
+      $("#location").tooltip("enable").tooltip("show");
     } else {
       $("#location").removeClass("is-invalid");
+      $("#location").tooltip("disable");
     }
   });
   /* --------------------------------------------------------- */

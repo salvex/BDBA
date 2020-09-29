@@ -26,11 +26,9 @@ router.post(
   PrenotazioneControl.identifica_ospiti_post
 );
 
-router.get(
-  "/prenota/pagamento",
-  [JwtToken.verifyToken],
-  PrenotazioneControl.pagamento_get
-);
+router.get("/prenota/pagamento", [JwtToken.verifyToken], (req, res) => {
+  res.render("pagamento");
+});
 
 router.post(
   "/prenota/pagamento",

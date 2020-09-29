@@ -1,11 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
+<html>
+  <%- include("./partials/head.ejs", {title: "identify"}) %>
   <body>
-    <h1>orco porco</h1>
+    <div id="identify-wrapper">
+      <%- include("./partials/nav.ejs") %>
+      <div id="identify-content">
+        <div class="side"></div>
+        <div id="center">
+          <div id="identify-heading">
+            <h1>Identifica gli ospiti</h1>
+          </div>
+          <div
+            class="alert alert-warning"
+            role="alert"
+            style="margin-top: 10px"
+          >
+            Gli aventi diritto all'esenzione, tra cui soggetti affetti da
+            disabilità, eventuali accompagnatori, bambini di età inferiore a 12
+            anni, forze dell'ordine, studenti universitari fuori sede e
+            residenti nel comune, non dovranno pagare la tassa regionale.
+            <u
+              >Eventuali verifiche sulla veridicità di quanto dichiarato
+              verranno fatte in presenza dal host della struttura.</u
+            >
+          </div>
+          <div id="content"></div>
+        </div>
+        <div class="side"></div>
+      </div>
+      <div id="footer"><%- include("./partials/footer.ejs") %></div>
+    </div>
+
+    <script>
+      $(document).ready(() => {
+        /* LETs & CONSTs */
+        const params = new URLSearchParams(window.location.search);
+        /* --------------------------------------------------------- */
+
+        /* GENERATE FORMS */
+        for (let i = 0; i < params.get("nospiti"); i++) {
+          let card;
+          if (i === 0) {
+            card = `
+              <div id="${i}" class="card guest">
+                <div class="card-header">Ospite ${i + 1}</div>
+                  <div class="card-body">
+                    <form>
+                      <div class="form-content">
+                        <label for="name-${i}">Nome:</label>
+                        <input id="name-${i}" class="form-control" type="text" value="<%= user.nome %>"/>
+                        &nbsp;
+                        <label for="surname-${i}">Cognome: </label>
+                        <input id="surname-${i}" class="form-control" type="text" value="<%= user.cognome %>"/>
+                        &nbsp;
+                      </div>
+                      <div id="gender-${i}">
+                        <label for="male-${i}">M: </label>
+                        <input type="radio" name="gender-${i}" id="male-${i}" value="maschio" />
+                        &nbsp;&nbsp;&nbsp;
+                        <label for="female-${i}">F: </label>
+                        <input type="radio" name="gender-${i}" id="female-${i}" value="femmina" />
+                        &nbsp;&nbsp;&nbsp;
+                        <small class="text-danger"></small>
+                      </div>
+                      <div class="info">
+                        <label
+                          for="es-${i}"
+                          data-toggle="tooltip"
+                          data-placement="right"
+                          data-html="true"
+                          title = "Gli aventi diritto all'esenzione, tra cui soggetti affetti da disabilità, eventuali accompagnatori, bambini di età inferiore a 12 anni, forze dell'ordine, studenti universitari fuori sede e residenti nel comune, non dovranno pagare la tassa regionale. <u>Eventuali verifiche sulla veridicità di quanto dichiarato verranno fatte in presenza dal host della struttura.</u>"
+                        >
+                        Esenzione:&nbsp;&#9432;
+                        </label>
+                        &nbsp;&nbsp;
+                        <input type="checkbox" name="esenzione" id="es-${i}" />
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              `;
+          } else {
+            card = `
+              <div id="${i}" class="card guest">
+                <div class="card-header">Ospite ${i + 1}</div>
+                  <div class="card-body">
+                    <form id="form-${i}">
+                      <div class="form-content">
+                        <label for="name-${i}">Nome:</label>
+                        <input id="name-${i}" class="form-control" type="text" />
+                        &nbsp;
+                        <label for="surname-${i}">Cognome: </label>
+                        <input id="surname-${i}" class="form-control" type="text" />
+                        &nbsp;
+                      </div>
+                      <div id="gender-${i}">
+                        <label for="male-${i}">M:</label>
+                        &nbsp;&nbsp;
+                        <input type="radio" name="gender-${i}" id="male-${i}" value="maschio" />
+                        &nbsp;&nbsp;&nbsp;
+                        <label for="female-${i}">F: </label>
+                        <input type="radio" name="gender-${i}" id="female-${i}" value="femmina" />
+                        &nbsp;&nbsp;&nbsp;
+                        <small class="text-danger"></small>
+                        </div>
+                      <div class="info">
+                        <label
+                          for="es-${i}"
+                          data-toggle="tooltip"
+                          data-placement="right"
+                          data-html="true"
+                          title = "Gli aventi diritto all'esenzione, tra cui soggetti affetti da disabilità, eventuali accompagnatori, bambini di età inferiore a 12 anni, forze dell'ordine, studenti universitari fuori sede e residenti nel comune, non dovranno pagare la tassa regionale. <u>Eventuali verifiche sulla veridicità di quanto dichiarato verranno fatte in presenza dal host della struttura.</u>"
+                        >
+                        Esenzione:&nbsp;&#9432;
+                        </label>
+                        &nbsp;&nbsp;
+                        <input type="checkbox" name="esenzione" id="es-${i}" />
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              `;
+          }
+          $("#content").append(card);
+          $(`input[type=text][id$="${i}"]`).on("focusout input", function () {
+            if ($(this).val() === "") {
+              $(this).addClass("is-invalid");
+            } else {
+              $(this).removeClass("is-invalid");
+            }
+          });
+        }
+        $("#content").append(
+          "<button class='btn btn-primary send-btn'>Invia</button>"
+        );
+        /* --------------------------------------------------------- */
+      });
+    </script>
   </body>
 </html>

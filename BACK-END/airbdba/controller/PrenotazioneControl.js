@@ -68,7 +68,7 @@ const identifica_ospiti_post = (req, res) => {
     const ospiti = req.body.ospiti;
     console.log(ospiti);
     req.session.ospiti = ospiti;
-    res.status(200).json(req.session.ospiti);
+    res.status(200).json({ success: true });
   } catch (err) {
     console.log(err);
     res.status(400).json({ err });
