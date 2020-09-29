@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let type = req.params.type;
     let id = req.params.id;
-    let path = "public/uploads" + "/" + type + "/" + id ;
+    let path = "airbdba/public/uploads" + "/" + type + "/" + id ;
     fs.mkdirSync(path, { recursive: true }); //crea il percorso qualora non ci fosse
     cb(null, path);
   },
