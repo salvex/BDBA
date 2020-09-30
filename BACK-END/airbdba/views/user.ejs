@@ -3,7 +3,8 @@
   <%- include("./partials/head.ejs", {title: "Profile"}) %>
   <body>
     <%- include("./partials/nav.ejs") %>
-
+    <!-- Cropper -->
+    <%- include("./partials/img-cropper.ejs") %>
     <div id="profile-wrapper">
       <div id="profile-content">
         <div class="side"></div>
@@ -116,7 +117,10 @@
                           href="/user/profilo/modifica-password"
                           >Modifica password</a
                         >
-                        <a class="btn btn-primary active" href="/"
+                        <a
+                          class="btn btn-primary active"
+                          id="edit-avatar"
+                          href="#"
                           >Modifica foto profilo</a
                         >
                         <a class="btn btn-primary active" href="/"

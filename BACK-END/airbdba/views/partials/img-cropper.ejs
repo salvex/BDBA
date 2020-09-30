@@ -1,0 +1,42 @@
+<div
+  class="modal fade"
+  id="image-crop"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Scegli un'immagine</h3>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body cropper-container">
+        <div>
+          <img id="image" src="" style="max-width: 100%" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <input type="file" id="imgupload" style="display: none" />
+        <button type="button" class="btn btn-primary" id="save">Salva</button>
+        <button class="btn btn-primary" id="OpenImgUpload">Carica</button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          id="close"
+          data-dismiss="modal"
+        >
+          Chiudi
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
