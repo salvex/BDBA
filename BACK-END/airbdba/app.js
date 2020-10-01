@@ -9,6 +9,7 @@ const dotenv = require("dotenv");
 var moment = require("moment");
 var session = require("express-session");
 var sessionStore = require("./utils/sessionStore");
+var { checkRendiconto } = require("./utils/checkRendiconto");
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -23,7 +24,7 @@ var insRouter = require("./routes/MostraInserzione");
 var recRouter = require("./routes/RecuperaPassword");
 var regRouter = require("./routes/Registrazione");
 var searchRouter = require("./routes/Ricerca");
-var Prenotazione = require("./model/Prenotazione");
+//var Prenotazione = require("./model/Prenotazione");
 //---------Database--------------//
 var mysql = require("mysql2");
 const db = require("./utils/connection");
@@ -65,6 +66,7 @@ app.use(cors());
 app.use("*", checkUser);
 app.use("/", indexRouter);
 app.use(authRouter);
+setInterval(checkRendiconto, 60*60*24*1000);
 
 /*app.get("/data", (req, res) => {
   var annoCorrente = moment().format("YYYY");

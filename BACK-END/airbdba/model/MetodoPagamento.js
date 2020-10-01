@@ -6,17 +6,26 @@ const Utente = require('../model/Utente');
 
 
 const MetodoPagamento = db.sequelize.define("metodo_pagamento", {
+    id_metodo: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     ref_utente: {
         type: DataTypes.INTEGER(11),
         allowNull: false,
-        primaryKey: true
+    },
+    nome_circuito: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
     },
     codice_carta: {
-        type: DataTypes.INTEGER(20),
+        type: DataTypes.STRING(20),
         allowNull: false,
     },
     intestatario: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(100),
         allowNull: false,
     },
     data_scadenza: {
@@ -33,7 +42,7 @@ const MetodoPagamento = db.sequelize.define("metodo_pagamento", {
 });
 
 //--ASSOCIAZIONE [1-1] Utente - MetodoPagamento
-Utente.hasOne(MetodoPagamento, {
+Utente.hasMany(MetodoPagamento, {
     foreignKey : 'ref_utente'
 })
 MetodoPagamento.belongsTo(Utente, {
@@ -41,10 +50,10 @@ MetodoPagamento.belongsTo(Utente, {
 })
 
 
-MetodoPagamento.getPagamento = async (id_utente) => {
-    let metodo = MetodoPagamento.findByPk(id_utente);
-    return metodo; 
-}
+MetodoPagamento.get_metodi = async (id_utente) => {
+  let metodi = MetodoPagamento.findAll({ where: { ref_utente: id_utente } });
+  return metodi;
+};
 
 
 

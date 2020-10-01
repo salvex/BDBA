@@ -40,6 +40,12 @@ const Utente = db.sequelize.define(
       type: DataTypes.INTEGER(11),
       defaultValue: 0,
     },
+    ultimo_rendiconto: {
+      type: DataTypes.DATEONLY(),
+    }, 
+    hostBecomeAt: {
+      type: DataTypes.DATEONLY(),
+    }
     /*    indirizzo: {
         type: DataTypes.STRING(80),
         allowNull: false

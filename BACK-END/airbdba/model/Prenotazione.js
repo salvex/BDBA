@@ -21,7 +21,7 @@ const Prenotazione = db.sequelize.define(
       type: DataTypes.INTEGER(11),
       allowNull: false,
     },
-    stato_ordine: {
+    stato_prenotazione: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
     },
@@ -37,18 +37,18 @@ const Prenotazione = db.sequelize.define(
       type: DataTypes.DATE(),
       allowNull: false,
     },
-    prezzo_parziale : {
+/*    prezzo_parziale : {
       type: DataTypes.INTEGER(11),
       allowNull: false,
-    },
+    }, */
     prezzo_finale: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
     },
-    tassa_soggiorno_totale : {
+/*    tassa_soggiorno_totale : {
       type: DataTypes.INTEGER(11),
       allowNull: false,
-    },
+    }, */
   },
   {
     freezeTableName: true,

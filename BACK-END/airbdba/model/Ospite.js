@@ -23,6 +23,18 @@ const Ospite = db.sequelize.define("ospite", {
         type: DataTypes.STRING(20),
         allowNull: false,
     },
+    nazionalita: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+    },
+    tipo_documento: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+    },
+    data_nascita: {
+        type: DataTypes.DATEONLY(),
+        allowNull: false,
+    },
     ref_prenotazione_u: {
         type: DataTypes.INTEGER(11),
         allowNull: false,
@@ -38,9 +50,11 @@ const Ospite = db.sequelize.define("ospite", {
 
 //----ASSOCIAZIONE [1-N] PRENOTAZIONE-OSPITE //
 Prenotazione.hasMany(Ospite, {
+    as: "ospiti",
     foreignKey: 'ref_prenotazione_u'
 })
 Ospite.belongsTo(Prenotazione, {
+    as: "ospiti",
     foreignKey: 'ref_prenotazione_u'
 })
 

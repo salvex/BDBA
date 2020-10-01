@@ -77,14 +77,8 @@ const identifica_ospiti_post = (req, res) => {
 
 const pagamento_get = async (req, res) => {
   try {
-    //DA RIVEDERE
-    var metodo_p = await MetodoPagamento.getPagamento(req.session.utente.id);
-    var riepilogo = req.session.inserzione;
-    if (metodo_p) {
-      res.render("pagamento", { metodo_p });
-    } else {
-      res.render("pagamento");
-    }
+    var lista_metodi = await MetodoPagamento.get_metodi(req.session.utente.id);
+    res.status(200).json({ lista_metodi });
   } catch (err) {
     console.log(err);
     res.status(400).json({ err });
@@ -179,16 +173,14 @@ const pagamento_get = async (req, res) => {
   }
 };*/
 
-
 const pagamento_post = async (req, res) => {
   //PER DANIEL: devi inviarmi gli oggetti metodo_pagamento,option e prezzo
   try {
     if (req.body.option == 1) {
       //SE IL METODO E' GIA' PREIMPOSTATO
       var metodo_pagamento = await MetodoPagamento.findOne({
-        where: { ref_utente: req.session.utente.id },
+        where: {  ref_utente: req.session.utente.id },
       });
-  
     } else if (req.body.option == 2) {
       //SE IL METODO E' NUOVO
       const {
@@ -199,23 +191,22 @@ const pagamento_post = async (req, res) => {
         scadenza_anno,
       } = req.body.metodo_pagamento;
       let scadenza = scadenza_mese + "/" + scadenza_anno;
-      var metodo_pagamento = await MetodoPagamento.SetOrUpdate(
-        req.session.utente.id,
-        intestatario,
-        numero_carta,
-        scadenza,
-        cvv
-      );
-      // PROCESSO DI PAGAMENTO : NON E' STATO IMPLEMENTATO IN QUANTO NON RICHIESTO //
-
+      var metodo_pagamento = {
+        ref_utente: req.session.utente.id,
+        intestatario: intestatario,
+        numero_carta: numero_carta,
+        data_scadenza: scadenza,
+        cvv: cvv,
+      };
     } else if (req.body.option == 3) {
       //PAGA IN LOCO
-      var metodo_pagamento = {option: "paga in struttura"};
+      var metodo_pagamento = null;
     }
     var prenotazione = {
       ref_host: req.session.inserzione.ref_host_ins,
       ref_utente: req.session.utente.id,
-      stato_ordine: 1, //STATO ORDINE: CREATO (PAGA IN LOCO)
+      ref_inserzione: req.session.inserzione.id_inserzione,
+      stato_prenotazione: 1,
       check_in: req.query.checkin,
       check_out: req.query.checkout,
       prezzo_finale: req.body.prezzo,
@@ -229,6 +220,7 @@ const pagamento_post = async (req, res) => {
   }
 };
 
+
 const riepilogo_get = (req, res) => {
   res
     .status(200)
@@ -236,7 +228,6 @@ const riepilogo_get = (req, res) => {
       req.session.inserzione,
       req.session.prenotazione,
       req.session_metodo_pagamento,
-      req.session.ospiti,
     ]);
 };
 
