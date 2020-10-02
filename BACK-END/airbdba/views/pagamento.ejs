@@ -53,24 +53,27 @@
         const pay = () => {
           const metodiJSON = `<%= lista_metodi %>`;
           const metodiObj = JSON.parse(metodiJSON.replace(/&#34;/g, '"'));
+          let metodo, option;
 
           if ($("input[type=radio]:checked").prop("id") === "add") {
+            // add metodo pagamento option 2
           } else {
-            let metodo = metodiObj[$("input[type=radio]:checked").prop("id")];
-
-            fetch(`/inserzione/prenota/pagamento${window.location.search}`, {
-              method: "POST",
-              body: JSON.stringify({ metodo, option: 1 }),
-              headers: { "Content-Type": "application/json" },
-            })
-              .then(async (res) => {
-                const response = await res.json();
-                if (response.success) {
-                  window.location.href = `/inserzione/prenota/riepilogo${window.location.search}`;
-                }
-              })
-              .catch((err) => console.log(err));
+            metodo = metodiObj[$("input[type=radio]:checked").prop("id")];
+            option = 1;
           }
+
+          fetch(`/inserzione/prenota/pagamento${window.location.search}`, {
+            method: "POST",
+            body: JSON.stringify({ metodo, option: 1 }),
+            headers: { "Content-Type": "application/json" },
+          })
+            .then(async (res) => {
+              const response = await res.json();
+              if (response.success) {
+                window.location.href = `/inserzione/prenota/riepilogo${window.location.search}`;
+              }
+            })
+            .catch((err) => console.log(err));
         };
 
         const changeDim = () => {

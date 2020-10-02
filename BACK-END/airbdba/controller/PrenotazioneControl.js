@@ -201,7 +201,7 @@ const pagamento_post = async (req, res, next) => {
         cvv,
         scadenza_mese,
         scadenza_anno,
-      } = req.body.metodo_pagamento;
+      } = req.body.metodo;
       let scadenza = scadenza_mese + "/" + scadenza_anno;
       var metodo_pagamento = {
         ref_utente: req.session.utente.id,
