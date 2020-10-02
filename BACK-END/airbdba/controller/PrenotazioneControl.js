@@ -187,14 +187,12 @@ const pagamento_get = async (req, res, next) => {
   }
 };
 
-const pagamento_post = async (req, res) => {
+const pagamento_post = async (req, res, next) => {
   //PER DANIEL: devi inviarmi gli oggetti metodo_pagamento,option e prezzo
   try {
     if (req.body.option == 1) {
       //SE IL METODO E' GIA' PREIMPOSTATO
-      var metodo_pagamento = await MetodoPagamento.findOne({
-        where: { ref_utente: req.session.utente.id },
-      });
+      var metodo_pagamento = req.body.metodo;
     } else if (req.body.option == 2) {
       //SE IL METODO E' NUOVO
       const {
@@ -234,14 +232,12 @@ const pagamento_post = async (req, res) => {
   }
 };
 
-const riepilogo_get = (req, res) => {
-  res
-    .status(200)
-    .json([
-      req.session.inserzione,
-      req.session.prenotazione,
-      req.session_metodo_pagamento,
-    ]);
+const riepilogo_get = (req, res, next) => {
+  res.locals.inserzione = req.session.inserzione;
+  res.locals.prenotazione = req.session.prenotazione;
+  res.locals.metodo_pagamento = req.session.metodo_pagamento;
+  console.log(req.session.inserzione);
+  next();
 };
 
 module.exports = {

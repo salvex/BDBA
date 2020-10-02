@@ -44,7 +44,10 @@ router.post(
 router.get(
   "/prenota/riepilogo",
   [JwtToken.verifyToken],
-  PrenotazioneControl.riepilogo_get
+  PrenotazioneControl.riepilogo_get,
+  (req, res) => {
+    res.render("riepilogo");
+  }
 );
 
 //router.get("")
