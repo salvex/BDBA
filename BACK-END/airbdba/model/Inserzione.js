@@ -117,6 +117,17 @@ Inserzione.verRicerca = async (query, checkin, checkout) => {
   //console.log(typeof checkin);
   //console.log(typeof checkout);
 
+  let ListaSenzaPren = [];
+
+  lista.forEach(elem => {
+    if(Object.keys(elem.prenotazioni).length == 0) {
+      //console.log(typeof elem.prenotazioni);
+      ListaSenzaPren = ListaSenzaPren.concat(elem);
+    }
+  })
+
+  console.log(ListaSenzaPren);
+
   if (lista) {
     // PROVA 2
     let outsideRangeList = [];
@@ -158,7 +169,11 @@ Inserzione.verRicerca = async (query, checkin, checkout) => {
       });
     });
 
-    return lista;
+    diffList = diffList.concat(ListaSenzaPren);
+
+    let diffUniqueList = Array.from(new Set(diffList));
+
+    return diffUniqueList;
   }
   throw new Error("Nessuna inserzione");
 };
