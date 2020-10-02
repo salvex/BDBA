@@ -172,6 +172,26 @@ const pagamento_get = async (req, res) => {
     res.status(400).json({ err });
   }
 };*/
+const pagamento_get = async (req, res, next) => {
+  try {
+    //DA RIVEDERE
+    console.log(req.session.utente.id);
+    var lista_metodi = await MetodoPagamento.get_metodi(req.session.utente.id);
+    /* var riepilogo = req.session.inserzione;
+    if (metodo_p) {
+      res.render("pagamento", { metodo_p });
+    } else {
+      res.render("pagamento");
+    } */
+    res.locals.lista_metodi = JSON.stringify(lista_metodi);
+    console.log(res.locals.lista_metodi);
+    next();
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err });
+  }
+};
+
 
 const pagamento_post = async (req, res) => {
   //PER DANIEL: devi inviarmi gli oggetti metodo_pagamento,option e prezzo
