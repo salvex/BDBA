@@ -75,7 +75,7 @@ const identifica_ospiti_post = (req, res) => {
   }
 };
 
-const pagamento_get = async (req, res) => {
+/* const pagamento_get = async (req, res) => {
   try {
     var lista_metodi = await MetodoPagamento.get_metodi(req.session.utente.id);
     res.status(200).json({ lista_metodi });
@@ -83,7 +83,7 @@ const pagamento_get = async (req, res) => {
     console.log(err);
     res.status(400).json({ err });
   }
-};
+}; */
 
 /*const pagamento_post = async (req, res) => {
   //PER DANIEL: devi inviarmi gli oggetti metodo_pagamento,option e prezzo
@@ -177,12 +177,7 @@ const pagamento_get = async (req, res, next) => {
     //DA RIVEDERE
     console.log(req.session.utente.id);
     var lista_metodi = await MetodoPagamento.get_metodi(req.session.utente.id);
-    /* var riepilogo = req.session.inserzione;
-    if (metodo_p) {
-      res.render("pagamento", { metodo_p });
-    } else {
-      res.render("pagamento");
-    } */
+
     res.locals.lista_metodi = JSON.stringify(lista_metodi);
     console.log(res.locals.lista_metodi);
     next();
@@ -192,14 +187,13 @@ const pagamento_get = async (req, res, next) => {
   }
 };
 
-
 const pagamento_post = async (req, res) => {
   //PER DANIEL: devi inviarmi gli oggetti metodo_pagamento,option e prezzo
   try {
     if (req.body.option == 1) {
       //SE IL METODO E' GIA' PREIMPOSTATO
       var metodo_pagamento = await MetodoPagamento.findOne({
-        where: {  ref_utente: req.session.utente.id },
+        where: { ref_utente: req.session.utente.id },
       });
     } else if (req.body.option == 2) {
       //SE IL METODO E' NUOVO
@@ -239,7 +233,6 @@ const pagamento_post = async (req, res) => {
     res.status(400).json({ err });
   }
 };
-
 
 const riepilogo_get = (req, res) => {
   res

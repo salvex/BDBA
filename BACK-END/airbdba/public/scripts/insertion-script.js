@@ -10,7 +10,7 @@ $(document).ready(() => {
     checkinDate,
     checkoutDate,
     nights,
-    mapURL;
+    prezzoTotale;
   /* --------------------------------------------------------- */
 
   /* ON REFRESH */
@@ -459,7 +459,9 @@ $(document).ready(() => {
             nights = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
           }
 
-          $("#total").html(nights * prezzoBase + " &euro;");
+          prezzoTotale = nights * prezzoBase;
+
+          $("#total").html(prezzoTotale + " &euro;");
         } else {
           $("#total").html("0 &euro;");
         }
@@ -506,7 +508,7 @@ $(document).ready(() => {
       .then(async (res) => {
         const response = await res.json();
         if (response.success) {
-          window.location.href = `/inserzione/prenota/identify${window.location.search}&price=`;
+          window.location.href = `/inserzione/prenota/identify${window.location.search}&price=${prezzoTotale}`;
         } else {
           $("#exampleModal").modal("show");
           $("#left").css("overflow", "hidden");

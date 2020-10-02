@@ -1,11 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
+  <%- include("./partials/head.ejs", {title: "payment"}) %>
+  <!-- IMPORTO LA LISTA DEI METODI DI PAGAMENTO -->
+  <% let metodi = JSON.parse(lista_metodi) %>
   <body>
-    Ocane ha un'ascia.
+    <div id="payment-wrapper">
+      <%- include("./partials/nav.ejs") %>
+
+      <div id="payment-content">
+        <div class="side"></div>
+        <div id="center">
+          <div class="card" id="paga-adesso">
+            <div class="card-header">
+              <h3>Paga adesso</h3>
+            </div>
+            <div class="card-body pay-body">
+              <div id="pay-info-container">
+                <p id="pay-info">
+                  Inserisci i tuoi dati di pagamento o utilizza il tuo metodo di
+                  pagamento predefinito per <u>pagare tutto subito!</u> Non ci
+                  saranno spese aggiuntive e potrai goderti un viaggio senza
+                  pensieri.
+                </p>
+              </div>
+            </div>
+            <div class="card-footer pay-footer">
+              <button id="pay-btn" class="btn btn-primary">Paga</button>
+            </div>
+          </div>
+          <div class="card" id="paga-loco">
+            <div class="card-header">
+              <h3>Paga in loco</h3>
+            </div>
+            <div class="card-body place-body">
+              <p id="place-info">
+                <u>Paga tutto sul posto!</u> All'arrivo nella struttura salderai
+                il conto con il proprietario di casa.
+              </p>
+            </div>
+            <div class="card-footer paga-loco-btn">
+              <button id="book-btn" class="btn btn-primary">Prenota</button>
+            </div>
+          </div>
+        </div>
+        <div class="side"></div>
+      </div>
+      <div id="footer"><%- include("./partials/footer.ejs") %></div>
+    </div>
+
+    <script>
+      $(document).ready(() => {
+        const pay = () => {
+          const metodiJSON = `<%= lista_metodi %>`;
+          const metodiObj = JSON.parse(metodiJSON.replace(/&#34;/g, '"'));
+
+          if ($("input[type=radio]:checked").prop("id") === "add") {
+          } else {
+            let metodo = metodiObj[$("input[type=radio]:checked").prop("id")];
+            console.log(metodo);
+          }
+        };
+
+        const changeDim = () => {
+          if ($(window).width() >= "950") {
+            $("#paga-loco").animate({ width: "0", opacity: 0 }, "slow", () => {
+              $("#paga-loco").css({ display: "none" });
+            });
+            $("#pay-info").remove();
+            $("#paga-adesso").animate(
+              { width: "100%", height: "100%" },
+              "slow",
+              () => {
+                // Rimuovo la funzione changeDim() e aggiungo la funzione
+                // pay() al tasto Paga
+                $("#pay-btn").off("click", changeDim).on("click", pay);
+
+                if ($("#paga-loco-btn").length === 0) {
+                  $(".pay-footer").append(
+                    `<button style="margin-left: 10px" id="paga-loco-btn" class="btn btn-danger">Paga in loco</button>`
+                  );
+                }
+                if ($("#pay-container").length === 0) {
+                  $(".pay-body").append(`
+                    <div id="pay-container">
+                      <% metodi.forEach((metodo, i) => { %>
+                        <div class="card metodo-container">
+                          <div class="card-body metodo">
+                            <div class="general">
+                              <input type="radio" name="metodo" id="<%= i %>">
+                              &nbsp;
+                              &nbsp;
+                              <image class="credit-logo" src="/assets/icons/credit-card-solid.svg" >
+                              &nbsp;
+                              <%= metodo.nome_circuito[0].toUpperCase() + metodo.nome_circuito.slice(1) %>
+                              &nbsp;
+                              <span>************<%= metodo.codice_carta.slice(12) %></span>
+                            </div>
+                            <div class="date">
+                              <%= metodo.data_scadenza %>
+                            </div>
+                            <div class="owner">
+                              <% let owner = metodo.intestatario.split(" ") %>
+                              <%= owner[0][0].toUpperCase() + owner[0].slice(1) + " " + owner[1][0].toUpperCase() + owner[1].slice(1) %>
+                            </div>
+                          </div>
+                        </div>
+                      <% }); %>
+                      <div class="card aggiungi metodo-container">
+                        <div class="card-body aggiungi-metodo">
+                          <div id="select-metodo">
+                            <input type="radio" name="metodo" id="add">
+                            &nbsp;
+                            <label for="add">
+                              <b>Aggiungi un nuovo metodo di pagamento</b>
+                            </label>
+                          </div>
+                          <div id="form-container">
+                            <form>
+                              <div class="form-group">
+                                <label for="inputIntestatario">Intestatario</label>
+                                <input type="text" class="form-control" id="inputIntestatario" placeholder="Mario Rossi">
+                              </div>
+                              <div class="form-row">
+                                <div class="form-group col-md-8">
+                                  <label for="inputCarta">Numero Carta</label>
+                                  <input type="text" class="form-control" id="inputCarta" placeholder="**** **** **** ****">
+                                </div>
+                                <div class="form-group col-md-4">
+                                  <label for="inputCircuito">Circuito</label>
+                                  <select id="inputState" class="form-control">
+                                    <option selected>Scegli...</option>
+                                    <option value="mastercard">Mastercard</option>
+                                    <option value="visa">Visa</option>
+                                    <option value="american-express">American express</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-row">
+                                <div class="form-group col-md-3">
+                                  <label for="inputScadenza">Mese</label>
+                                  <input type="text" class="form-control" id="inputScadenzaM" placeholder="mm">
+                                </div>
+                                <div class="form-group col-md-3">
+                                  <label for="inputScadenza">Anno</label>
+                                  <input type="text" class="form-control" id="inputScadenzaA" placeholder="aa">
+                                </div>
+                                <div class="form-group col-md-6">
+                                  <label for="inputCvv">CVV</label>
+                                  <input type="password" class="form-control" id="inputCvv" placeholder="cvv">
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  `);
+
+                  $("#add").on("click", () => {
+                    $("#form-container").slideDown(1000);
+                  });
+                }
+
+                /* RITORNO ALLA SCHERMATA DI PARTENZA */
+                $("#paga-loco-btn").on("click", () => {
+                  $("#pay-btn").off("click", pay).on("click", changeDim);
+                  $("#pay-container").remove();
+                  if ($("#pay-info").length === 0) {
+                    $(".pay-body").append(
+                      "<p id='pay-info'>Inserisci i tuoi dati di pagamento o utilizza il tuo metodo di pagamento predefinito per <u>pagare tutto subito!</u> Non ci saranno spese aggiuntive e potrai goderti un viaggio senza pensieri.</p>"
+                    );
+                  }
+
+                  $("#paga-loco-btn").remove();
+                  $("#paga-loco")
+                    .css({ display: "flex" })
+                    .animate({ width: "50%", opacity: 1 }, "slow");
+                  $("#paga-adesso").animate(
+                    { width: "50%", height: "350px" },
+                    "slow"
+                  );
+                });
+              }
+            );
+          } else {
+            $("#pay-info").remove();
+            $(".pay-footer").remove();
+            $("#paga-adesso").animate({ height: "600px" }, "slow", () => {
+              if ($("#pay-container").length === 0) {
+                $(".pay-body").append(`
+                    <div id="pay-container">
+                      <% metodi.forEach(metodo => { %>
+                        <div class="card metodo-container">
+                          <div class="card-body metodo-mobile">
+                            <div class="general general-mobile">
+                              <div>
+                                <image class="credit-logo" src="/assets/icons/credit-card-solid.svg" >
+                                <%= metodo.nome_circuito[0].toUpperCase() + metodo.nome_circuito.slice(1) %>
+                              </div>
+                              <span>************<%= metodo.codice_carta.slice(12) %></span>
+                            </div>
+                            <div class="owner">
+                              <%= metodo.data_scadenza %>,&nbsp;
+                              <% let owner = metodo.intestatario.split(" ") %>
+                              <%= owner[0][0].toUpperCase() + owner[0].slice(1) + " " + owner[1][0].toUpperCase() + owner[1].slice(1) %>
+                            </div>
+                          </div>
+                          <div class="card-footer select-btn">
+                            <button class="btn btn-primary">Seleziona</button>
+                          </div>
+                        </div>
+                      <% }); %>
+                    </div>
+                  `);
+              }
+            });
+          }
+        };
+
+        $(window).resize(() => {
+          if ($(window).width() < "950") {
+            $("#paga-loco").css({
+              display: "flex",
+              width: "100%",
+              opacity: 1,
+            });
+            $("#paga-adesso").css({
+              width: "100%",
+              height: "none",
+              height: "350px",
+            });
+
+            if ($(".pay-footer").length === 0) {
+              $("#paga-adesso").append(
+                `<div class="card-footer pay-footer"><button id="pay-btn" class="btn btn-primary">Paga</button></div>`
+              );
+              $("#pay-btn").on("click", changeDim);
+            }
+
+            if ($("#pay-info").length === 0) {
+              $("#pay-container").remove();
+              $("#paga-loco-btn").remove();
+              $("#pay-btn").off("click", pay).on("click", changeDim);
+              $(".pay-body").append(
+                "<p id='pay-info'>Inserisci i tuoi dati di pagamento o utilizza il tuo metodo di pagamento predefinito per <u>pagare tutto subito!</u> Non ci saranno spese aggiuntive e potrai goderti un viaggio senza pensieri.</p>"
+              );
+            }
+          }
+        });
+
+        $("#pay-btn").on("click", changeDim);
+      });
+    </script>
   </body>
 </html>
+
+<!-- <form>
+  <label for="intestatario">Intestatario</label>
+  <input type="text" id="intestatario" class="form-control" />
+  <label for="circuito">Circuito</label>
+  <select id="circuito" class="form-control">
+    <option value="mastercard">Mastercard</option>
+    <option value="visa">Visa</option>
+    <option value="american-express">American express</option>
+  </select>
+</form> -->

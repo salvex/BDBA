@@ -1,15 +1,14 @@
 const { Sequelize, DataTypes, Op } = require("sequelize");
 const db = require("../utils/connection");
-const Utente = require("./Utente"); 
+const Utente = require("./Utente");
 const Prenotazione = require("./Prenotazione");
 const Servizi = require("./Servizi");
-const Moment = require('moment');
-const MomentRange = require('moment-range');
+const Moment = require("moment");
+const MomentRange = require("moment-range");
 
 const moment = MomentRange.extendMoment(Moment);
 
 //TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
-
 
 const Inserzione = db.sequelize.define(
   "inserzione",
@@ -70,19 +69,17 @@ const Inserzione = db.sequelize.define(
   }
 );
 
-// ASSOCIAZIONE [1-1] 
+// ASSOCIAZIONE [1-1]
 Inserzione.hasOne(Servizi, {
-  foreignKey: "ref_inserzione_s"
-})
+  foreignKey: "ref_inserzione_s",
+});
 Servizi.belongsTo(Inserzione, {
-  foreignKey: "ref_inserzione_s"
-})
-
-
+  foreignKey: "ref_inserzione_s",
+});
 
 //---------ASSOCIAZIONE [1-N] // INSERZIONE-PRENOTAZIONE-------------------//
 Inserzione.hasMany(Prenotazione, {
-  as: 'prenotazioni',
+  as: "prenotazioni",
   foreignKey: "ref_inserzione",
   onDelete: "cascade",
 });
@@ -99,48 +96,52 @@ Inserzione.belongsTo(Utente, {
   foreignKey: "ref_host_ins",
 });
 
-
-
-
-Inserzione.verRicerca = async (query,checkin,checkout) => {
-  
-  const lista = await Inserzione.findAll({ 
+Inserzione.verRicerca = async (query, checkin, checkout) => {
+  const lista = await Inserzione.findAll({
     where: query,
-    include: [{
-      model: Servizi,
-      required: false,
-      //attributes: ['wifiFlag', 'riscaldamentoFlag','frigoriferoFlag','casaFlag','bnbFlag','parcheggioFlag','ascensoreFlag','cucinaFlag','essenzialiFlag', 'piscinaFlag']
-    },{
-      model: Prenotazione,
-      as: 'prenotazioni',
-      required: true,
-      attributes: ['ref_inserzione','check_in', 'check_out']
-    }
-  ]});
+    include: [
+      {
+        model: Servizi,
+        required: false,
+        //attributes: ['wifiFlag', 'riscaldamentoFlag','frigoriferoFlag','casaFlag','bnbFlag','parcheggioFlag','ascensoreFlag','cucinaFlag','essenzialiFlag', 'piscinaFlag']
+      },
+      {
+        model: Prenotazione,
+        as: "prenotazioni",
+        required: false,
+        attributes: ["ref_inserzione", "check_in", "check_out"],
+      },
+    ],
+  });
 
   //console.log(typeof checkin);
   //console.log(typeof checkout);
-  
+
   if (lista) {
-    
     // PROVA 2
     let outsideRangeList = [];
     let insideRangeList = [];
 
-    lista.forEach(elem => {
-      elem.prenotazioni.forEach(pren =>{
+    lista.forEach((elem) => {
+      elem.prenotazioni.forEach((pren) => {
         let checkinPren = Date.parse(pren.check_in);
         let checkoutPren = Date.parse(pren.check_out);
         let checkinComp = Date.parse(checkin);
         let checkoutComp = Date.parse(checkout);
-        let range = moment().range(checkinPren,checkoutPren);
-        if(((range.contains(checkinComp) == false) && (range.contains(checkoutComp) == false))) {
+        let range = moment().range(checkinPren, checkoutPren);
+        if (
+          range.contains(checkinComp) == false &&
+          range.contains(checkoutComp) == false
+        ) {
           outsideRangeList = outsideRangeList.concat(elem);
-        } else if(((range.contains(checkinComp) == true) || (range.contains(checkoutComp) == true))) {
+        } else if (
+          range.contains(checkinComp) == true ||
+          range.contains(checkoutComp) == true
+        ) {
           insideRangeList = insideRangeList.concat(elem);
         }
-      }) 
-    })
+      });
+    });
     //console.log(outsideRangeList);
     //console.log("LUNGHEZZA ARRAY DI DATE ESTERNE " + outsideRangeList.length);
     //console.log("LUNGHEZZA ARRAY DI DATE INTERNE " + insideRangeList.length);
@@ -151,16 +152,13 @@ Inserzione.verRicerca = async (query,checkin,checkout) => {
     console.log("LUNGHEZZA ARRAY DI DATE INTERNE " + uniqueInsideList.length);
     console.log(uniqueInsideList);*/
 
-    let diffList = uniqueOutsideList.filter(a1 => {
-      return !uniqueInsideList.some(a2 => {
+    let diffList = uniqueOutsideList.filter((a1) => {
+      return !uniqueInsideList.some((a2) => {
         return a2.id_inserzione == a1.id_inserzione;
-      })
+      });
     });
 
-
-    
-    return diffList;
-    
+    return lista;
   }
   throw new Error("Nessuna inserzione");
 };
@@ -184,7 +182,7 @@ Inserzione.aggiungiInserzione = async (query) => {
       galleryPath: query[7],
       ref_host_ins: query[8],
     });
-    
+
     const services = await Servizi.create({
       ref_inserzione_s: newIns.id_inserzione,
       wifiFlag: query[9]["wifi"],
@@ -197,7 +195,7 @@ Inserzione.aggiungiInserzione = async (query) => {
       cucinaFlag: query[9]["cucina"],
       essenzialiFlag: query[9]["essenziali"],
       piscinaFlag: query[9]["piscina"],
-    })
+    });
     return newIns;
   }
   throw new Error("query vuota");
