@@ -508,7 +508,7 @@ $(document).ready(() => {
       .then(async (res) => {
         const response = await res.json();
         if (response.success) {
-          window.location.href = `/inserzione/prenota/identify${window.location.search}&price=${prezzoTotale}`;
+          window.location.href = `/inserzione/prenota/pagamento${window.location.search}&price=${prezzoTotale}`;
         } else {
           $("#exampleModal").modal("show");
           $("#left").css("overflow", "hidden");
