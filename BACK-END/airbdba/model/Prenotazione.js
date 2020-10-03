@@ -64,14 +64,9 @@ Utente.hasMany(Prenotazione, {
 Prenotazione.belongsTo(Utente, {
   foreignKey: "ref_utente",
 });
-//-------ASSOCIAZIONE [1-N] HOST-PRENOTAZIONE----------/
-/*Prenotazione.hasOne(Utente, {
-  as: 'host',
-  foreignKey: "id",
-});
-Utente.belongsTo(Prenotazione, {
-  foreignKey: "id",
-});*/
+
+
+
 
 
 
@@ -112,7 +107,7 @@ Prenotazione.getUserMail = async (id_pren,id_host) => {
   let result = await Prenotazione.findOne({
     where: {
       id_prenotazione: id_pren,
-      ref_host: id_host
+      //ref_host: id_host
     },
     include: [
       {model: Utente, required: true, attributes: ['email']},]

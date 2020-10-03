@@ -304,11 +304,11 @@ const cancella_prenotazione_delete = async (req,res) => {
 
 const contatta_utente_post = async (req,res) => {  //DA MODIFICARE CON GET
   try{
-    const res = await Prenotazione.getUserMail(req.params.id_pren,req.session.utente.id);
-
+    const result = await Prenotazione.getUserMail(req.params.id_pren,req.session.utente.id);
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba_services@gmail.com>',
-      to: res.utente.email,
+      to: result.utente.email,
+      replyTo: req.session.utente.email,
       subject: "Comunicazione dall'Host " + req.session.utente.nome + " " + req.session.utente.cognome + " relativa alla Prenotazione ID " + req.params.id_pren ,
       text: "Comunicazione relativa alla prenotazione ID " + req.params.id_pren,
       html: "<b>RIEPILOGO PLACEHOLDER</b>",
