@@ -198,6 +198,7 @@ const pagamento_post = async (req, res, next) => {
       const {
         intestatario,
         numero_carta,
+        nome_circuito,
         cvv,
         scadenza_mese,
         scadenza_anno,
@@ -207,6 +208,7 @@ const pagamento_post = async (req, res, next) => {
         ref_utente: req.session.utente.id,
         intestatario: intestatario,
         numero_carta: numero_carta,
+        nome_circuito: nome_circuito,
         data_scadenza: scadenza,
         cvv: cvv,
       };
@@ -236,7 +238,7 @@ const riepilogo_get = (req, res, next) => {
   res.locals.inserzione = req.session.inserzione;
   res.locals.prenotazione = req.session.prenotazione;
   res.locals.metodo_pagamento = req.session.metodo_pagamento;
-  console.log(req.session.inserzione);
+  console.log(req.session.metodo_pagamento);
   next();
 };
 

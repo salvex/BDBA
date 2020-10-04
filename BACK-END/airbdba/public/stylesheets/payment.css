@@ -2,7 +2,6 @@
   background: url("https://images.pexels.com/photos/584399/living-room-couch-interior-room-584399.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
   background-size: cover;
 } */
-@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600;700;800;900&display=swap");
 
 #payment-wrapper {
   display: flex;
@@ -76,10 +75,6 @@
   flex-direction: column;
 }
 
-.metodo > span {
-  font-family: "Inconsolata", monospace;
-}
-
 .general {
   flex: 2;
   display: flex;
@@ -141,6 +136,14 @@
 
 #form-container {
   display: none;
+}
+
+#form-container {
+  margin-top: 10px;
+}
+
+label {
+  margin: 0;
 }
 
 @media (max-width: 950px) {
