@@ -37,7 +37,7 @@ const Prenotazione = db.sequelize.define(
       type: DataTypes.DATE(),
       allowNull: false,
     },
-/*    prezzo_parziale : {
+    /*    prezzo_parziale : {
       type: DataTypes.INTEGER(11),
       allowNull: false,
     }, */
@@ -45,7 +45,11 @@ const Prenotazione = db.sequelize.define(
       type: DataTypes.INTEGER(11),
       allowNull: false,
     },
-/*    tassa_soggiorno_totale : {
+    n_ospiti_pren: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+    },
+    /*    tassa_soggiorno_totale : {
       type: DataTypes.INTEGER(11),
       allowNull: false,
     }, */
@@ -64,13 +68,6 @@ Utente.hasMany(Prenotazione, {
 Prenotazione.belongsTo(Utente, {
   foreignKey: "ref_utente",
 });
-
-
-
-
-
-
-
 
 Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
   let yearBefore = moment().format("YYYY") - 1;
@@ -94,33 +91,30 @@ Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
 };
 
 Prenotazione.getPrenotazioni = async (id_ins) => {
-  let result = await Prenotazione.findAll({ //risultato dell'interrogazione che viene passato nel foreach
-      attributes: ["id_prenotazione","check_in", "check_out"],
-      where: {
-        ref_inserzione: id_ins,
-      },
-    });
+  let result = await Prenotazione.findAll({
+    //risultato dell'interrogazione che viene passato nel foreach
+    attributes: ["id_prenotazione", "check_in", "check_out"],
+    where: {
+      ref_inserzione: id_ins,
+    },
+  });
   return result;
-}
+};
 
-Prenotazione.getUserMail = async (id_pren,id_host) => {
+Prenotazione.getUserMail = async (id_pren, id_host) => {
   let result = await Prenotazione.findOne({
     where: {
       id_prenotazione: id_pren,
       //ref_host: id_host
     },
-    include: [
-      {model: Utente, required: true, attributes: ['email']},]
-  })
-  if(result) {
+    include: [{ model: Utente, required: true, attributes: ["email"] }],
+  });
+  if (result) {
     return result;
   } else {
     throw new Error("nessun utente associato");
   }
-}
-
-
-
+};
 
 /*Prenotazione.mostraPrenAss = async (idInserzione) => {
   const risultato = await Prenotazione.findOne({
@@ -141,7 +135,5 @@ Prenotazione.getUserMail = async (id_pren,id_host) => {
     //throw new Error("inserzione inesistente");
   }
 };*/
-
-
 
 module.exports = Prenotazione;

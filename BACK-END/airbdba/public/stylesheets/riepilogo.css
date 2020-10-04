@@ -1,0 +1,43 @@
+h1,
+h4 {
+  text-align: center;
+}
+
+.container-fluid {
+  padding: 0;
+  height: 100%;
+}
+
+.riepilogo {
+  padding: 30px;
+}
+
+.col > h1 {
+  margin-bottom: 30px;
+}
+
+.content {
+  padding: 30px;
+  border: 2px dashed rgba(0, 0, 0, 0.125);
+}
+
+h4 {
+  font-style: italic;
+}
+
+.card {
+  border: 3px solid rgb(166, 240, 166);
+  height: 100%;
+}
+
+@media print {
+  #profile-nav,
+  #exit-nav {
+    display: none;
+  }
+
+  @page {
+    size: auto;
+    margin: 0;
+  }
+}

@@ -2,6 +2,73 @@
 <html lang="en">
   <%- include("./partials/head.ejs", {title: "Riepilogo"}) %>
   <body>
-    <h1>Malandrino chi so io</h1>
+    <div class="container-fluid">
+      <%- include("./partials/nav.ejs") %>
+      <div class="row riepilogo justify-content-center">
+        <div class="col">
+          <h1><b>Riepilogo</b></h1>
+        </div>
+        <div class="w-100"></div>
+        <div class="col-10 col-sm-9 col-md-8 content">
+          <div class="row">
+            <div class="col-12">
+              <h4>Inserzione</h4>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <p>
+                <b
+                  ><%= inserzione.nome_inserzione[0].toUpperCase() +
+                  inserzione.nome_inserzione.slice(1) %></b
+                >,
+                <br />
+                <i
+                  ><%= inserzione.citta[0].toUpperCase() +
+                  inserzione.citta.slice(1) %> (<%=
+                  (inserzione.citta.slice(0,2)).toUpperCase() %>)</i
+                >,
+                <!-- VIA DA INSERIRE -->
+                <br />
+                // manca la via
+                <br />
+                <%= inserzione.prezzo_base %> &euro; x notte
+              </p>
+            </div>
+            <div class="col-md-12 col-lg-8">
+              <p class="text-justify"><%= inserzione.descrizione %></p>
+            </div>
+          </div>
+          <hr />
+          <div class="row align-items-stretch">
+            <div class="col-md-12 col-lg-8 prenotazione">
+              <div class="row">
+                <div class="col-12">
+                  <h4>Prenotazione</h4>
+                </div>
+                <div class="col">
+                  <p class="pren">
+                    Check in - <%= prenotazione.check_in %>
+                    <br />
+                    Check out - <%= prenotazione.check_out %>
+                    <br />
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <div class="card">
+                <div class="card-body">ciao</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        const params = new URLSearchParams(window.location.search);
+        $(".pren").append(params.get("nospiti"));
+      });
+    </script>
   </body>
 </html>
