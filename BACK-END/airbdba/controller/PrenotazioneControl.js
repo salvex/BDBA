@@ -180,7 +180,6 @@ const pagamento_get = async (req, res, next) => {
 
     res.locals.lista_metodi = JSON.stringify(lista_metodi);
     req.session.prezzo = req.query.prezzo;
-    res.locals.prezzo = req.query.prezzo;
 
     console.log(res.locals.lista_metodi);
     next();
@@ -226,8 +225,10 @@ const pagamento_post = async (req, res, next) => {
       stato_prenotazione: 1,
       check_in: req.query.checkin,
       check_out: req.query.checkout,
-      prezzo_finale: req.body.prezzo,
+      n_ospiti_pren: req.query.nospiti,
+      prezzo_finale: req.session.prezzo,
     };
+    console.log(req.query.nospiti);
     req.session.metodo_pagamento = metodo_pagamento;
     req.session.prenotazione = prenotazione;
     res.status(200).json({ success: true });
@@ -245,7 +246,16 @@ const riepilogo_get = (req, res, next) => {
   next();
 };
 
-const riepilogo_post = (req, res) => {};
+const riepilogo_post = async (req, res) => {
+  try {
+    const prenotazione = await Prenotazione.create(req.session.prenotazione);
+    console.log(prenotazione);
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err });
+  }
+};
 
 module.exports = {
   effettua_pren_get,

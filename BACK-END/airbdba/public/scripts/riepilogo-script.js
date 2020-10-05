@@ -22,13 +22,12 @@ $(document).ready(function () {
   $("#confirm-btn").on("click", () => {
     fetch(`/inserzione/prenota/riepilogo${window.location.search}`, {
       method: "POST",
-      body: JSON.stringify({}),
       headers: { "Content-Type": "application/json" },
     })
       .then(async (res) => {
         const response = await res.json();
         if (response.success) {
-          window.location.href = `/inserzione/prenota/riepilogo${window.location.search}`;
+          window.location.href = `/`;
         }
       })
       .catch((err) => console.log(err));
