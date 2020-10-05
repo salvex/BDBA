@@ -30,4 +30,29 @@ $(document).ready(() => {
       $("#filter-btn > img").addClass("rotate-right");
     }
   });
+
+  /* NAVBAR */
+  $(".profile-circle")
+    .css({
+      "background-image":
+        "url('/uploads/avatarUtente/profile-placeholder.png')",
+      "background-size": "cover",
+      "background-position": "center",
+      width: "50px",
+      height: "50px",
+      "border-radius": "50%",
+      border: "2px solid rgba(0,0,0,.65)",
+    })
+    .on("click", () => {
+      $(".hidden-list").slideToggle();
+    });
+  $(".profile-circle-mobile").css({
+    "background-image": "url('/uploads/avatarUtente/profile-placeholder.png')",
+    "background-size": "cover",
+    "background-position": "center",
+    width: "25px",
+    height: "25px",
+    "border-radius": "50%",
+    border: "2px solid rgba(0,0,0,.65)",
+  });
 });

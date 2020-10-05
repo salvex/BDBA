@@ -42,6 +42,37 @@ body {
 .nav-link {
   color: #000000;
 }
+#navbarResponsive {
+  justify-content: end;
+}
+.profile-circle {
+  position: relative;
+}
+.profile-circle:hover {
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 10;
+}
+.hidden-list {
+  position: absolute;
+  top: 60px;
+  right: -35px;
+  list-style-type: none;
+  padding: 0;
+  background-color: #ffffff;
+  width: 150px;
+  display: none;
+}
+.hidden-list > li > a {
+  text-align: start;
+}
+
+.normal-nav {
+  cursor: pointer;
+}
+
+.mobile-nav {
+  display: none;
+}
 /* ---------------------------------- */
 
 /* BACK-BTN */
@@ -254,6 +285,18 @@ body {
 
   .form-input::placeholder {
     text-align: center;
+  }
+
+  .normal-nav {
+    display: none;
+  }
+  .mobile-nav {
+    display: flex;
+  }
+
+  ul li span {
+    float: left;
+    width: 40px;
   }
 }
 
