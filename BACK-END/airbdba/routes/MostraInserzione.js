@@ -50,6 +50,12 @@ router.get(
   }
 );
 
+router.post(
+  "/prenota/riepilogo",
+  [JwtToken.verifyToken],
+  PrenotazioneControl.riepilogo_post
+);
+
 //router.get("")
 
 // localhost:3000/inserzione/prenota/identify

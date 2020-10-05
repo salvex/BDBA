@@ -179,6 +179,9 @@ const pagamento_get = async (req, res, next) => {
     var lista_metodi = await MetodoPagamento.get_metodi(req.session.utente.id);
 
     res.locals.lista_metodi = JSON.stringify(lista_metodi);
+    req.session.prezzo = req.query.prezzo;
+    res.locals.prezzo = req.query.prezzo;
+
     console.log(res.locals.lista_metodi);
     next();
   } catch (err) {
@@ -204,23 +207,14 @@ const pagamento_post = async (req, res, next) => {
         scadenza_anno,
       } = req.body.metodo;
       let scadenza = scadenza_mese + "/" + scadenza_anno;
-      var metodo_pagamento = {
+      var metodo_pagamento = await MetodoPagamento.crete({
         ref_utente: req.session.utente.id,
         intestatario: intestatario,
         codice_carta: codice_carta,
         nome_circuito: nome_circuito,
-        data_scadenza: scadenza,
-        cvv: cvv,
-      };
-      const result = await MetodoPagamento.create({
-        ref_utente: req.session.utente.id,
-        nome_circuito: nome_circuito,
-        codice_carta: codice_carta,
-        intestatario: intestatario,
         data_scadenza: scadenza,
         cvv: cvv,
       });
-      console.log(result);
     } else if (req.body.option == 3) {
       //PAGA IN LOCO
       var metodo_pagamento = null;
@@ -251,10 +245,13 @@ const riepilogo_get = (req, res, next) => {
   next();
 };
 
+const riepilogo_post = (req, res) => {};
+
 module.exports = {
   effettua_pren_get,
   identifica_ospiti_post,
   pagamento_get,
   pagamento_post,
   riepilogo_get,
+  riepilogo_post,
 };
