@@ -197,7 +197,7 @@ const pagamento_post = async (req, res, next) => {
       //SE IL METODO E' NUOVO
       const {
         intestatario,
-        numero_carta,
+        codice_carta,
         nome_circuito,
         cvv,
         scadenza_mese,
@@ -207,7 +207,7 @@ const pagamento_post = async (req, res, next) => {
       var metodo_pagamento = {
         ref_utente: req.session.utente.id,
         intestatario: intestatario,
-        numero_carta: numero_carta,
+        codice_carta: codice_carta,
         nome_circuito: nome_circuito,
         data_scadenza: scadenza,
         cvv: cvv,

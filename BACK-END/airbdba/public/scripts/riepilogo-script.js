@@ -11,7 +11,11 @@ $(document).ready(function () {
     enableLinks: false,
   };
   const params = new URLSearchParams(window.location.search);
-  $(".pren").append("&#8614; " + params.get("nospiti") + " ospiti");
+  $(".pren").prepend(() => {
+    return params.get("nospiti") == 1
+      ? "&#8614; " + params.get("nospiti") + " ospite"
+      : "&#8614; " + params.get("nospiti") + " ospiti";
+  });
   $("#notti").append(params.get("notti"));
   $("#tot").append(params.get("prezzo"));
 
