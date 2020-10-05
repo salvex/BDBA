@@ -51,6 +51,12 @@ $("document").ready(() => {
       if (checkoutDate < checkinDate) {
         $("#check-out").val(checkin);
       }
+
+      if ($("#guestNum").val() === "") {
+        $("#guestNum").focus().val("1");
+      } else {
+        $("#guestNum").focus();
+      }
     }
   });
 

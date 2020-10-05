@@ -84,6 +84,8 @@ $(document).ready(() => {
       if (checkoutDate < checkinDate) {
         $("#check-out").datepicker("update", checkin);
       }
+
+      $("#guestNum").focus().val("1");
     }
   });
 
