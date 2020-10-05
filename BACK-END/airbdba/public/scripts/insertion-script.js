@@ -10,6 +10,8 @@ $(document).ready(() => {
     checkinDate,
     checkoutDate,
     nights,
+    prezzoPerNotte,
+    prezzoNotteServizio,
     prezzoTotale;
   /* --------------------------------------------------------- */
 
@@ -18,6 +20,24 @@ $(document).ready(() => {
   $("#check-in").val(params.get("checkin"));
   $("#check-out").val(params.get("checkout"));
   $("#guestNum").val(params.get("nospiti"));
+
+  checkin = params.get("checkin");
+  checkout = params.get("checkout");
+
+  if (checkin && checkout) {
+    checkinDate = new Date(checkin);
+    checkoutDate = new Date(checkout);
+
+    // Se prenoto per un giorno pagherò l'intera giornata
+    // come se pernottassi
+    if (checkin === checkout) {
+      nights = 1;
+    } else {
+      nights = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
+    }
+  } else {
+    nights = 0;
+  }
 
   /* --------------------------------------------------------- */
 
@@ -352,16 +372,30 @@ $(document).ready(() => {
           } else {
             nights = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
           }
+          $("#nights").html(nights);
+          $("#check-in-value").html(checkin);
+          $("#check-out-value").html(checkout);
 
-          $("#total").html(nights * prezzoBase + " &euro;");
+          prezzoPerNotte = nights * prezzoBase;
+          prezzoNotteServizio = prezzoPerNotte + prezzoPerNotte * 0.07;
+          prezzoTotale = prezzoNotteServizio + prezzoNotteServizio * 0.1;
+
+          $("#total").html(prezzoTotale.toPrecision(4) + " &euro;");
         } else {
           $("#total").html("0 &euro;");
         }
-      }, Math.floor(Math.random() * 2000) + 1);
+      }, 1000);
     });
   });
 
   $("input").on("focusout change input", () => {});
+
+  /* ON REFRESH */
+  $("#check-in-value").html(checkin);
+  $("#check-out-value").html(checkout);
+  $("#nights").html(nights);
+  $("#servizio").html("7%");
+  $("#iva").html("10%");
   /* --------------------------------------------------------- */
 
   /* OPERAZIONE DI FETCH */
@@ -459,9 +493,11 @@ $(document).ready(() => {
             nights = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
           }
 
-          prezzoTotale = nights * prezzoBase;
+          prezzoPerNotte = nights * prezzoBase;
+          prezzoNotteServizio = prezzoPerNotte + prezzoPerNotte * 0.07;
+          prezzoTotale = prezzoNotteServizio + prezzoNotteServizio * 0.1;
 
-          $("#total").html(prezzoTotale + " &euro;");
+          $("#total").html(prezzoTotale.toPrecision(4) + " &euro;");
         } else {
           $("#total").html("0 &euro;");
         }
