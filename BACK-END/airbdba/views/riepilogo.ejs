@@ -40,6 +40,7 @@
           <div class="row">
             <div class="col-12">
               <h4>Inserzione</h4>
+              <br />
             </div>
             <div class="col-md-12 col-lg-4">
               <p>
@@ -82,20 +83,40 @@
           <div class="row">
             <div class="col-12">
               <h4>Prenotazione</h4>
+              <br />
             </div>
           </div>
           <div class="row align-items-stretch">
-            <div class="col-md-12 col-lg-4 prenotazione">
-              <p class="pren">
-                <br />
-                &#8614; Check in &bullet; <%= prenotazione.check_in %>
-                <br />
-                &#8614; Check out &bullet; <%= prenotazione.check_out %>
-                <br />
-                &#8614; <%= metodo_pagamento.codice_carta %>
-              </p>
+            <div class="col-md-12 col-lg-6 prenotazione">
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="pren">
+                    <br />
+                    &#8614; Check in &bullet; <%= prenotazione.check_in %>
+                    <br />
+                    &#8614; Check out &bullet; <%= prenotazione.check_out %>
+                  </p>
+                </div>
+                <div class="col-md-12 metodo-p">
+                  <% if (metodo_pagamento) { %>
+                  <div class="row">
+                    <div class="col">
+                      <b>Metodo pagamento:</b>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <%= metodo_pagamento.nome_circuito[0].toUpperCase() +
+                      metodo_pagamento.nome_circuito.slice(1) %> &nbsp; ****
+                      **** **** <%= metodo_pagamento.codice_carta.slice(12) %>
+                      <br /><br />
+                    </div>
+                  </div>
+                  <% } %>
+                </div>
+              </div>
             </div>
-            <div class="col-md-12 col-lg-8">
+            <div class="col-md-12 col-lg-6">
               <div class="card sumup-card">
                 <div class="card-body sumup">
                   <div class="row">
