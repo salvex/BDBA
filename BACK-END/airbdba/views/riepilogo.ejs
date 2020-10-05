@@ -98,17 +98,26 @@
                   </p>
                 </div>
                 <div class="col-md-12 metodo-p">
-                  <% if (metodo_pagamento) { %>
                   <div class="row">
                     <div class="col">
                       <b>Metodo pagamento:</b>
                     </div>
                   </div>
+                  <% if (metodo_pagamento) { %>
                   <div class="row">
                     <div class="col">
                       <%= metodo_pagamento.nome_circuito[0].toUpperCase() +
                       metodo_pagamento.nome_circuito.slice(1) %> &nbsp; ****
                       **** **** <%= metodo_pagamento.codice_carta.slice(12) %>
+                      <br /><br />
+                    </div>
+                  </div>
+                  <% } else { %>
+                  <div class="row">
+                    <div class="col">
+                      <p class="text-justify">
+                        Pagamento presso la struttura turistica.
+                      </p>
                       <br /><br />
                     </div>
                   </div>
@@ -175,7 +184,7 @@
             id="confirm-btn"
             data-html2canvas-ignore="true"
           >
-            Scarica
+            Prenota
           </button>
         </div>
       </div>

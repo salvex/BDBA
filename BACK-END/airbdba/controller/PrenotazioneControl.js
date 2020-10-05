@@ -212,6 +212,15 @@ const pagamento_post = async (req, res, next) => {
         data_scadenza: scadenza,
         cvv: cvv,
       };
+      const result = await MetodoPagamento.create({
+        ref_utente: req.session.utente.id,
+        nome_circuito: nome_circuito,
+        codice_carta: codice_carta,
+        intestatario: intestatario,
+        data_scadenza: scadenza,
+        cvv: cvv,
+      });
+      console.log(result);
     } else if (req.body.option == 3) {
       //PAGA IN LOCO
       var metodo_pagamento = null;

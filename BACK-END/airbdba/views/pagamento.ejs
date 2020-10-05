@@ -189,7 +189,7 @@
 
           fetch(`/inserzione/prenota/pagamento${window.location.search}`, {
             method: "POST",
-            body: JSON.stringify({ metodo, option: 1 }),
+            body: JSON.stringify({ metodo, option }),
             headers: { "Content-Type": "application/json" },
           })
             .then(async (res) => {
