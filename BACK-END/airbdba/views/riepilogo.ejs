@@ -85,7 +85,7 @@
             </div>
           </div>
           <div class="row align-items-stretch">
-            <div class="col-md-12 col-lg-8 prenotazione">
+            <div class="col-md-12 col-lg-4 prenotazione">
               <p class="pren">
                 &#8614; Check in &bullet; <%= prenotazione.check_in %>
                 <br /><br />
@@ -93,8 +93,8 @@
                 <br /><br />
               </p>
             </div>
-            <div class="col-md-12 col-lg-4">
-              <div class="card">
+            <div class="col-md-12 col-lg-8">
+              <div class="card sumup-card">
                 <div class="card-body sumup">
                   <div class="row">
                     <div class="col">Notti</div>
@@ -107,7 +107,7 @@
                   <hr />
                   <div class="row">
                     <div class="col">Servizio</div>
-                    <div class="col values" style="text-align: end">3%</div>
+                    <div class="col values" style="text-align: end">7%</div>
                   </div>
                   <hr />
                   <div class="row">
@@ -115,7 +115,16 @@
                     <div class="col values" style="text-align: end">10%</div>
                   </div>
                 </div>
-                <div class="card-footer">Totale:</div>
+                <div class="card-footer sumup-footer">
+                  <div class="row">
+                    <div class="col">Totale</div>
+                    <div
+                      class="col values"
+                      id="tot"
+                      style="text-align: end"
+                    ></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -154,21 +163,5 @@
       </div>
     </div>
     <%- include("./partials/footer.ejs") %>
-    <script>
-      $(document).ready(() => {
-        $("#notti").append(() => {
-          checkin = "<%= prenotazione.check_in %>";
-          checkout = "<%= prenotazione.check_out %>";
-          checkinDate = new Date(checkin);
-          checkoutDate = new Date(checkout);
-
-          if (checkin === checkout) {
-            return "1";
-          } else {
-            return String((checkoutDate - checkinDate) / (1000 * 3600 * 24));
-          }
-        });
-      });
-    </script>
   </body>
 </html>

@@ -12,6 +12,8 @@ $(document).ready(function () {
   };
   const params = new URLSearchParams(window.location.search);
   $(".pren").append("&#8614; " + params.get("nospiti") + " ospiti");
+  $("#notti").append(params.get("notti"));
+  $("#tot").append(params.get("prezzo"));
 
   $("#confirm-btn").on("click", () => {
     // Default export is a4 paper, portrait, using millimeters for units

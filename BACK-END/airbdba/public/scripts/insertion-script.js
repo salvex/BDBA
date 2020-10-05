@@ -544,7 +544,7 @@ $(document).ready(() => {
       .then(async (res) => {
         const response = await res.json();
         if (response.success) {
-          window.location.href = `/inserzione/prenota/pagamento${window.location.search}&price=${prezzoTotale}`;
+          window.location.href = `/inserzione/prenota/pagamento${window.location.search}&prezzo=${prezzoTotale}&notti=${nights}`;
         } else {
           $("#exampleModal").modal("show");
           $("#left").css("overflow", "hidden");
