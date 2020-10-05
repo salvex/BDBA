@@ -2,13 +2,35 @@
 <html lang="en">
   <%- include("./partials/head.ejs", {title: "Riepilogo"}) %>
   <body>
+    <%- include("./partials/nav.ejs") %>
     <div class="container-fluid">
-      <%- include("./partials/nav.ejs") %>
-      <div class="row riepilogo justify-content-center">
-        <div class="col">
+      <a href="#confirm-btn" class="btn btn-primary confirm">Conferma</a>
+      <div class="row logo-print logo-top">
+        <div class="col-12">
+          <img src="/assets/images/logo-xs.jpg" alt="AIR - BDBA" />
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-10">
+          <div class="alert alert-danger alert-print">
+            <p class="text-justify">
+              Si ricorda che in fase di check in, presso la struttura turistica,
+              dovrà essere pagata una quota aggiuntiva relativa alla tassa di
+              soggiorno. Gli esenti si potranno astenere al pagamento
+              <u
+                >presentando un certificato che attesti la veridicità di quanto
+                dichiarato</u
+              >.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="row heading">
+        <div class="col-12">
           <h1><b>Riepilogo</b></h1>
         </div>
-        <div class="w-100"></div>
+      </div>
+      <div class="row riepilogo justify-content-center align-items-stretch">
         <div class="col-10 col-sm-9 col-md-8 content">
           <div class="row">
             <div class="col-12">
@@ -37,37 +59,107 @@
               <p class="text-justify"><%= inserzione.descrizione %></p>
             </div>
           </div>
+          <div class="row">
+            <div class="alert alert-danger alert-normal" style="width: 100%">
+              <p class="text-justify">
+                Si ricorda che in fase di check in, presso la struttura
+                turistica, dovrà essere pagata una quota aggiuntiva relativa
+                alla tassa di soggiorno. Gli esenti si potranno astenere al
+                pagamento
+                <u
+                  >presentando un certificato che attesti la veridicità di
+                  quanto dichiarato</u
+                >.
+              </p>
+            </div>
+          </div>
           <hr />
+          <div class="row">
+            <div class="col-12">
+              <h4>Prenotazione</h4>
+            </div>
+          </div>
           <div class="row align-items-stretch">
             <div class="col-md-12 col-lg-8 prenotazione">
-              <div class="row">
-                <div class="col-12">
-                  <h4>Prenotazione</h4>
-                </div>
-                <div class="col">
-                  <p class="pren">
-                    Check in - <%= prenotazione.check_in %>
-                    <br />
-                    Check out - <%= prenotazione.check_out %>
-                    <br />
-                  </p>
-                </div>
-              </div>
+              <p class="pren">
+                &#8614; Check in &bullet; <%= prenotazione.check_in %>
+                <br /><br />
+                &#8614; Check out &bullet; <%= prenotazione.check_out %>
+                <br /><br />
+              </p>
             </div>
             <div class="col-md-12 col-lg-4">
               <div class="card">
-                <div class="card-body">ciao</div>
+                <div class="card-body sumup">
+                  <div class="row">
+                    <div class="col">Notti</div>
+                    <div
+                      id="notti"
+                      class="col values"
+                      style="text-align: end"
+                    ></div>
+                  </div>
+                  <hr />
+                  <div class="row">
+                    <div class="col">Servizio</div>
+                    <div class="col values" style="text-align: end">3%</div>
+                  </div>
+                  <hr />
+                  <div class="row">
+                    <div class="col">IVA</div>
+                    <div class="col values" style="text-align: end">10%</div>
+                  </div>
+                </div>
+                <div class="card-footer">Totale:</div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="row justify-content-center">
+        <div class="col-10">
+          <div class="alert alert-danger alert-print">
+            <p class="text-justify">
+              Si ricorda che in fase di check in, presso la struttura turistica,
+              dovrà essere pagata una quota aggiuntiva relativa alla tassa di
+              soggiorno. Gli esenti si potranno astenere al pagamento
+              <u
+                >presentando un certificato che attesti la veridicità di quanto
+                dichiarato</u
+              >.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="book row">
+        <div class="col-12 book-btn-container">
+          <button class="btn btn-primary" id="confirm-btn">Prenota</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col"><%- include("./partials/footer.ejs") %></div>
+      </div>
+      <div class="row logo-print">
+        <div class="col-12">
+          <img src="/assets/images/logo-xs.jpg" alt="AIR - BDBA" />
+        </div>
+      </div>
     </div>
 
     <script>
-      $(document).ready(function () {
-        const params = new URLSearchParams(window.location.search);
-        $(".pren").append(params.get("nospiti"));
+      $(document).ready(() => {
+        $("#notti").append(() => {
+          checkin = "<%= prenotazione.check_in %>";
+          checkout = "<%= prenotazione.check_out %>";
+          checkinDate = new Date(checkin);
+          checkoutDate = new Date(checkout);
+
+          if (checkin === checkout) {
+            return "1";
+          } else {
+            return String((checkoutDate - checkinDate) / (1000 * 3600 * 24));
+          }
+        });
       });
     </script>
   </body>

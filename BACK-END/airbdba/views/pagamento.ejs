@@ -50,7 +50,7 @@
 
     <script>
       $(document).ready(() => {
-        let intestatarioReg = /^[A-Z][a-z]*\s[A-Z][a-z]*/;
+        let intestatarioReg = /^[a-z]+\s[a-z]+/;
         let cartaReg = /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/;
         let meseReg = /^0[1-9]|1[0-2]$/;
         let annoReg = /^[0-9]{2}$/;
@@ -120,44 +120,43 @@
               if ($(this).prop("id") === "inputScadenzaM") {
                 if (meseReg.test($(this).val())) {
                   $(this).removeClass("is-invalid");
+                  // Verifico se la data di scadenza non è inferiore all'anno
+                  // corrente
+                  if ($("#inputScadenzaA").val() !== "") {
+                    if (
+                      Number($(this).val()) < mese &&
+                      Number($("#inputScadenzaA").val()) <= anno
+                    ) {
+                      $(this).addClass("is-invalid");
+                      $("#inputScadenzaA").addClass("is-invalid");
+                    } else {
+                      $(this).removeClass("is-invalid");
+                      $("#inputScadenzaA").removeClass("is-invalid");
+                    }
+                  }
                 } else {
                   $(this).addClass("is-invalid");
-                }
-
-                // Verifico se la data di scadenza non è inferiore all'anno
-                // corrente
-                if ($("#inputScadenzaA").val() !== "") {
-                  if (
-                    Number($(this).val()) < mese &&
-                    Number($("#inputScadenzaA").val()) <= anno
-                  ) {
-                    $(this).addClass("is-invalid");
-                    $("#inputScadenzaA").addClass("is-invalid");
-                  } else {
-                    $(this).removeClass("is-invalid");
-                    $("#inputScadenzaA").removeClass("is-invalid");
-                  }
                 }
               }
 
               if ($(this).prop("id") === "inputScadenzaA") {
                 if (annoReg.test($(this).val())) {
                   $(this).removeClass("is-invalid");
+                  // Verifico se la data di scadenza non è inferiore all'anno
+                  // corrente
+                  if (
+                    Number($(this).val()) < anno ||
+                    (Number($(this).val()) === anno &&
+                      Number($("#inputScadenzaM").val()) < mese)
+                  ) {
+                    $(this).addClass("is-invalid");
+                    $("#inputScadenzaM").addClass("is-invalid");
+                  } else {
+                    $(this).removeClass("is-invalid");
+                    $("#inputScadenzaM").removeClass("is-invalid");
+                  }
                 } else {
                   $(this).addClass("is-invalid");
-                }
-                // Verifico se la data di scadenza non è inferiore all'anno
-                // corrente
-                if (
-                  Number($(this).val()) < anno ||
-                  (Number($(this).val()) === anno &&
-                    Number($("#inputScadenzaM").val()) < mese)
-                ) {
-                  $(this).addClass("is-invalid");
-                  $("#inputScadenzaM").addClass("is-invalid");
-                } else {
-                  $(this).removeClass("is-invalid");
-                  $("#inputScadenzaM").removeClass("is-invalid");
                 }
               }
 
@@ -331,44 +330,43 @@
                       if ($(this).prop("id") === "inputScadenzaM") {
                         if (meseReg.test($(this).val())) {
                           $(this).removeClass("is-invalid");
+                          // Verifico se la data di scadenza non è inferiore all'anno
+                          // corrente
+                          if ($("#inputScadenzaA").val() !== "") {
+                            if (
+                              Number($(this).val()) < mese &&
+                              Number($("#inputScadenzaA").val()) <= anno
+                            ) {
+                              $(this).addClass("is-invalid");
+                              $("#inputScadenzaA").addClass("is-invalid");
+                            } else {
+                              $(this).removeClass("is-invalid");
+                              $("#inputScadenzaA").removeClass("is-invalid");
+                            }
+                          }
                         } else {
                           $(this).addClass("is-invalid");
-                        }
-
-                        // Verifico se la data di scadenza non è inferiore all'anno
-                        // corrente
-                        if ($("#inputScadenzaA").val() !== "") {
-                          if (
-                            Number($(this).val()) < mese &&
-                            Number($("#inputScadenzaA").val()) <= anno
-                          ) {
-                            $(this).addClass("is-invalid");
-                            $("#inputScadenzaA").addClass("is-invalid");
-                          } else {
-                            $(this).removeClass("is-invalid");
-                            $("#inputScadenzaA").removeClass("is-invalid");
-                          }
                         }
                       }
 
                       if ($(this).prop("id") === "inputScadenzaA") {
                         if (annoReg.test($(this).val())) {
                           $(this).removeClass("is-invalid");
+                          // Verifico se la data di scadenza non è inferiore all'anno
+                          // corrente
+                          if (
+                            Number($(this).val()) < anno ||
+                            (Number($(this).val()) === anno &&
+                              Number($("#inputScadenzaM").val()) < mese)
+                          ) {
+                            $(this).addClass("is-invalid");
+                            $("#inputScadenzaM").addClass("is-invalid");
+                          } else {
+                            $(this).removeClass("is-invalid");
+                            $("#inputScadenzaM").removeClass("is-invalid");
+                          }
                         } else {
                           $(this).addClass("is-invalid");
-                        }
-                        // Verifico se la data di scadenza non è inferiore all'anno
-                        // corrente
-                        if (
-                          Number($(this).val()) < anno ||
-                          (Number($(this).val()) === anno &&
-                            Number($("#inputScadenzaM").val()) < mese)
-                        ) {
-                          $(this).addClass("is-invalid");
-                          $("#inputScadenzaM").addClass("is-invalid");
-                        } else {
-                          $(this).removeClass("is-invalid");
-                          $("#inputScadenzaM").removeClass("is-invalid");
                         }
                       }
 
