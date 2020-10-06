@@ -34,8 +34,7 @@ $(document).ready(() => {
   /* NAVBAR */
   $(".profile-circle")
     .css({
-      "background-image":
-        "url('/uploads/avatarUtente/profile-placeholder.png')",
+      "background-image": "url('/uploads/avatarUtente/1/1.jpeg')",
       "background-size": "cover",
       "background-position": "center",
       width: "50px",
@@ -47,7 +46,7 @@ $(document).ready(() => {
       $(".hidden-list").slideToggle();
     });
   $(".profile-circle-mobile").css({
-    "background-image": "url('/uploads/avatarUtente/profile-placeholder.png')",
+    "background-image": "url('/uploads/avatarUtente/1/1.jpeg')",
     "background-size": "cover",
     "background-position": "center",
     width: "25px",
