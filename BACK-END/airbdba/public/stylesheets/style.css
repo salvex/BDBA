@@ -48,16 +48,6 @@ body {
 .profile-circle {
   position: relative;
 }
-.profile-circle-overlay {
-  width: "50px";
-  height: "50px";
-  position: absolute;
-  right: 100px;
-  top: 100px;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 1);
-  z-index: 100;
-}
 .hidden-list {
   position: absolute;
   top: 60px;

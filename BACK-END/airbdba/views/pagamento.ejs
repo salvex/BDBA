@@ -58,17 +58,18 @@
 
         let params = new URLSearchParams(window.location.search);
         let prezzo = params.get("prezzo");
+        console.log(prezzo);
 
         // Prendo la data di oggi
         const anno = Number(String(new Date().getFullYear()).slice(2));
         const mese = new Date().getMonth() + 1;
 
-        let n = window.location.href.indexOf("&prezzo");
+        /* let n = window.location.href.indexOf("&prezzo");
         window.history.pushState(
           null,
           null,
           window.location.href.substring(0, n)
-        );
+        ); */
 
         const payLater = () => {
           fetch(`/inserzione/prenota/pagamento${window.location.search}`, {
@@ -493,6 +494,7 @@
         $(".paga-loco-btn").on("click", payLater);
       });
     </script>
+    <%- include("../public/scripts/general-script.ejs") %>
   </body>
 </html>
 

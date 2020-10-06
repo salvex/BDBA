@@ -206,7 +206,7 @@ const pagamento_post = async (req, res, next) => {
         scadenza_anno,
       } = req.body.metodo;
       let scadenza = scadenza_mese + "/" + scadenza_anno;
-      var metodo_pagamento = await MetodoPagamento.crete({
+      var metodo_pagamento = await MetodoPagamento.create({
         ref_utente: req.session.utente.id,
         intestatario: intestatario,
         codice_carta: codice_carta,

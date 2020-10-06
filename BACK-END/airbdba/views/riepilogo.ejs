@@ -193,5 +193,47 @@
       </div>
     </div>
     <%- include("./partials/footer.ejs") %>
+
+    <script>
+      $(document).ready(function () {
+        const opt = {
+          filename:
+            "Prenotazione " +
+            new Date().getFullYear() +
+            "-" +
+            new Date().getMonth() +
+            "-" +
+            new Date().getDay() +
+            ".pdf",
+          enableLinks: false,
+        };
+        const params = new URLSearchParams(window.location.search);
+        $(".pren").prepend(() => {
+          return params.get("nospiti") == 1
+            ? "&#8614; " + params.get("nospiti") + " ospite"
+            : "&#8614; " + params.get("nospiti") + " ospiti";
+        });
+        $("#notti").append(params.get("notti"));
+
+        $("#confirm-btn").on("click", () => {
+          fetch(
+            `/inserzione/prenota/riepilogo${window.location.search}&prezzo=<%= prenotazione.prezzo_finale %>`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+            }
+          )
+            .then(async (res) => {
+              const response = await res.json();
+              if (response.success) {
+                window.location.href = `/`;
+              }
+            })
+            .catch((err) => console.log(err));
+        });
+      });
+    </script>
+
+    <%- include("../public/scripts/general-script.ejs") %>
   </body>
 </html>
