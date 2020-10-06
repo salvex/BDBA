@@ -76,6 +76,19 @@ const metodoPagamento_post = async (req, res) => {
   }
 };
 
+const modificaFotoProfilo_put = async (req, res) => {
+  try {
+    console.log(req.body);
+    let path = req.files["avatar"][0].path;
+    let user = await Utente.findByPk(req.session.utente.id);
+    user.imagePath = path;
+    await user.save();
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(400).json({ err });
+  }
+};
+
 module.exports = {
   user_get,
   // profilo_get,
@@ -83,5 +96,6 @@ module.exports = {
   modificaPassword_post,
   metodoPagamento_post,
   metodoPagamento_get,
+  modificaFotoProfilo_put,
   //diventaHost_post,
 };
