@@ -21,9 +21,9 @@ const user_get = (req, res) => {
   res.render("user");
 };
 
-const profilo_get = (req, res) => {
+/* const profilo_get = (req, res) => {
   res.render("profilo");
-};
+}; */
 
 const modificaPassword_get = (req, res) => {
   res.render("modificaPassword");
@@ -78,7 +78,7 @@ const metodoPagamento_post = async (req, res) => {
 
 module.exports = {
   user_get,
-  profilo_get,
+  // profilo_get,
   modificaPassword_get,
   modificaPassword_post,
   metodoPagamento_post,

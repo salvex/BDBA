@@ -3,20 +3,20 @@ const multer = require("multer");
 const path = require("path");
 var fs = require("fs-extra");
 
+// FOTO PATH FORMAT
+// path/1/1.jpg
+
 //funzione custom
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let type = req.params.type;
     let id = req.params.id;
-    let path = "airbdba/public/uploads" + "/" + type + "/" + id ;
+    let path = "airbdba/public/uploads" + "/" + type + "/" + id;
     fs.mkdirSync(path, { recursive: true }); //crea il percorso qualora non ci fosse
     cb(null, path);
   },
   filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+    cb(null, req.params.id + path.extname(file.originalname));
   },
 });
 

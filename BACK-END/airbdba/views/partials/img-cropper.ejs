@@ -25,8 +25,18 @@
         </div>
       </div>
       <div class="modal-footer">
-        <input type="file" id="imgupload" style="display: none" />
-        <button type="button" class="btn btn-primary" id="save">Salva</button>
+        <form action="/profile" method="post" enctype="multipart/form-data">
+          <input
+            name="avatar"
+            type="file"
+            id="imgupload"
+            style="display: none"
+          />
+          <button type="button" class="btn btn-primary" id="save-img">
+            Salva
+          </button>
+        </form>
+
         <button class="btn btn-primary" id="OpenImgUpload">Carica</button>
         <button
           type="button"

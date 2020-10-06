@@ -66,7 +66,7 @@ app.use(cors());
 app.use("*", checkUser);
 app.use("/", indexRouter);
 app.use(authRouter);
-setInterval(checkRendiconto, 60*60*24*1000);
+setInterval(checkRendiconto, 60 * 60 * 24 * 1000);
 
 /*app.get("/data", (req, res) => {
   var annoCorrente = moment().format("YYYY");
@@ -97,7 +97,7 @@ app.post("/prova", async (req, res) => {
     console.log("Messaggio inviato: %s", info.messageId);
   });
 });
-app.use("/user", verifyToken, utenteRouter);
+app.use("/profilo", verifyToken, utenteRouter);
 app.use("/signup", regRouter);
 app.use("/host", verifyToken, hostRouter);
 app.use("/inserzione", insRouter);
