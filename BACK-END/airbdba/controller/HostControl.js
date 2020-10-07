@@ -151,11 +151,12 @@ const aggiungi_inserzione_post = async (req, res) => {
   }
 };
 
-const visualizza_inserzioni_get = async (req, res) => {
+const visualizza_inserzioni_get = async (req, res, next) => {
   try {
     const id_host = JwtToken.decodedId(req);
     var lista = await Inserzione.processaLista(id_host);
-    res.status(200).json({ lista });
+    res.locals.inserzioni = JSON.stringify(lista);
+    next();
   } catch (err) {
     const errors = errorsHandler(err); //
     res.status(400).json({ errors });

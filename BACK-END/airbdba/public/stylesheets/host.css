@@ -1,0 +1,10 @@
+.host-container {
+  padding-top: 30px;
+  min-height: 100%;
+}
+.host-container-row {
+  height: 100%;
+}
+.tab-pane {
+  padding: 20px;
+}

@@ -12,7 +12,14 @@ router.post(
   HostControl.aggiungi_inserzione_post
 );
 
-router.get("/", [JwtToken.verifyHost], HostControl.visualizza_inserzioni_get);
+router.get(
+  "/",
+  [JwtToken.verifyHost],
+  HostControl.visualizza_inserzioni_get,
+  (req, res) => {
+    res.render("host");
+  }
+);
 
 router.put(
   "/modifica/",

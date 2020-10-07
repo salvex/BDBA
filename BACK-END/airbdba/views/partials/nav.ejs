@@ -26,11 +26,13 @@
         </li>
         <% if (user.isHost) { %>
         <li class="nav-item active">
-          <a class="nav-link exit-nav" href="#">Pannello Host</a>
+          <a class="nav-link exit-nav" href="/host">Pannello Host</a>
         </li>
         <% } else { %>
         <li class="nav-item active">
-          <a class="nav-link exit-nav" href="#">Diventa host</a>
+          <a class="nav-link exit-nav become-host-btn" href="#"
+            >Diventa host &#9733;</a
+          >
         </li>
         <% } %>
         <li class="nav-item active">
@@ -46,7 +48,7 @@
           </li>
           <% if (user.isHost) { %>
           <li class="nav-item active">
-            <a class="nav-link host-nav" href="#">Gestione Host</a>
+            <a class="nav-link host-nav" href="/host">Gestione Host</a>
           </li>
           <% } else { %>
           <li class="nav-item active">
