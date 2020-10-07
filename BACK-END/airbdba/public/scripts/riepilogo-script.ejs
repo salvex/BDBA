@@ -1,0 +1,50 @@
+<script>
+  $(document).ready(function () {
+    let nights;
+    const checkin = "<%= prenotazione.check_in %>";
+    const checkout = "<%= prenotazione.check_out %>";
+    const checkinDate = new Date(checkin);
+    const checkoutDate = new Date(checkout);
+    if (checkin === checkout) {
+      nights = 1;
+    } else {
+      nights = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
+    }
+
+    const opt = {
+      filename:
+        "Prenotazione " +
+        new Date().getFullYear() +
+        "-" +
+        new Date().getMonth() +
+        "-" +
+        new Date().getDay() +
+        ".pdf",
+      enableLinks: false,
+    };
+    const params = new URLSearchParams(window.location.search);
+    $(".pren").prepend(() => {
+      return params.get("nospiti") == 1
+        ? "&#8614; " + params.get("nospiti") + " ospite"
+        : "&#8614; " + params.get("nospiti") + " ospiti";
+    });
+    $("#notti").append(String(nights));
+
+    $("#confirm-btn").on("click", () => {
+      fetch(
+        `/inserzione/prenota/riepilogo${window.location.search}&prezzo=<%= prenotazione.prezzo_finale %>`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+        .then(async (res) => {
+          const response = await res.json();
+          if (response.success) {
+            window.location.href = `/`;
+          }
+        })
+        .catch((err) => console.log(err));
+    });
+  });
+</script>
