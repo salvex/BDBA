@@ -42,7 +42,7 @@
       .css({
         "background-image": `
         <% if (user.imagePath) { %>
-          url("<%= user.imagePath.slice(user.imagePath.indexOf("uploads")) %>")
+          url("<%= user.imagePath.slice(user.imagePath.indexOf("/uploads")) %>")
         <% } else { %>
           url("assets/images/profile_pics/profile-placeholder.png")
         <% } %>
@@ -60,7 +60,7 @@
     $(".profile-circle-mobile").css({
       "background-image": `
       <% if (user.imagePath) { %>
-        url("<%= user.imagePath.slice(user.imagePath.indexOf("uploads")) %>")
+        url("<%= user.imagePath.slice(user.imagePath.indexOf("/uploads")) %>")
       <% } else { %>
         url("assets/images/profile_pics/profile-placeholder.png")
       <% } %>
