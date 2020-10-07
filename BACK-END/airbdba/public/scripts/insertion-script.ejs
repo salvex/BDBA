@@ -228,7 +228,7 @@
         const checkoutDate = new Date(checkout);
 
         if (checkinDate > checkoutDate) {
-          $("#check-in").datepicker("update", checkout);
+          $("#check-out").datepicker("update", checkin);
           params.set("checkin", $("#check-out").val());
           window.history.pushState(
             "",
@@ -241,6 +241,33 @@
               params.toString()
           );
         } else {
+          let flag = 1;
+          for (let i = date.length - 1; i >= 0; i -= 1) {
+            let currentCheckIn = new Date(date[i]);
+            if (currentCheckIn > checkinDate) {
+              let j = i;
+
+              for (j; j >= 0; j -= 1) {
+                let currentCheckOut = new Date(date[j]);
+                if (currentCheckOut < checkoutDate) {
+                  // trovo una data inferiore già
+                  // prenotata in mezzo alle date di
+                  // checkin e checkout
+                  // setto il checkout = checkin
+
+                  $("#check-out").datepicker("update", checkin);
+                  flag = 0;
+                }
+                if (!flag) {
+                  break;
+                }
+              }
+            }
+            if (!flag) {
+              break;
+            }
+          }
+
           params.set("checkin", $("#check-in").val());
           window.history.pushState(
             "",
@@ -285,7 +312,6 @@
           );
         } else {
           let flag = 1;
-          console.log(date);
           for (let i = date.length - 1; i >= 0; i -= 1) {
             let currentCheckIn = new Date(date[i]);
             if (currentCheckIn > checkinDate) {
@@ -293,13 +319,13 @@
 
               for (j; j >= 0; j -= 1) {
                 let currentCheckOut = new Date(date[j]);
-                console.log(currentCheckOut);
-                if (currentCheckOut < checkinDate) {
+                if (currentCheckOut < checkoutDate) {
                   // trovo una data inferiore già
                   // prenotata in mezzo alle date di
                   // checkin e checkout
                   // setto il checkout = checkin
-                  $("#check-out").val(checkin);
+
+                  $("#check-out").datepicker("update", checkin);
                   flag = 0;
                 }
                 if (!flag) {

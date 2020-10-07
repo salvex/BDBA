@@ -8,11 +8,9 @@ var bcrypt = require("bcrypt");
 const Prenotazione = require("../model/Prenotazione.js");
 var transporter = require("../utils/mailSender");
 
-
 const maxAge = 60 * 60 * 24;
 
 /* TO-DO: CONTATTA UTENTE */
-
 
 var errorsHandler = (err) => {
   let errors = { email: "", query: "", ins: "" };
@@ -81,19 +79,19 @@ async function parseField(
     if (IdFilter) {
       query[8] = IdFilter;
     }
-    if(ServiziFilter) {
-      var filtri={
+    if (ServiziFilter) {
+      var filtri = {
         wifi: ServiziFilter.wifi,
-        riscaldamento: ServiziFilter.riscaldamento , 
+        riscaldamento: ServiziFilter.riscaldamento,
         frigorifero: ServiziFilter.frigorifero,
         casa: ServiziFilter.casa,
         bnb: ServiziFilter.bnb,
         parcheggio: ServiziFilter.parcheggio,
         ascensore: ServiziFilter.ascensore,
         cucina: ServiziFilter.cucina,
-        essenziali:ServiziFilter.essenziali,
+        essenziali: ServiziFilter.essenziali,
         piscina: ServiziFilter.piscina,
-      }
+      };
       query[9] = filtri;
     }
   }
@@ -110,9 +108,7 @@ const become_host_get = async (req, res) => {
       expiresIn: maxAge * 1000,
     });
     //--------------------/
-    res
-      .status(200)
-      .json({ message: "Utente trasformato in Host con successo!" });
+    res.status(200).json({ success: true });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });
@@ -127,9 +123,9 @@ const aggiungi_inserzione_post = async (req, res) => {
       inizioDisp,
       fineDisp,
       nospiti,
-      desc, 
+      desc,
       prezzo,
-      servizi  
+      servizi,
     } = req.body;
     const id_host = JwtToken.decodedId(req);
     var path = req.files["gallery"][0].path;
@@ -142,7 +138,7 @@ const aggiungi_inserzione_post = async (req, res) => {
       desc,
       prezzo,
       path,
-      id_host,
+      id_host
     );
     var inserzione = await Inserzione.aggiungiInserzione(fields);
     res.status(200).json({
@@ -177,7 +173,7 @@ const modifica_inserzione_put = async (req, res) => {
       nospiti,
       desc,
       prezzo,
-      servizi
+      servizi,
     } = req.body;
     const id_host = JwtToken.decodedId(req);
     var path = "dummy";
@@ -240,10 +236,10 @@ const cancella_inserzione_delete = async (req, res) => {
   }
 };
 
-const accetta_prenotazione_get = async (req,res) => {
+const accetta_prenotazione_get = async (req, res) => {
   try {
     var acceptPren = await Prenotazione.findByPk(req.params.id_pren);
-    if(acceptPren) {
+    if (acceptPren) {
       acceptPren.stato_ordine = 2;
       await acceptPren.save();
     } else {
@@ -254,14 +250,14 @@ const accetta_prenotazione_get = async (req,res) => {
     });
   } catch (err) {
     const errors = errorsHandler(err);
-    res.status(400).json({errors});
+    res.status(400).json({ errors });
   }
-}
+};
 
-const rifiuta_prenotazione_get = async (req,res) => {
+const rifiuta_prenotazione_get = async (req, res) => {
   try {
     var refusePren = await Prenotazione.findByPk(req.params.id_pren);
-    if(refusePren) {
+    if (refusePren) {
       refusePren.stato_ordine = 0;
       await refusePren.save();
     } else {
@@ -272,21 +268,21 @@ const rifiuta_prenotazione_get = async (req,res) => {
     });
   } catch (err) {
     const errors = errorsHandler(err);
-    res.status(400).json({errors});
+    res.status(400).json({ errors });
   }
-}
+};
 
-const cancella_prenotazione_delete = async (req,res) => {
+const cancella_prenotazione_delete = async (req, res) => {
   try {
     var deletePren = await Prenotazione.findByPk(req.params.id_pren);
-    if(deletePren) {
-      if(deletePren.stato_ordine == 2) {
+    if (deletePren) {
+      if (deletePren.stato_ordine == 2) {
         await deletePren.destroy();
       } else {
         res.status(304).json({
           message: "Non puoi cancellare questa prenotazione!",
-        })
-      }  
+        });
+      }
       res.status(200).json({
         message: "hai cancellato l'ordine con successo!",
       });
@@ -298,22 +294,32 @@ const cancella_prenotazione_delete = async (req,res) => {
     });
   } catch (err) {
     const errors = errorsHandler(err);
-    res.status(400).json({errors});
+    res.status(400).json({ errors });
   }
-}
+};
 
-const contatta_utente_post = async (req,res) => {  //DA MODIFICARE CON GET
-  try{
-    const result = await Prenotazione.getUserMail(req.params.id_pren,req.session.utente.id);
+const contatta_utente_post = async (req, res) => {
+  //DA MODIFICARE CON GET
+  try {
+    const result = await Prenotazione.getUserMail(
+      req.params.id_pren,
+      req.session.utente.id
+    );
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba_services@gmail.com>',
       to: result.utente.email,
       replyTo: req.session.utente.email,
-      subject: "Comunicazione dall'Host " + req.session.utente.nome + " " + req.session.utente.cognome + " relativa alla Prenotazione ID " + req.params.id_pren ,
+      subject:
+        "Comunicazione dall'Host " +
+        req.session.utente.nome +
+        " " +
+        req.session.utente.cognome +
+        " relativa alla Prenotazione ID " +
+        req.params.id_pren,
       text: "Comunicazione relativa alla prenotazione ID " + req.params.id_pren,
       html: "<b>RIEPILOGO PLACEHOLDER</b>",
     };
-  
+
     await transporter.sendMail(bodyMail, (error, info) => {
       if (error) {
         return console.log(error);
@@ -322,10 +328,9 @@ const contatta_utente_post = async (req,res) => {  //DA MODIFICARE CON GET
     });
   } catch (err) {
     const errors = errorsHandler(err);
-    res.status(400).json({errors});
+    res.status(400).json({ errors });
   }
-}
-
+};
 
 module.exports = {
   become_host_get,
@@ -337,5 +342,5 @@ module.exports = {
   accetta_prenotazione_get,
   rifiuta_prenotazione_get,
   cancella_prenotazione_delete,
-  contatta_utente_post
+  contatta_utente_post,
 }; //

@@ -31,6 +31,18 @@
         $("#filter-btn > img").addClass("rotate-right");
       }
     });
+    /* --------------------------------------------------------- */
+
+    /* MODAL BECOME HOST */
+    $(".become-host-btn").on("click", (e) => {
+      e.preventDefault();
+      $("#becomeHost").modal("show");
+    });
+
+    $("#acceptBecomeHost").on("click", () => {
+      $("#becomeHost").modal("hide");
+    });
+    /* --------------------------------------------------------- */
   });
 </script>
 

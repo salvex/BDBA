@@ -10,6 +10,7 @@ var moment = require("moment");
 var session = require("express-session");
 var sessionStore = require("./utils/sessionStore");
 var { checkRendiconto } = require("./utils/checkRendiconto");
+var HostControl = require("./controller/HostControl");
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -103,6 +104,7 @@ app.use("/host", verifyToken, hostRouter);
 app.use("/inserzione", insRouter);
 app.use("/recovery", recRouter);
 app.use("/search", searchRouter);
+app.get("/become", HostControl.become_host_get);
 
 // handler errore 404
 app.use(function (req, res, next) {

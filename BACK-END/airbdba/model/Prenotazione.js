@@ -30,11 +30,11 @@ const Prenotazione = db.sequelize.define(
       allowNull: false,
     },
     check_in: {
-      type: DataTypes.DATE(),
+      type: DataTypes.DATEONLY(),
       allowNull: false,
     },
     check_out: {
-      type: DataTypes.DATE(),
+      type: DataTypes.DATEONLY(),
       allowNull: false,
     },
     /*    prezzo_parziale : {

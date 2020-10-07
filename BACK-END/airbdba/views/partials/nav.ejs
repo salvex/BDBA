@@ -46,11 +46,13 @@
           </li>
           <% if (user.isHost) { %>
           <li class="nav-item active">
-            <a class="nav-link exit-nav" href="#">Gestione Host</a>
+            <a class="nav-link host-nav" href="#">Gestione Host</a>
           </li>
           <% } else { %>
           <li class="nav-item active">
-            <a class="nav-link exit-nav" href="#">Diventa Host</a>
+            <a class="nav-link become-host-btn" href="#"
+              >Diventa Host &#9733;</a
+            >
           </li>
           <% } %>
           <li>
@@ -73,3 +75,42 @@
     <% } %>
   </div>
 </nav>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="becomeHost"
+  tabindex="-1"
+  aria-labelledby="becomeHostLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="becomeHostLabel">Diventa un Host</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="text-justify">
+          Diventando un Host avrai la possibilità di inserire le tue inserzioni
+          e iniziare a guadagnare nello straordinario mondo dei B&B!!
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Chiudi
+        </button>
+        <button type="button" class="btn btn-primary" id="acceptBecomeHost">
+          Accetta &#9733;
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

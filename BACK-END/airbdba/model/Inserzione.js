@@ -28,11 +28,11 @@ const Inserzione = db.sequelize.define(
       allowNull: false,
     },
     inizioDisponibilita: {
-      type: DataTypes.DATE(),
+      type: DataTypes.DATEONLY(),
       allowNull: false,
     },
     fineDisponibilita: {
-      type: DataTypes.DATE(),
+      type: DataTypes.DATEONLY(),
       allowNull: false,
     },
     n_ospiti: {
@@ -114,17 +114,49 @@ Inserzione.verRicerca = async (query, checkin, checkout) => {
     ],
   });
 
+  let listaFinale = [];
+
+  function checkDates(pren) {
+    let checkinPren = Date.parse(pren.check_in);
+    let checkoutPren = Date.parse(pren.check_out);
+    let checkinComp = Date.parse(checkin);
+    let checkoutComp = Date.parse(checkout);
+    let range = moment().range(checkinPren, checkoutPren);
+    if (
+      range.contains(checkinComp) == true ||
+      range.contains(checkoutComp) == true
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  if (lista) {
+    lista.forEach((inserzione) => {
+      if (inserzione.prenotazioni.length === 0) {
+        listaFinale.push(inserzione);
+      } else {
+        if (inserzione.prenotazioni.every(checkDates)) {
+          listaFinale.push(inserzione);
+        }
+      }
+    });
+    return listaFinale;
+  }
+  throw new Error("Nessuna inserzione");
+
   //console.log(typeof checkin);
   //console.log(typeof checkout);
 
-  let ListaSenzaPren = [];
+  /* let ListaSenzaPren = [];
 
-  lista.forEach(elem => {
-    if(Object.keys(elem.prenotazioni).length == 0) {
+  lista.forEach((elem) => {
+    if (Object.keys(elem.prenotazioni).length == 0) {
       //console.log(typeof elem.prenotazioni);
       ListaSenzaPren = ListaSenzaPren.concat(elem);
     }
-  })
+  });
 
   console.log(ListaSenzaPren);
 
@@ -140,8 +172,14 @@ Inserzione.verRicerca = async (query, checkin, checkout) => {
         let checkinComp = Date.parse(checkin);
         let checkoutComp = Date.parse(checkout);
         let range = moment().range(checkinPren, checkoutPren);
-        if (
-          range.contains(checkinComp) == false &&
+        let range2 = moment().range(checkinComp, checkoutComp);
+        if (range2.overlaps(range) === false) {
+          outsideRangeList = outsideRangeList.concat(elem);
+        } else if (range2.overlaps(range) === true) {
+          insideRangeList = insideRangeList.concat(elem);
+        }
+        /* if (
+          range.contains(checkinComp) == false ||
           range.contains(checkoutComp) == false
         ) {
           outsideRangeList = outsideRangeList.concat(elem);
@@ -150,18 +188,18 @@ Inserzione.verRicerca = async (query, checkin, checkout) => {
           range.contains(checkoutComp) == true
         ) {
           insideRangeList = insideRangeList.concat(elem);
-        }
+        } 
       });
     });
     //console.log(outsideRangeList);
     //console.log("LUNGHEZZA ARRAY DI DATE ESTERNE " + outsideRangeList.length);
     //console.log("LUNGHEZZA ARRAY DI DATE INTERNE " + insideRangeList.length);
-    let uniqueOutsideList = Array.from(new Set(outsideRangeList));
-    let uniqueInsideList = Array.from(new Set(insideRangeList));
+    //let uniqueOutsideList = Array.from(new Set(outsideRangeList));
+    //let uniqueInsideList = Array.from(new Set(insideRangeList));
     /*console.log("LUNGHEZZA ARRAY DI DATE ESTERNE " + uniqueOutsideList.length);
     console.log(uniqueOutsideList);
     console.log("LUNGHEZZA ARRAY DI DATE INTERNE " + uniqueInsideList.length);
-    console.log(uniqueInsideList);*/
+    console.log(uniqueInsideList);
 
     let diffList = uniqueOutsideList.filter((a1) => {
       return !uniqueInsideList.some((a2) => {
@@ -174,8 +212,7 @@ Inserzione.verRicerca = async (query, checkin, checkout) => {
     let diffUniqueList = Array.from(new Set(diffList));
 
     return diffUniqueList;
-  }
-  throw new Error("Nessuna inserzione");
+  } */
 };
 
 Inserzione.aggiungiInserzione = async (query) => {
