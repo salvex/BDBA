@@ -81,7 +81,7 @@ const modificaFotoProfilo_put = async (req, res) => {
     console.log(req.body);
     let path = req.files["avatar"][0].path;
     let user = await Utente.findByPk(req.session.utente.id);
-    user.imagePath = path;
+    user.imagePath = path.replace(/\\/g, "/");
     await user.save();
     res.status(200).json({ success: true });
   } catch (err) {
