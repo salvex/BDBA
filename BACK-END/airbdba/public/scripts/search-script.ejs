@@ -38,6 +38,16 @@
 
     // Datepicker focus
     $("#check-in").on("change", () => {
+      if ($("#check-out").val() !== "") {
+        const checkin = $("#check-in").val();
+        const checkout = $("#check-out").val();
+
+        const checkinDate = new Date(checkin);
+        const checkoutDate = new Date(checkout);
+        if (checkoutDate < checkinDate) {
+          $("#check-out").datepicker("update", checkin);
+        }
+      }
       $("#check-out").focus();
     });
     /* --------------------------------------------------------- */
