@@ -13,12 +13,12 @@
     $("#imgupload").val("");
     $("#profile-pic").css({
       "background-image": `
-          <% if ( user.imagePath !== "" && user.imagePath !== null ) { %>
-            url("<%= user.imagePath.slice(user.imagePath.indexOf("uploads")) %>")
-          <% } else { %>
-            url("assets/images/profile_pics/profile-placeholder.png")
-          <% }%>
-          `,
+        <% if ( user.imagePath ) { %>
+          url("<%= user.imagePath.slice(user.imagePath.indexOf("uploads")) %>")
+        <% } else { %>
+          url("assets/images/profile_pics/profile-placeholder.png")
+        <% }%>
+        `,
     });
     /* --------------------------------------------------------- */
 
@@ -95,14 +95,14 @@
             if (response.success) {
               console.log("caricamento effettuato");
               $("#image-crop").modal("hide");
-              $(".profile-circle, #profile-pic").css({
+              $("#profile-pic").css({
                 "background-image": `
-                    <% if ( user.imagePath !== "" && user.imagePath !== null ) { %>
-                        url("<%= user.imagePath.slice(user.imagePath.indexOf("uploads")) %>")
-                    <% } else { %>
-                        url("assets/images/profile_pics/profile-placeholder.png")
-                    <% }%>
-                    `,
+                  <% if ( user.imagePath ) { %>
+                      url("<%= user.imagePath.slice(user.imagePath.indexOf("uploads")) %>")
+                  <% } else { %>
+                      url("assets/images/profile_pics/profile-placeholder.png")
+                  <% }%>
+                  `,
               });
               window.location.reload();
             }

@@ -43,7 +43,7 @@ body {
   color: #000000;
 }
 #navbarResponsive {
-  justify-content: end;
+  justify-content: flex-end;
 }
 .profile-circle {
   position: relative;

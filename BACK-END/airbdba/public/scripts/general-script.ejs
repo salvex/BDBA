@@ -31,11 +31,22 @@
         $("#filter-btn > img").addClass("rotate-right");
       }
     });
+  });
+</script>
 
+<% if (user) { %>
+<script>
+  $(document).ready(() => {
     /* NAVBAR */
     $(".profile-circle")
       .css({
-        "background-image": "url('/uploads/avatarUtente/1/1.png')",
+        "background-image": `
+        <% if (user.imagePath) { %>
+          url("<%= user.imagePath.slice(user.imagePath.indexOf("uploads")) %>")
+        <% } else { %>
+          url("assets/images/profile_pics/profile-placeholder.png")
+        <% } %>
+      `,
         "background-size": "cover",
         "background-position": "center",
         width: "50px",
@@ -47,7 +58,13 @@
         $(".hidden-list").slideToggle();
       });
     $(".profile-circle-mobile").css({
-      "background-image": "url('/uploads/avatarUtente/1/1.png')",
+      "background-image": `
+      <% if (user.imagePath) { %>
+        url("<%= user.imagePath.slice(user.imagePath.indexOf("uploads")) %>")
+      <% } else { %>
+        url("assets/images/profile_pics/profile-placeholder.png")
+      <% } %>
+    `,
       "background-size": "cover",
       "background-position": "center",
       width: "25px",
@@ -57,3 +74,4 @@
     });
   });
 </script>
+<% } %>
