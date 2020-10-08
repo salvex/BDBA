@@ -78,7 +78,7 @@ const metodoPagamento_post = async (req, res) => {
 
 const modificaFotoProfilo_put = async (req, res) => {
   try {
-    console.log(req.body);
+    console.log(req.body.formData);
     let path = req.files["avatar"][0].path;
     let user = await Utente.findByPk(req.session.utente.id);
     user.imagePath = path.replace(/\\/g, "/");

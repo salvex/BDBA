@@ -11,14 +11,27 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let type = req.params.type;
     let id = req.params.id;
-    let path = "public/uploads" + "/" + type + "/" + id;
-    fs.mkdirSync(path, { recursive: true }); //crea il percorso qualora non ci fosse
-    cb(null, path);
+    if (req.params.name) {
+      let name = req.params.name;
+      let path = "public/uploads" + "/" + type + "/" + id + "/" + name;
+      fs.mkdirSync(path, { recursive: true }); //crea il percorso qualora non ci fosse
+      cb(null, path);
+    } else {
+      let path = "public/uploads" + "/" + type + "/" + id;
+      fs.mkdirSync(path, { recursive: true }); //crea il percorso qualora non ci fosse
+      cb(null, path);
+    }
   },
   filename: function (req, file, cb) {
-    cb(null, req.params.id + path.extname(file.originalname));
+    if (req.params.name) {
+      cb(null, req.params.name + path.extname(file.originalname));
+    } else {
+      cb(null, req.params.id + path.extname(file.originalname));
+    }
   },
 });
+
+// /uploads/fotoInserzioni/1/nome/
 
 // Inizializza upload
 

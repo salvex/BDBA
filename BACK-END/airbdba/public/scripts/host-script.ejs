@@ -1,7 +1,156 @@
 <script>
   $(document).ready(() => {
+    /* ON RELOAD */
+    bsCustomFileInput.init();
+    if ($(window).width() < "448") {
+      $("#visualizza-tab").text("Visualizza");
+      $("#aggiungi-tab").text("Aggiungi");
+    } else {
+      $("#visualizza-tab").text("Visualizza inserzioni");
+      $("#aggiungi-tab").text("Aggiungi inserzione");
+    }
+    /* ------------------------------------------------- */
+
+    /* INPUT FILE */
+    $("#inputFile").on("change", () => {
+      $("#inputFileLabel").text(() => {
+        return "ciao";
+      });
+    });
+
+    /* DATEPICKER */
+    $("#inputInit, #inputFin").datepicker({
+      format: "yyyy-mm-dd",
+      autoclose: true,
+      todayHighlight: true,
+      startDate: new Date(),
+    });
+
+    /* CHECKBOXES */
+    $("#casa").on("click", () => {
+      if ($("#bnb").prop("checked")) {
+        $("#bnb").prop("checked", false);
+      }
+    });
+    $("#bnb").on("click", () => {
+      if ($("#casa").prop("checked")) {
+        $("#casa").prop("checked", false);
+      }
+    });
+    /* ------------------------------------------------- */
+
     /* VISUALIZZA INSERZIONI */
     const inserzioni = JSON.parse("<%= inserzioni %>".replace(/&#34;/g, '"'));
-    console.log(inserzioni);
+    if (inserzioni.length === 0) {
+      $("#visualizza").append(`
+          <div class="row justify-content-center align-items-center">
+            <div class="col-10">
+              <p class="text-justify">
+                Non hai ancora nessuna inserzione. Vai su <u>Aggiungi inserzione</u> per iniziare!!
+                <br>
+              </p>
+              <img src="/assets/images/notFound.png" style="width:100%; opacity:.35; margin-top: 30px">
+            </div>
+          </div>
+        `);
+    } else {
+      inserzioni.forEach((inserzione) => {
+        $("#visualizza").append(`
+          <div class="row">
+            <div class="col-12">
+              <div class="card add-margin">
+                <div class="card-body no-padding">
+                  <div class="row">
+                    <div class="col-md-12 col-lg-4">
+                      <img src="/assets/images/homePage1.jpg" class="card-i" alt="img" style="width:100%">
+                    </div>
+                    <div class="col-md-12 col-lg-8 add-padding">
+                      <b>${inserzione.nome_inserzione}</b>
+                      <p>
+                        <i>${
+                          inserzione.citta[0].toUpperCase() +
+                          inserzione.citta.slice(1)
+                        }, ${inserzione.indirizzo}</i>
+                        <br>
+                        ${inserzione.inizioDisponibilita}&nbsp;
+                        ${inserzione.fineDisponibilita}
+                        <br>
+                        ${inserzione.n_ospiti} ospiti,&nbsp;
+                        ${inserzione.prezzo_base}&euro; x notte
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer inserzione-footer">
+                  <button id="mod" class="btn btn-primary">Modifica</button>
+                  <button id="del" class="btn btn-danger">Elimina</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `);
+      });
+    }
+    /* ------------------------------------------------- */
+
+    /* AGGIUNGI INSERZIONE */
+    $("form").on("submit", (e) => {
+      e.preventDefault();
+      let $servizi = {};
+      $("input[type=checkbox]").each((index, element) => {
+        if ($(element).prop("checked")) {
+          $servizi[$(element).prop("id")] = 1;
+        } else {
+          $servizi[$(element).prop("id")] = 0;
+        }
+      });
+      const servizi = $servizi;
+
+      const files = $("input[type=file]").prop("files");
+      const obj = JSON.stringify({
+        nome: $("#inputTitolo").val(),
+        citta: $("#inputCity").val(),
+        inizioDisp: $("#inputInit").val(),
+        fineDisp: $("#inputFin").val(),
+        nospiti: $("#inputOspiti").val(),
+        desc: $("#inputDesc").val(),
+        indirizzo: $("#inputAddress").val() + " " + $("#inputNum").val(),
+        prezzo: $("#inputPrice").val(),
+        servizi: servizi,
+      });
+
+      const formData = new FormData();
+      Array.from(files).forEach((file) => {
+        formData.append("gallery", file);
+      });
+      fetch(
+        `/host/crea_ins/fotoInserzione/<%= user.id %>/${$(
+          "#inputTitolo"
+        ).val()}`,
+        {
+          method: "POST",
+          body: { obj, formData },
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+        .then(async (res) => {
+          const response = await res.json();
+          if (response.success) {
+            console.log("Caricamento completato!");
+          }
+        })
+        .catch((err) => console.log(err));
+    });
+    /* ------------------------------------------------- */
+
+    $(window).resize(() => {
+      if ($(window).width() < "448") {
+        $("#visualizza-tab").text("Visualizza");
+        $("#aggiungi-tab").text("Aggiungi");
+      } else {
+        $("#visualizza-tab").text("Visualizza inserzioni");
+        $("#aggiungi-tab").text("Aggiungi inserzione");
+      }
+    });
   });
 </script>

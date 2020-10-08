@@ -45,6 +45,10 @@ const Inserzione = db.sequelize.define(
       },
     },
     descrizione: {
+      type: DataTypes.STRING(1000),
+      allowNull: false,
+    },
+    indirizzo: {
       type: DataTypes.STRING(300),
       allowNull: false,
     },
@@ -230,23 +234,24 @@ Inserzione.aggiungiInserzione = async (query) => {
       fineDisponibilita: query[3],
       n_ospiti: query[4],
       descrizione: query[5],
-      prezzo_base: query[6],
-      galleryPath: query[7],
-      ref_host_ins: query[8],
+      indirizzo: query[6],
+      prezzo_base: query[7],
+      galleryPath: query[8],
+      ref_host_ins: query[9],
     });
 
     const services = await Servizi.create({
       ref_inserzione_s: newIns.id_inserzione,
-      wifiFlag: query[9]["wifi"],
-      riscaldamentoFlag: query[9]["riscaldamento"],
-      frigoriferoFlag: query[9]["frigorifero"],
-      casaFlag: query[9]["casa"],
-      bnbFlag: query[9]["bnb"],
-      parcheggioFlag: query[9]["parcheggio"],
-      ascensoreFlag: query[9]["ascensore"],
-      cucinaFlag: query[9]["cucina"],
-      essenzialiFlag: query[9]["essenziali"],
-      piscinaFlag: query[9]["piscina"],
+      wifiFlag: query[10]["wifi"],
+      riscaldamentoFlag: query[10]["riscaldamento"],
+      frigoriferoFlag: query[10]["frigorifero"],
+      casaFlag: query[10]["casa"],
+      bnbFlag: query[10]["bnb"],
+      parcheggioFlag: query[10]["parcheggio"],
+      ascensoreFlag: query[10]["ascensore"],
+      cucinaFlag: query[10]["cucina"],
+      essenzialiFlag: query[10]["essenziali"],
+      piscinaFlag: query[10]["piscina"],
     });
     return newIns;
   }
@@ -276,6 +281,7 @@ Inserzione.processaLista = async (id_host) => {
       "fineDisponibilita",
       "n_ospiti",
       "descrizione",
+      "indirizzo",
       "prezzo_base",
       "galleryPath",
     ],
@@ -323,7 +329,13 @@ Inserzione.modificaInserzione = async (id_ins, query) => {
       ins_modifica.descrizione = query[5];
     }
     if (query[6]) {
-      ins_modifica.prezzo_base = query[6];
+      ins_modifica.indirizzo = query[6];
+    }
+    if (query[7]) {
+      ins_modifica.prezzo_base = query[7];
+    }
+    if (query[8]) {
+      ins_modifica.galleryPath = query[8];
     }
     if (query[9]["wifi"] != ins_modifica_s.wifiFlag) {
       ins_modifica_s.wifiFlag = query[9]["wifi"];

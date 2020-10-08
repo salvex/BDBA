@@ -7,8 +7,8 @@ const ContattaQuesturaControl = require("../controller/ContattaQuesturaControl")
 const JwtToken = require("../utils/JwtToken");
 
 router.post(
-  "/crea_ins/:type/:id",
-  FileUpload.upFiles,
+  "/crea_ins/:type/:id/:name",
+  [JwtToken.verifyHost],
   HostControl.aggiungi_inserzione_post
 );
 
@@ -22,17 +22,18 @@ router.get(
 );
 
 router.put(
-  "/modifica/",
+  "/modifica/:type/:id",
   [JwtToken.verifyHost],
+  FileUpload.upFiles,
   HostControl.modifica_inserzione_put
 );
-
+/* 
 router.put(
   "/modifica/:type/:id",
   [JwtToken.verifyHost],
   FileUpload.upFiles,
   HostControl.modifica_inserzione_put_img
-);
+); */
 
 router.delete(
   "/delete_ins",

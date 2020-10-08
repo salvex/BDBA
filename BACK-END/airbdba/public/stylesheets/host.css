@@ -1,10 +1,86 @@
 .host-container {
-  padding-top: 30px;
-  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  /*  height: 100%;
+  position: relative; */
 }
-.host-container-row {
+.content-footer,
+.content-container,
+.body-col,
+.foot-col,
+.foot {
+  padding: 0;
+  margin: 0;
+}
+/* .content-footer,
+.content-container {
   height: 100%;
+} */
+.content {
+  padding: 30px;
 }
-.tab-pane {
-  padding: 20px;
+#questura:hover,
+#turismo:hover {
+  background-color: #007bff;
+  color: #ffffff;
 }
+/* INSERZIONI */
+#visualizza,
+#aggiungi {
+  padding: 30px;
+}
+#preview {
+  height: 100%;
+  width: 100%;
+}
+.inserzione-footer {
+  display: flex;
+  justify-content: end;
+}
+#mod {
+  margin-right: 10px;
+}
+.add-margin {
+  margin-bottom: 30px;
+}
+
+/* FORM */
+textarea {
+  resize: none;
+}
+
+@media (min-width: 992px) {
+  .no-padding {
+    padding: 0;
+  }
+  .add-padding {
+    padding: 10px 0;
+  }
+}
+
+@media (max-width: 992px) {
+  /* .inserzione-info {
+    padding: 0 10px;
+  } */
+  .card-i {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* .inserzione-info {
+    padding: 0 10px;
+  } */
+}
+
+@media (max-width: 448px) {
+  #visualizza,
+  #aggiungi {
+    padding: 20px 0;
+  }
+  .inserzione-footer {
+    display: flex;
+    justify-content: center;
+  }
+}
+/* ----------- */

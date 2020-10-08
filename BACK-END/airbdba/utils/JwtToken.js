@@ -28,7 +28,6 @@ const verifyToken = (req, res, next) => {
 
 const verifyHost = (req, res, next) => {
   let token = req.cookies.host;
-
   if (!token) {
     /*return res.status(403).send({
       isHost: false,

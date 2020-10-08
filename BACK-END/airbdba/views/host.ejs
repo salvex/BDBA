@@ -2,16 +2,574 @@
 <html>
   <%- include("./partials/head.ejs", {title: "Host"}) %>
   <body>
-    <%- include("./partials/nav.ejs") %>
+    <div class="container-fluid host-container h-100">
+      <%- include("./partials/nav.ejs") %>
+      <div class="row content-footer h-100">
+        <div class="col body-col">
+          <div class="row content-container justify-content-center h-100">
+            <div class="col-12 col-sm-10">
+              <div class="row content h-100">
+                <div class="col-md-12 col-lg-3">
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-12">
+                          <div
+                            class="nav flex-column nav-pills"
+                            id="v-pills-tab"
+                            role="tablist"
+                            aria-orientation="vertical"
+                          >
+                            <a
+                              class="nav-link active"
+                              id="v-pills-host-tab"
+                              data-toggle="pill"
+                              href="#v-pills-host"
+                              role="tab"
+                              aria-controls="v-pills-host"
+                              aria-selected="true"
+                              >Gestione Host</a
+                            >
+                            <a
+                              class="nav-link"
+                              id="v-pills-inserzioni-tab"
+                              data-toggle="pill"
+                              href="#v-pills-inserzioni"
+                              role="tab"
+                              aria-controls="v-pills-inserzioni"
+                              aria-selected="false"
+                              >Gestione inserzioni</a
+                            >
+                            <a
+                              class="nav-link"
+                              id="v-pills-prenotazioni-tab"
+                              data-toggle="pill"
+                              href="#v-pills-prenotazioni"
+                              role="tab"
+                              aria-controls="v-pills-prenotazioni"
+                              aria-selected="false"
+                              >Gestioni prenotazioni</a
+                            >
+                            <div>
+                              <hr />
+                            </div>
+                            <a
+                              id="questura"
+                              class="nav-link"
+                              href="/host"
+                              role="tab"
+                              >Questura</a
+                            >
+                            <a
+                              class="nav-link"
+                              id="turismo"
+                              href="/host"
+                              role="tab"
+                              >Ufficio del turismo</a
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-9">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="tab-content" id="v-pills-tabContent">
+                        <div
+                          class="tab-pane fade show active"
+                          id="v-pills-host"
+                          role="tabpanel"
+                          aria-labelledby="v-pills-host-tab"
+                        >
+                          Host
+                        </div>
+                        <div
+                          class="tab-pane fade"
+                          id="v-pills-inserzioni"
+                          role="tabpanel"
+                          aria-labelledby="v-pills-inserzioni-tab"
+                        >
+                          <div class="row">
+                            <div class="col-12">
+                              <ul
+                                class="nav nav-tabs"
+                                id="myTab"
+                                role="tablist"
+                              >
+                                <li class="nav-item" role="presentation">
+                                  <a
+                                    class="nav-link active"
+                                    id="visualizza-tab"
+                                    data-toggle="tab"
+                                    href="#visualizza"
+                                    role="tab"
+                                    aria-controls="visualizza"
+                                    aria-selected="true"
+                                    >Visualizza inserzione</a
+                                  >
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                  <a
+                                    class="nav-link"
+                                    id="aggiungi-tab"
+                                    data-toggle="tab"
+                                    href="#aggiungi"
+                                    role="tab"
+                                    aria-controls="aggiungi"
+                                    aria-selected="false"
+                                    >Aggiungi inserzione</a
+                                  >
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="tab-content" id="myTabContent">
+                                <div
+                                  class="tab-pane fade show active"
+                                  id="visualizza"
+                                  role="tabpanel"
+                                  aria-labelledby="visualizza-tab"
+                                >
+                                  <!-- asdasd -->
+                                </div>
+                                <div
+                                  class="tab-pane fade"
+                                  id="aggiungi"
+                                  role="tabpanel"
+                                  aria-labelledby="aggiungi-tab"
+                                >
+                                  <form
+                                    id="add-insertion"
+                                    enctype="multipart/form-data"
+                                  >
+                                    <div class="form-row">
+                                      <div class="form-group col">
+                                        <label for="inputTitolo">Titolo</label>
+                                        <input
+                                          type="text"
+                                          class="form-control"
+                                          id="inputTitolo"
+                                        />
+                                      </div>
+                                    </div>
+                                    <div class="form-row">
+                                      <div class="form-group col-md-4">
+                                        <label for="inputCity">Città</label>
+                                        <input
+                                          type="text"
+                                          class="form-control"
+                                          id="inputCity"
+                                          placeholder="Milano"
+                                        />
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                        <label for="inputAddress"
+                                          >Indirizzo</label
+                                        >
+                                        <input
+                                          type="text"
+                                          class="form-control"
+                                          id="inputAddress"
+                                          placeholder="Via Roma"
+                                        />
+                                      </div>
+                                      <div class="form-group col-md-2">
+                                        <label for="inputNum">Numero</label>
+                                        <input
+                                          type="number"
+                                          class="form-control"
+                                          id="inputNum"
+                                          placeholder="12"
+                                        />
+                                      </div>
+                                    </div>
+                                    <div class="form-row">
+                                      <div class="form-group col-md-6">
+                                        <label for="inputInit"
+                                          >Inizio disponibilità</label
+                                        >
+                                        <input
+                                          id="inputInit"
+                                          type="text"
+                                          class="form-control"
+                                          value="02-16-2012"
+                                        />
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                        <label for="inputFin"
+                                          >Fine disponibilità</label
+                                        >
+                                        <input
+                                          id="inputFin"
+                                          type="text"
+                                          class="form-control"
+                                          value="02-16-2012"
+                                        />
+                                      </div>
+                                    </div>
+                                    <div class="form-row">
+                                      <div class="form-group col-md-6">
+                                        <label for="inputOspiti"
+                                          >Numero ospiti</label
+                                        >
+                                        <input
+                                          type="number"
+                                          class="form-control"
+                                          id="inputOspiti"
+                                          placeholder="12"
+                                        />
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                        <label for="inputPrice"
+                                          >Prezzo per notte</label
+                                        >
+                                        <input
+                                          type="number"
+                                          class="form-control"
+                                          id="inputPrice"
+                                          placeholder="15"
+                                        />
+                                      </div>
+                                    </div>
+                                    <div class="form-row">
+                                      <div class="form-group col-md-12">
+                                        <label for="inputDesc"
+                                          >Descrizione</label
+                                        >
+                                        <textarea
+                                          class="form-control"
+                                          id="inputDesc"
+                                          rows="3"
+                                          placeholder="Inserisci una descrizione che definisca la tua casa e aiuti i clienti a raggiungere la struttura."
+                                        ></textarea>
+                                      </div>
+                                    </div>
+                                    <div class="form-row">
+                                      <div class="form-group col-md-12">
+                                        <label for="customFile"
+                                          >Selezione delle foto</label
+                                        >
+                                        <div class="custom-file">
+                                          <input
+                                            type="file"
+                                            class="custom-file-input"
+                                            id="customFile"
+                                            multiple
+                                          />
+                                          <label
+                                            class="custom-file-label"
+                                            for="customFileLangHTML"
+                                            data-browse="Sfoglia"
+                                            >Carica immagini</label
+                                          >
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="form-row">
+                                      <div class="form-group col-md-12">
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <h3>
+                                              Che tipo di struttura vuoi
+                                              caricare?
+                                            </h3>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <div
+                                              class="custom-control custom-switch"
+                                            >
+                                              <input
+                                                type="checkbox"
+                                                class="custom-control-input"
+                                                id="casa"
+                                              />
+                                              <label
+                                                class="custom-control-label"
+                                                for="casa"
+                                                >Casa vacanza&nbsp;&nbsp;<i
+                                                  class="fas fa-home"
+                                                ></i>
+                                              </label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <div
+                                              class="custom-control custom-switch"
+                                            >
+                                              <input
+                                                type="checkbox"
+                                                class="custom-control-input"
+                                                id="bnb"
+                                              />
+                                              <label
+                                                class="custom-control-label"
+                                                for="bnb"
+                                                >B&B&nbsp;&nbsp;<i
+                                                  class="fas fa-bed"
+                                                ></i>
+                                              </label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <hr />
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <h3>Quali servizi offri?</h3>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <div
+                                              class="custom-control custom-switch"
+                                            >
+                                              <input
+                                                type="checkbox"
+                                                class="custom-control-input"
+                                                id="wifi"
+                                              />
+                                              <label
+                                                class="custom-control-label"
+                                                for="wifi"
+                                                >Wi-Fi&nbsp;&nbsp;<i
+                                                  class="fas fa-wifi"
+                                                ></i>
+                                              </label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <div
+                                              class="custom-control custom-switch"
+                                            >
+                                              <input
+                                                type="checkbox"
+                                                class="custom-control-input"
+                                                id="riscaldamento"
+                                              />
+                                              <label
+                                                class="custom-control-label"
+                                                for="riscaldamento"
+                                                >Riscaldamento&nbsp;&nbsp;<i
+                                                  class="fas fa-thermometer-half"
+                                                ></i
+                                              ></label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <div
+                                              class="custom-control custom-switch"
+                                            >
+                                              <input
+                                                type="checkbox"
+                                                class="custom-control-input"
+                                                id="frigorifero"
+                                              />
+                                              <label
+                                                class="custom-control-label"
+                                                for="frigorifero"
+                                                >Frigorifero&nbsp;&nbsp;<i
+                                                  class="fas fa-snowflake"
+                                                ></i
+                                              ></label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <div
+                                              class="custom-control custom-switch"
+                                            >
+                                              <input
+                                                type="checkbox"
+                                                class="custom-control-input"
+                                                id="parcheggio"
+                                              />
+                                              <label
+                                                class="custom-control-label"
+                                                for="parcheggio"
+                                                >Parcheggio&nbsp;&nbsp;<i
+                                                  class="fas fa-car-side"
+                                                ></i
+                                              ></label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <div
+                                              class="custom-control custom-switch"
+                                            >
+                                              <input
+                                                type="checkbox"
+                                                class="custom-control-input"
+                                                id="ascensore"
+                                              />
+                                              <label
+                                                class="custom-control-label"
+                                                for="ascensore"
+                                                >Ascensore&nbsp;&nbsp;<i
+                                                  class="fas fa-arrow-up"
+                                                ></i
+                                              ></label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <div
+                                              class="custom-control custom-switch"
+                                            >
+                                              <input
+                                                type="checkbox"
+                                                class="custom-control-input"
+                                                id="cucina"
+                                              />
+                                              <label
+                                                class="custom-control-label"
+                                                for="cucina"
+                                                >Cucina&nbsp;&nbsp;<i
+                                                  class="fas fa-utensils"
+                                                ></i
+                                              ></label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <div
+                                              class="custom-control custom-switch"
+                                            >
+                                              <input
+                                                type="checkbox"
+                                                class="custom-control-input"
+                                                id="essenziali"
+                                              />
+                                              <label
+                                                class="custom-control-label"
+                                                for="essenziali"
+                                                >Essenziali&nbsp;&nbsp;<i
+                                                  class="fas fa-plus"
+                                                ></i
+                                              ></label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <div
+                                              class="custom-control custom-switch"
+                                            >
+                                              <input
+                                                type="checkbox"
+                                                class="custom-control-input"
+                                                id="piscina"
+                                              />
+                                              <label
+                                                class="custom-control-label"
+                                                for="piscina"
+                                                >Piscina&nbsp;&nbsp;<i
+                                                  class="fas fa-swimmer"
+                                                ></i
+                                              ></label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!-- 
+                                    <div class="form-group">
+                                      <div class="form-check">
+                                        <input
+                                          class="form-check-input"
+                                          type="checkbox"
+                                          id="gridCheck"
+                                        />
+                                        <label
+                                          class="form-check-label"
+                                          for="gridCheck"
+                                        >
+                                          Check me out
+                                        </label>
+                                      </div>
+                                    </div> -->
+                                    <button
+                                      type="submit"
+                                      class="btn btn-primary"
+                                    >
+                                      Crea inserzione
+                                    </button>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="tab-pane fade"
+                          id="v-pills-prenotazioni"
+                          role="tabpanel"
+                          aria-labelledby="v-pills-prenotazioni-tab"
+                        >
+                          Prenotazioni
+                        </div>
+                        <div
+                          class="tab-pane fade"
+                          id="v-pills-questura"
+                          role="tabpanel"
+                          aria-labelledby="v-pills-questura-tab"
+                        >
+                          Questura
+                        </div>
+                        <div
+                          class="tab-pane fade"
+                          id="v-pills-turismo"
+                          role="tabpanel"
+                          aria-labelledby="v-pills-turismo-tab"
+                        >
+                          Turismo
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row foot">
+            <div class="col foot-col">
+              <%- include("./partials/footer.ejs") %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <div class="container-fluid host-container">
+    <!-- GENERAL SCRIPT -->
+    <%- include("../public/scripts/general-script.ejs") %>
+    <!-- HOST SCRIPT -->
+    <%- include("../public/scripts/host-script.ejs") %>
+  </body>
+</html>
+
+<!-- <div class="container-fluid host-container">
       <div class="row justify-content-center host-container-row">
         <div class="col-sm-12 col-md-10">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
               <a
                 class="nav-link active"
-                id="home-tab"
+                id="host-tab"
                 data-toggle="tab"
                 href="#home"
                 role="tab"
@@ -71,10 +629,4 @@
           </div>
         </div>
       </div>
-    </div>
-    <!-- GENERAL SCRIPT -->
-    <%- include("../public/scripts/general-script.ejs") %>
-    <!-- HOST SCRIPT -->
-    <%- include("../public/scripts/host-script.ejs") %>
-  </body>
-</html>
+    </div> -->

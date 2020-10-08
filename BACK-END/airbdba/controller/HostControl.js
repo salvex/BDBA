@@ -33,6 +33,7 @@ async function parseField(
   CheckOutFilter,
   nOspitiFilter,
   DescFilter,
+  IndirizzoFilter,
   PrezzoFilter,
   PathFilter,
   IdFilter,
@@ -48,6 +49,7 @@ async function parseField(
     nOspitiFilter ||
     PrezzoFilter ||
     DescFilter ||
+    IndirizzoFilter ||
     PathFilter ||
     IdFilter ||
     ServiziFilter
@@ -70,14 +72,17 @@ async function parseField(
     if (DescFilter) {
       query[5] = DescFilter;
     }
+    if (IndirizzoFilter) {
+      query[6] = IndirizzoFilter;
+    }
     if (PrezzoFilter) {
-      query[6] = PrezzoFilter;
+      query[7] = PrezzoFilter;
     }
     if (PathFilter) {
-      query[7] = PathFilter;
+      query[8] = PathFilter;
     }
     if (IdFilter) {
-      query[8] = IdFilter;
+      query[9] = IdFilter;
     }
     if (ServiziFilter) {
       var filtri = {
@@ -92,7 +97,7 @@ async function parseField(
         essenziali: ServiziFilter.essenziali,
         piscina: ServiziFilter.piscina,
       };
-      query[9] = filtri;
+      query[10] = filtri;
     }
   }
 
@@ -124,11 +129,15 @@ const aggiungi_inserzione_post = async (req, res) => {
       fineDisp,
       nospiti,
       desc,
+      indirizzo,
       prezzo,
       servizi,
     } = req.body;
-    const id_host = JwtToken.decodedId(req);
+
+    const id_host = req.session.utente.id;
     var path = req.files["gallery"][0].path;
+    path = path.replace(/\\/g, "/");
+    console.log(path);
     var fields = await parseField(
       nome,
       citta,
@@ -136,15 +145,14 @@ const aggiungi_inserzione_post = async (req, res) => {
       fineDisp,
       nospiti,
       desc,
+      indirizzo,
       prezzo,
+      servizi,
       path,
       id_host
     );
     var inserzione = await Inserzione.aggiungiInserzione(fields);
-    res.status(200).json({
-      message: "Inserzione creata con successo!",
-      new_insertion: inserzione,
-    });
+    res.status(200).json({ success: true });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });
@@ -173,11 +181,13 @@ const modifica_inserzione_put = async (req, res) => {
       fineDisp,
       nospiti,
       desc,
+      indirizzo,
       prezzo,
       servizi,
     } = req.body;
-    const id_host = JwtToken.decodedId(req);
-    var path = "dummy";
+    const id_host = req.session.utente.id;
+    var path = req.files["gallery"][0].path;
+    path = path.replace(/\\/g, "/");
     var fields = await parseField(
       nome,
       citta,
@@ -185,6 +195,7 @@ const modifica_inserzione_put = async (req, res) => {
       fineDisp,
       nospiti,
       desc,
+      indirizzo,
       prezzo,
       path,
       id_host,
@@ -195,6 +206,11 @@ const modifica_inserzione_put = async (req, res) => {
       id_inserzione,
       fields
     );
+    /* var path = req.files["gallery"][0].path;
+    var inserzione_m = await Inserzione.modificaInserzione_img(
+      id_inserzione,
+      path
+    ); */
     res.status(200).json({
       message: "hai modificato questa inserzione con successo!",
       inserzione_m,
@@ -205,7 +221,7 @@ const modifica_inserzione_put = async (req, res) => {
   }
 };
 
-const modifica_inserzione_put_img = async (req, res) => {
+/* const modifica_inserzione_put_img = async (req, res) => {
   try {
     const { id_inserzione } = req.body;
     var path = req.files["gallery"][0].path;
@@ -221,7 +237,7 @@ const modifica_inserzione_put_img = async (req, res) => {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });
   }
-};
+}; */
 
 const cancella_inserzione_delete = async (req, res) => {
   try {
@@ -338,7 +354,7 @@ module.exports = {
   aggiungi_inserzione_post,
   visualizza_inserzioni_get,
   modifica_inserzione_put,
-  modifica_inserzione_put_img,
+  /* modifica_inserzione_put_img, */
   cancella_inserzione_delete,
   accetta_prenotazione_get,
   rifiuta_prenotazione_get,
