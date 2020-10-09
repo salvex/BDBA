@@ -219,13 +219,13 @@ Inserzione.verRicerca = async (query, checkin, checkout) => {
   } */
 };
 
-Inserzione.aggiungiInserzione = async (query) => {
+/* Inserzione.aggiungiInserzione = async (query) => {
   if (query) {
     /*const oldIns = await Inserzione.findOne({
              where: {
                 nome_inserzione: query[0]
             }
-        })*/
+        })
     //se l'inserzione non esiste
     const newIns = await Inserzione.create({
       nome_inserzione: query[0],
@@ -256,6 +256,48 @@ Inserzione.aggiungiInserzione = async (query) => {
     return newIns;
   }
   throw new Error("query vuota");
+}; */
+
+Inserzione.aggiungiInserzione = async (
+  nome_inserzione,
+  citta,
+  inizioDisponibilita,
+  fineDisponibilita,
+  n_ospiti,
+  descrizione,
+  indirizzo,
+  prezzo_base,
+  ref_host_ins,
+  galleryPath,
+  servizi
+) => {
+  const newIns = await Inserzione.create({
+    nome_inserzione,
+    citta,
+    inizioDisponibilita,
+    fineDisponibilita,
+    n_ospiti,
+    descrizione,
+    indirizzo,
+    prezzo_base,
+    ref_host_ins,
+    galleryPath,
+  });
+
+  const services = await Servizi.create({
+    ref_inserzione_s: newIns.id_inserzione,
+    wifiFlag: servizi["wifi"],
+    riscaldamentoFlag: servizi["riscaldamento"],
+    frigoriferoFlag: servizi["frigorifero"],
+    casaFlag: servizi["casa"],
+    bnbFlag: servizi["bnb"],
+    parcheggioFlag: servizi["parcheggio"],
+    ascensoreFlag: servizi["ascensore"],
+    cucinaFlag: servizi["cucina"],
+    essenzialiFlag: servizi["essenziali"],
+    piscinaFlag: servizi["piscina"],
+  });
+  return newIns;
 };
 
 //Funzione temporanea

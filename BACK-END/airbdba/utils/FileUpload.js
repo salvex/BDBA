@@ -11,22 +11,23 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let type = req.params.type;
     let id = req.params.id;
-    if (req.params.name) {
-      let name = req.params.name;
-      let path = "public/uploads" + "/" + type + "/" + id + "/" + name;
+    let folder = req.params.folder;
+    if (type === "avatarUtente") {
+      let path = "public/uploads" + "/" + type + "/" + id;
       fs.mkdirSync(path, { recursive: true }); //crea il percorso qualora non ci fosse
       cb(null, path);
     } else {
-      let path = "public/uploads" + "/" + type + "/" + id;
+      let path = "public/uploads" + "/" + type + "/" + id + "/" + folder;
       fs.mkdirSync(path, { recursive: true }); //crea il percorso qualora non ci fosse
       cb(null, path);
     }
   },
   filename: function (req, file, cb) {
-    if (req.params.name) {
-      cb(null, req.params.name + path.extname(file.originalname));
+    let type = req.params.type;
+    if (type === "avatarUtente") {
+      cb(null, req.params.id + ".png");
     } else {
-      cb(null, req.params.id + path.extname(file.originalname));
+      cb(null, Date.now() + ".png");
     }
   },
 });

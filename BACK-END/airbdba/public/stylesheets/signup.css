@@ -1,5 +1,4 @@
 #signup {
-  min-height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -126,6 +125,12 @@
   input,
   input::placeholder {
     text-align: center;
+  }
+}
+
+@media (min-height: 720px) {
+  #signup {
+    height: 100%;
   }
 }
 

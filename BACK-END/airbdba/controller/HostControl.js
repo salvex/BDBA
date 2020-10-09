@@ -120,7 +120,7 @@ const become_host_get = async (req, res) => {
   }
 };
 
-const aggiungi_inserzione_post = async (req, res) => {
+/* const aggiungi_inserzione_post = async (req, res) => {
   try {
     const {
       nome,
@@ -133,12 +133,13 @@ const aggiungi_inserzione_post = async (req, res) => {
       prezzo,
       servizi,
     } = req.body;
-
+    console.log(req.body);
     const id_host = req.session.utente.id;
-    var path = req.files["gallery"][0].path;
-    path = path.replace(/\\/g, "/");
+    /* var path = req.files["gallery"][0].path;
+    path = path.replace(/\\/g, "/"); 
+    let path = null;
     console.log(path);
-    var fields = await parseField(
+    /* var fields = await parseField(
       nome,
       citta,
       inizioDisp,
@@ -148,16 +149,101 @@ const aggiungi_inserzione_post = async (req, res) => {
       indirizzo,
       prezzo,
       servizi,
-      path,
       id_host
+    ); 
+    console.log(
+      nome,
+      citta,
+      inizioDisp,
+      fineDisp,
+      nospiti,
+      desc,
+      indirizzo,
+      prezzo,
+      servizi
     );
-    var inserzione = await Inserzione.aggiungiInserzione(fields);
+
+    var inserzione = await Inserzione.aggiungiInserzione(
+      nome,
+      citta,
+      inizioDisp,
+      fineDisp,
+      nospiti,
+      desc,
+      indirizzo,
+      prezzo,
+      servizi
+    );
+    res.status(200).json({ success: true });
+  } catch (err) {
+    const errors = errorsHandler(err);
+    res.status(400).json({ errors });
+  }
+}; */
+
+const aggiungi_inserzione_post = async (req, res) => {
+  try {
+    const {
+      nome,
+      citta,
+      inizioDisp,
+      fineDisp,
+      nospiti,
+      desc,
+      indirizzo,
+      prezzo,
+      servizi,
+    } = JSON.parse(req.body.inserzione);
+
+    const id_host = req.session.utente.id;
+    /* var path = req.files["gallery"][0].path;
+    path = path.replace(/\\/g, "/");
+    console.log(path); */
+
+    let path = "";
+    for (let i = 0; i < req.files["gallery"].length - 1; i++) {
+      path += req.files["gallery"][i].path.slice(29) + ",";
+    }
+    path += req.files["gallery"][req.files["gallery"].length - 1].path.slice(
+      29
+    );
+    path = path.replace(/\\/g, "/");
+
+    // /upload/AvatarUtente/12312748142/21907121.png
+
+    var inserzione = await Inserzione.aggiungiInserzione(
+      nome,
+      citta,
+      inizioDisp,
+      fineDisp,
+      nospiti,
+      desc,
+      indirizzo,
+      prezzo,
+      id_host,
+      path,
+      servizi
+    );
     res.status(200).json({ success: true });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });
   }
 };
+
+/* const aggiungi_inserzione_post = async (req, res) => {
+  try {
+    /* const id_host = req.session.utente.id;
+    var path = req.files["gallery"][0].path;
+    path = path.replace(/\\/g, "/");
+    console.log(path); 
+
+    res.status(200).json({ success: true });
+  } catch (err) {
+    const errors = errorsHandler(err);
+    res.status(400).json({ errors });
+  }
+}; */
 
 const visualizza_inserzioni_get = async (req, res, next) => {
   try {

@@ -27,20 +27,34 @@
     });
 
     /* CHECKBOXES */
-    $("#casa").on("click", () => {
+    // initial value
+    $("#casa").prop("checked", true);
+    $("#bnb").prop("checked", false);
+
+    $("#casa").on("click", function () {
       if ($("#bnb").prop("checked")) {
         $("#bnb").prop("checked", false);
+      } else {
+        $(this).prop("checked", true);
       }
     });
-    $("#bnb").on("click", () => {
+    $("#bnb").on("click", function () {
       if ($("#casa").prop("checked")) {
         $("#casa").prop("checked", false);
+      } else {
+        $(this).prop("checked", true);
       }
     });
     /* ------------------------------------------------- */
 
     /* VISUALIZZA INSERZIONI */
     const inserzioni = JSON.parse("<%= inserzioni %>".replace(/&#34;/g, '"'));
+
+    const immagini = {};
+    inserzioni.forEach((inserzione, index) => {
+      immagini[`${index}`] = inserzione.galleryPath.split(",");
+    });
+
     if (inserzioni.length === 0) {
       $("#visualizza").append(`
           <div class="row justify-content-center align-items-center">
@@ -54,7 +68,7 @@
           </div>
         `);
     } else {
-      inserzioni.forEach((inserzione) => {
+      inserzioni.forEach((inserzione, index) => {
         $("#visualizza").append(`
           <div class="row">
             <div class="col-12">
@@ -62,7 +76,9 @@
                 <div class="card-body no-padding">
                   <div class="row">
                     <div class="col-md-12 col-lg-4">
-                      <img src="/assets/images/homePage1.jpg" class="card-i" alt="img" style="width:100%">
+                      <img src="/uploads/fotoInserzione${
+                        immagini[index][0]
+                      }" class="card-i" alt="img" style="width:100%">
                     </div>
                     <div class="col-md-12 col-lg-8 add-padding">
                       <b>${inserzione.nome_inserzione}</b>
@@ -93,21 +109,34 @@
     }
     /* ------------------------------------------------- */
 
+    /* TEST */
+
+    /* const files = Array.from($("input[type=file]").prop("files"));
+    console.log(files); */
+
+    /* ------------------------------------------------- */
+
     /* AGGIUNGI INSERZIONE */
     $("form").on("submit", (e) => {
       e.preventDefault();
-      let $servizi = {};
+
+      let servizi = {};
       $("input[type=checkbox]").each((index, element) => {
         if ($(element).prop("checked")) {
-          $servizi[$(element).prop("id")] = 1;
+          servizi[$(element).prop("id")] = 1;
         } else {
-          $servizi[$(element).prop("id")] = 0;
+          servizi[$(element).prop("id")] = 0;
         }
       });
-      const servizi = $servizi;
 
-      const files = $("input[type=file]").prop("files");
-      const obj = JSON.stringify({
+      const formData = new FormData();
+      const images = $("input[type=file][multiple]").prop("files");
+
+      for (let i = 0; i < images.length; i++) {
+        formData.append("gallery", images[i]);
+      }
+
+      const ins = JSON.stringify({
         nome: $("#inputTitolo").val(),
         citta: $("#inputCity").val(),
         inizioDisp: $("#inputInit").val(),
@@ -116,30 +145,69 @@
         desc: $("#inputDesc").val(),
         indirizzo: $("#inputAddress").val() + " " + $("#inputNum").val(),
         prezzo: $("#inputPrice").val(),
-        servizi: servizi,
+        servizi,
       });
 
-      const formData = new FormData();
-      Array.from(files).forEach((file) => {
-        formData.append("gallery", file);
-      });
-      fetch(
-        `/host/crea_ins/fotoInserzione/<%= user.id %>/${$(
-          "#inputTitolo"
-        ).val()}`,
-        {
-          method: "POST",
-          body: { obj, formData },
-          headers: { "Content-Type": "application/json" },
-        }
-      )
+      formData.append("inserzione", ins);
+
+      fetch(`/host/crea_ins/fotoInserzione/<%= user.id %>/${Date.now()}`, {
+        method: "PUT",
+        body: formData,
+      })
         .then(async (res) => {
           const response = await res.json();
           if (response.success) {
             console.log("Caricamento completato!");
+            window.location.reload();
           }
         })
         .catch((err) => console.log(err));
+
+      /* const filesArr = [];
+      for (let i = 0; i < files.length; i += 1) {
+        filesArr.push(files[i]);
+      }
+      console.log(filesArr); */
+
+      /* const file = new Blob([new Array(filesArr)], { type: "image/png" });
+      var formdata = new FormData();
+      formdata.append("gallery", file);
+
+      console.log(formdata.getAll("gallery")); */
+
+      /* const nome = $("#inputTitolo").val();
+      const citta = $("#inputCity").val();
+      const inizioDisp = $("#inputInit").val();
+      const fineDisp = $("#inputFin").val();
+      const nospiti = $("#inputOspiti").val();
+      const desc = $("#inputDesc").val();
+      const indirizzo = $("#inputAddress").val() + " " + $("#inputNum").val();
+      const prezzo = $("#inputPrice").val();
+
+      const ins = JSON.stringify({
+        nome,
+        citta,
+        inizioDisp,
+        fineDisp,
+        nospiti,
+        desc,
+        indirizzo,
+        prezzo,
+        servizi,
+      });
+
+      fetch("/host/crea_ins/fotoInserzione/<%= user.id %>", {
+        method: "POST",
+        body: files[0],
+      })
+        .then(async (res) => {
+          const response = await res.json();
+          if (response.success) {
+            console.log("Caricamento completato!");
+            window.location.reload();
+          }
+        })
+        .catch((err) => console.log(err)); */
     });
     /* ------------------------------------------------- */
 

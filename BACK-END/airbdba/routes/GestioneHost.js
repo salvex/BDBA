@@ -6,9 +6,10 @@ const FileUpload = require("../utils/FileUpload");
 const ContattaQuesturaControl = require("../controller/ContattaQuesturaControl");
 const JwtToken = require("../utils/JwtToken");
 
-router.post(
-  "/crea_ins/:type/:id/:name",
+router.put(
+  "/crea_ins/:type/:id/:folder",
   [JwtToken.verifyHost],
+  [FileUpload.upFiles],
   HostControl.aggiungi_inserzione_post
 );
 
