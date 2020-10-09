@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
   <%- include("./partials/head.ejs", {title: "Host"}) %>
+  <!-- MODAL -->
+  <%- include("./partials/insMod.ejs") %>
+  <!-- MODAL -->
+  <%- include("./partials/confirmDel.ejs") %>
   <body>
     <div class="container-fluid host-container h-100">
       <%- include("./partials/nav.ejs") %>
@@ -163,7 +167,6 @@
                                           type="text"
                                           class="form-control"
                                           id="inputCity"
-                                          placeholder="Milano"
                                         />
                                       </div>
                                       <div class="form-group col-md-6">
@@ -174,7 +177,6 @@
                                           type="text"
                                           class="form-control"
                                           id="inputAddress"
-                                          placeholder="Via Roma"
                                         />
                                       </div>
                                       <div class="form-group col-md-2">
@@ -183,7 +185,6 @@
                                           type="number"
                                           class="form-control"
                                           id="inputNum"
-                                          placeholder="12"
                                         />
                                       </div>
                                     </div>
@@ -196,7 +197,6 @@
                                           id="inputInit"
                                           type="text"
                                           class="form-control"
-                                          value="02-16-2012"
                                         />
                                       </div>
                                       <div class="form-group col-md-6">
@@ -207,12 +207,11 @@
                                           id="inputFin"
                                           type="text"
                                           class="form-control"
-                                          value="02-16-2012"
                                         />
                                       </div>
                                     </div>
                                     <div class="form-row">
-                                      <div class="form-group col-md-6">
+                                      <div class="form-group col-md">
                                         <label for="inputOspiti"
                                           >Numero ospiti</label
                                         >
@@ -220,10 +219,9 @@
                                           type="number"
                                           class="form-control"
                                           id="inputOspiti"
-                                          placeholder="12"
                                         />
                                       </div>
-                                      <div class="form-group col-md-6">
+                                      <div class="form-group col-md">
                                         <label for="inputPrice"
                                           >Prezzo per notte</label
                                         >
@@ -231,7 +229,17 @@
                                           type="number"
                                           class="form-control"
                                           id="inputPrice"
-                                          placeholder="15"
+                                        />
+                                      </div>
+                                      <div class="form-group col-md">
+                                        <label for="inputTassa"
+                                          >Tassa soggiorno</label
+                                        >
+                                        <input
+                                          type="number"
+                                          step="0.01"
+                                          class="form-control"
+                                          id="inputTassa"
                                         />
                                       </div>
                                     </div>
@@ -257,11 +265,12 @@
                                           <input
                                             name="gallery"
                                             type="file"
-                                            class="custom-file-input"
+                                            class="custom-file-input inputFileNormal"
                                             id="customFile"
                                             multiple
                                           />
                                           <label
+                                            style="overflow: hidden"
                                             class="custom-file-label"
                                             for="customFileLangHTML"
                                             data-browse="Sfoglia"
@@ -488,22 +497,6 @@
                                         </div>
                                       </div>
                                     </div>
-                                    <!-- 
-                                    <div class="form-group">
-                                      <div class="form-check">
-                                        <input
-                                          class="form-check-input"
-                                          type="checkbox"
-                                          id="gridCheck"
-                                        />
-                                        <label
-                                          class="form-check-label"
-                                          for="gridCheck"
-                                        >
-                                          Check me out
-                                        </label>
-                                      </div>
-                                    </div> -->
                                     <button
                                       type="submit"
                                       class="btn btn-primary"

@@ -1,0 +1,295 @@
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="insMod"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="insModLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="insModLabel">Modifica inserzione</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="add-insertion" enctype="multipart/form-data">
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="inputTitoloModal">Titolo</label>
+              <input type="text" class="form-control" id="inputTitoloModal" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="inputCityModal">Città</label>
+              <input type="text" class="form-control" id="inputCityModal" />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputAddressModal">Indirizzo</label>
+              <input type="text" class="form-control" id="inputAddressModal" />
+            </div>
+            <div class="form-group col-md-2">
+              <label for="inputNumModal">Numero</label>
+              <input type="number" class="form-control" id="inputNumModal" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputInitModal">Inizio disponibilità</label>
+              <input id="inputInitModal" type="text" class="form-control" />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputFinModal">Fine disponibilità</label>
+              <input id="inputFinModal" type="text" class="form-control" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md">
+              <label for="inputOspitiModal">Numero ospiti</label>
+              <input type="number" class="form-control" id="inputOspitiModal" />
+            </div>
+            <div class="form-group col-md">
+              <label for="inputPriceModal">Prezzo per notte</label>
+              <input type="number" class="form-control" id="inputPriceModal" />
+            </div>
+            <div class="form-group col-md">
+              <label for="inputTassaModal">Tassa soggiorno</label>
+              <input
+                type="number"
+                step="0.01"
+                class="form-control"
+                id="inputTassaModal"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label for="inputDescModal">Descrizione</label>
+              <textarea
+                class="form-control"
+                id="inputDescModal"
+                rows="3"
+                placeholder="Inserisci una descrizione che definisca la tua casa e aiuti i clienti a raggiungere la struttura."
+              ></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label for="customFileModal">Selezione delle foto</label>
+              <div class="custom-file">
+                <input
+                  name="gallery"
+                  type="file"
+                  class="custom-file-input"
+                  id="customFileModal"
+                  multiple
+                />
+                <label
+                  class="custom-file-label"
+                  for="customFileLangHTML"
+                  data-browse="Sfoglia"
+                  style="overflow: hidden"
+                  >Carica immagini</label
+                >
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <h3>Le tue foto</h3>
+              <br />
+              <p class="text-justify">
+                Clicca sulle foto per eliminare quelle che non ti piacciono più.
+              </p>
+            </div>
+          </div>
+          <div class="row" style="margin-bottom: 30px; padding: 20px">
+            <div class="col-4 img0"></div>
+            <div class="col-4 img1"></div>
+            <div class="col-4 img2"></div>
+            <div class="col-4 img3"></div>
+            <div class="col-4 img4"></div>
+            <div class="col-4 img5"></div>
+            <div class="col-4 img6"></div>
+            <div class="col-4 img7"></div>
+            <div class="col-4 img8"></div>
+            <div class="col-4 img9"></div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <div class="row">
+                <div class="col-12">
+                  <h3>Che tipo di struttura vuoi caricare?</h3>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="custom-control custom-switch">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="casaModal"
+                    />
+                    <label class="custom-control-label" for="casaModal"
+                      >Casa vacanza&nbsp;&nbsp;<i class="fas fa-home"></i>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="custom-control custom-switch">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="bnbModal"
+                    />
+                    <label class="custom-control-label" for="bnbModal"
+                      >B&B&nbsp;&nbsp;<i class="fas fa-bed"></i>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div class="row">
+                <div class="col-12">
+                  <h3>Quali servizi offri?</h3>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="custom-control custom-switch">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="wifiModal"
+                    />
+                    <label class="custom-control-label" for="wifiModal"
+                      >Wi-Fi&nbsp;&nbsp;<i class="fas fa-wifi"></i>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="custom-control custom-switch">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="riscaldamentoModal"
+                    />
+                    <label class="custom-control-label" for="riscaldamentoModal"
+                      >Riscaldamento&nbsp;&nbsp;<i
+                        class="fas fa-thermometer-half"
+                      ></i
+                    ></label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="custom-control custom-switch">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="frigoriferoModal"
+                    />
+                    <label class="custom-control-label" for="frigoriferoModal"
+                      >Frigorifero&nbsp;&nbsp;<i class="fas fa-snowflake"></i
+                    ></label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="custom-control custom-switch">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="parcheggioModal"
+                    />
+                    <label class="custom-control-label" for="parcheggioModal"
+                      >Parcheggio&nbsp;&nbsp;<i class="fas fa-car-side"></i
+                    ></label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="custom-control custom-switch">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="ascensoreModal"
+                    />
+                    <label class="custom-control-label" for="ascensoreModal"
+                      >Ascensore&nbsp;&nbsp;<i class="fas fa-arrow-up"></i
+                    ></label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="custom-control custom-switch">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="cucinaModal"
+                    />
+                    <label class="custom-control-label" for="cucinaModal"
+                      >Cucina&nbsp;&nbsp;<i class="fas fa-utensils"></i
+                    ></label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="custom-control custom-switch">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="essenzialiModal"
+                    />
+                    <label class="custom-control-label" for="essenzialiModal"
+                      >Essenziali&nbsp;&nbsp;<i class="fas fa-plus"></i
+                    ></label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="custom-control custom-switch">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="piscinaModal"
+                    />
+                    <label class="custom-control-label" for="piscinaModal"
+                      >Piscina&nbsp;&nbsp;<i class="fas fa-swimmer"></i
+                    ></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Salva</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Chiudi
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

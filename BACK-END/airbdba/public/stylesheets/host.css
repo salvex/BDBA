@@ -37,7 +37,7 @@
   display: flex;
   justify-content: end;
 }
-#mod {
+.mod {
   margin-right: 10px;
 }
 .add-margin {
@@ -49,12 +49,32 @@ textarea {
   resize: none;
 }
 
+.img0:hover,
+.img1:hover,
+.img2:hover,
+.img3:hover,
+.img4:hover,
+.img5:hover,
+.img6:hover,
+.img7:hover,
+.img8:hover,
+.img9:hover {
+  opacity: 0.5;
+}
+
 @media (min-width: 992px) {
   .no-padding {
     padding: 0;
   }
   .add-padding {
     padding: 10px 0;
+  }
+}
+
+@media (min-width: 576px) {
+  /* MODIFICA INS */
+  .modal-dialog {
+    max-width: 85%;
   }
 }
 
@@ -71,6 +91,13 @@ textarea {
   /* .inserzione-info {
     padding: 0 10px;
   } */
+}
+
+@media (max-width: 576px) {
+  /* MODIFICA INS */
+  .modal-dialog {
+    margin: 0.5rem;
+  }
 }
 
 @media (max-width: 448px) {

@@ -7,6 +7,7 @@ var jwt = require("jsonwebtoken");
 var bcrypt = require("bcrypt");
 const Prenotazione = require("../model/Prenotazione.js");
 var transporter = require("../utils/mailSender");
+const fs = require("fs");
 
 const maxAge = 60 * 60 * 24;
 
@@ -192,6 +193,7 @@ const aggiungi_inserzione_post = async (req, res) => {
       desc,
       indirizzo,
       prezzo,
+      tassa,
       servizi,
     } = JSON.parse(req.body.inserzione);
 
@@ -202,10 +204,10 @@ const aggiungi_inserzione_post = async (req, res) => {
 
     let path = "";
     for (let i = 0; i < req.files["gallery"].length - 1; i++) {
-      path += req.files["gallery"][i].path.slice(29) + ",";
+      path += req.files["gallery"][i].path.slice(31) + ",";
     }
     path += req.files["gallery"][req.files["gallery"].length - 1].path.slice(
-      29
+      31
     );
     path = path.replace(/\\/g, "/");
 
@@ -220,6 +222,7 @@ const aggiungi_inserzione_post = async (req, res) => {
       desc,
       indirizzo,
       prezzo,
+      tassa,
       id_host,
       path,
       servizi
@@ -328,11 +331,23 @@ const modifica_inserzione_put = async (req, res) => {
 const cancella_inserzione_delete = async (req, res) => {
   try {
     const { id_inserzione } = req.body;
-    var deleteFlag = await Inserzione.cancellaInserzione(id_inserzione);
-    res.status(200).json({
-      message: "hai cancellato questa inserzione con successo!",
-      deleteFlag,
+    console.log(id_inserzione);
+    var deleteIns = await Inserzione.findByPk(id_inserzione);
+    let path =
+      `public/uploads/fotoInserzione/` +
+      req.session.utente.id +
+      deleteIns.galleryPath.slice(0, 14);
+
+    console.log(path, deleteIns);
+    await deleteIns.destroy();
+    // elimino ricorsivamente le la cartella e i file all'interno
+    fs.rmdir(path, { recursive: true }, (err) => {
+      if (err) {
+        throw err;
+      }
+      console.log(`File eliminati`);
     });
+    res.status(200).json({ success: true });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });

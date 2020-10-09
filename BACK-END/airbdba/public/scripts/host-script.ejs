@@ -28,19 +28,19 @@
 
     /* CHECKBOXES */
     // initial value
-    $("#casa").prop("checked", true);
-    $("#bnb").prop("checked", false);
+    $("#casa, #casaModal").prop("checked", true);
+    $("#bnb, #bnbModal").prop("checked", false);
 
-    $("#casa").on("click", function () {
-      if ($("#bnb").prop("checked")) {
-        $("#bnb").prop("checked", false);
+    $("#casa, #casaModal").on("click", function () {
+      if ($("#bnb, #bnbModal").prop("checked")) {
+        $("#bnb, #bnbModal").prop("checked", false);
       } else {
         $(this).prop("checked", true);
       }
     });
-    $("#bnb").on("click", function () {
-      if ($("#casa").prop("checked")) {
-        $("#casa").prop("checked", false);
+    $("#bnb, #bnbModal").on("click", function () {
+      if ($("#casa, #casaModal").prop("checked")) {
+        $("#casa, #casaModal").prop("checked", false);
       } else {
         $(this).prop("checked", true);
       }
@@ -76,7 +76,7 @@
                 <div class="card-body no-padding">
                   <div class="row">
                     <div class="col-md-12 col-lg-4">
-                      <img src="/uploads/fotoInserzione${
+                      <img src="/uploads/fotoInserzione/<%= user.id %>${
                         immagini[index][0]
                       }" class="card-i" alt="img" style="width:100%">
                     </div>
@@ -98,8 +98,12 @@
                   </div>
                 </div>
                 <div class="card-footer inserzione-footer">
-                  <button id="mod" class="btn btn-primary">Modifica</button>
-                  <button id="del" class="btn btn-danger">Elimina</button>
+                  <button id="${index}" inserzione="${
+          inserzione.id_inserzione
+        }" class="btn btn-primary mod">Modifica</button>
+                  <button inserzione="${
+                    inserzione.id_inserzione
+                  }" class="btn btn-danger del">Elimina</button>
                 </div>
               </div>
             </div>
@@ -109,10 +113,10 @@
     }
     /* ------------------------------------------------- */
 
-    /* TEST */
-
-    /* const files = Array.from($("input[type=file]").prop("files"));
-    console.log(files); */
+    /* CONTROLLI */
+    /* $("input").each((index, element) => {
+      $(element)
+    }); */
 
     /* ------------------------------------------------- */
 
@@ -130,7 +134,9 @@
       });
 
       const formData = new FormData();
-      const images = $("input[type=file][multiple]").prop("files");
+      const images = $("input[type=file][multiple].inputFileNormal").prop(
+        "files"
+      );
 
       for (let i = 0; i < images.length; i++) {
         formData.append("gallery", images[i]);
@@ -145,6 +151,7 @@
         desc: $("#inputDesc").val(),
         indirizzo: $("#inputAddress").val() + " " + $("#inputNum").val(),
         prezzo: $("#inputPrice").val(),
+        tassa: $("#inputTassa").val(),
         servizi,
       });
 
@@ -162,53 +169,83 @@
           }
         })
         .catch((err) => console.log(err));
+    });
+    /* ------------------------------------------------- */
 
-      /* const filesArr = [];
-      for (let i = 0; i < files.length; i += 1) {
-        filesArr.push(files[i]);
+    /* MODIFICA INSERZIONE */
+    // Aptro il modal
+
+    $(".mod").on("click", function () {
+      $("#insMod").prop("inserzione", $(this).prop("id")).modal("show");
+    });
+
+    $("#insMod").on("show.bs.modal", function () {
+      for (let i = 0; i < immagini[$(this).prop("inserzione")].length; i++) {
+        $(`div.img${i}`)
+          .css({
+            "background-image": `url("/uploads/fotoInserzione/1${
+              immagini[$(this).prop("inserzione")][i]
+            }")`,
+            "background-size": "cover",
+            "background-position": "center",
+            height: "200px",
+            opacity: 1,
+          })
+          .addClass(immagini[$(this).prop("inserzione")][i])
+          .on("click", function () {
+            $(this).animate({ opacity: 0 }, 125, function () {
+              $(this).css({ display: "none" });
+            });
+          });
       }
-      console.log(filesArr); */
+      console.log($(this).prop("inserzione"));
+    });
 
-      /* const file = new Blob([new Array(filesArr)], { type: "image/png" });
-      var formdata = new FormData();
-      formdata.append("gallery", file);
+    $("#insMod").on("hide.bs.modal", function () {
+      for (let i = 0; i < immagini[$(this).prop("inserzione")].length; i++) {
+        $(`div.img${i}`)
+          .css({
+            "background-image": `none`,
+          })
+          .removeClass(immagini[$(this).prop("inserzione")][i]);
+      }
+      $(this).prop("inserzione", "");
+    });
 
-      console.log(formdata.getAll("gallery")); */
+    // Chiudo il modal
+    /* $("#insMod")
+      .on("show.bs.modal", function (e) {
+        for (let i = 0; i < immagini[$(this).attr("inserzione")].length; i++) {
+          $(`div.img${i}`).css({
+            display: "flex",
+            opacity: 1,
+          });
+        }
+      })
+      .attr("inserzione", ""); */
+    /* ------------------------------------------------- */
 
-      /* const nome = $("#inputTitolo").val();
-      const citta = $("#inputCity").val();
-      const inizioDisp = $("#inputInit").val();
-      const fineDisp = $("#inputFin").val();
-      const nospiti = $("#inputOspiti").val();
-      const desc = $("#inputDesc").val();
-      const indirizzo = $("#inputAddress").val() + " " + $("#inputNum").val();
-      const prezzo = $("#inputPrice").val();
-
-      const ins = JSON.stringify({
-        nome,
-        citta,
-        inizioDisp,
-        fineDisp,
-        nospiti,
-        desc,
-        indirizzo,
-        prezzo,
-        servizi,
-      });
-
-      fetch("/host/crea_ins/fotoInserzione/<%= user.id %>", {
-        method: "POST",
-        body: files[0],
+    /* ELIMINA INSERZIONE */
+    $(".del").on("click", function () {
+      $(".confirm").attr("inserzione", $(this).attr("inserzione"));
+      $("#confirmDel").modal("show");
+    });
+    $(".confirm").on("click", function () {
+      const id_inserzione = $(this).attr("inserzione");
+      fetch("/host/delete_ins", {
+        method: "DELETE",
+        body: JSON.stringify({ id_inserzione }),
+        headers: { "Content-Type": "application/json" },
       })
         .then(async (res) => {
           const response = await res.json();
           if (response.success) {
-            console.log("Caricamento completato!");
             window.location.reload();
           }
         })
-        .catch((err) => console.log(err)); */
+        .catch((err) => console.log(err));
     });
+
     /* ------------------------------------------------- */
 
     $(window).resize(() => {

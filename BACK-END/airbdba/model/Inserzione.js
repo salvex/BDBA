@@ -56,6 +56,10 @@ const Inserzione = db.sequelize.define(
       type: DataTypes.INTEGER(30),
       allowNull: false,
     },
+    tassa_soggiorno: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
     galleryPath: {
       type: DataTypes.STRING(300),
       allowNull: true,
@@ -267,6 +271,7 @@ Inserzione.aggiungiInserzione = async (
   descrizione,
   indirizzo,
   prezzo_base,
+  tassa_soggiorno,
   ref_host_ins,
   galleryPath,
   servizi
@@ -280,6 +285,7 @@ Inserzione.aggiungiInserzione = async (
     descrizione,
     indirizzo,
     prezzo_base,
+    tassa_soggiorno,
     ref_host_ins,
     galleryPath,
   });
@@ -377,37 +383,40 @@ Inserzione.modificaInserzione = async (id_ins, query) => {
       ins_modifica.prezzo_base = query[7];
     }
     if (query[8]) {
-      ins_modifica.galleryPath = query[8];
+      ins_modifica.tassa_soggiorno = query[8];
     }
-    if (query[9]["wifi"] != ins_modifica_s.wifiFlag) {
-      ins_modifica_s.wifiFlag = query[9]["wifi"];
+    if (query[9]) {
+      ins_modifica.galleryPath = query[9];
     }
-    if (query[9]["riscaldamento"] != ins_modifica_s.riscaldamentoFlag) {
-      ins_modifica_s.riscaldamentoFlag = query[9]["riscaldamento"];
+    if (query[10]["wifi"] != ins_modifica_s.wifiFlag) {
+      ins_modifica_s.wifiFlag = query[10]["wifi"];
     }
-    if (query[9]["frigorifero"] != ins_modifica_s.frigoriferoFlag) {
-      ins_modifica_s.frigoriferoFlag = query[9]["frigorifero"];
+    if (query[10]["riscaldamento"] != ins_modifica_s.riscaldamentoFlag) {
+      ins_modifica_s.riscaldamentoFlag = query[10]["riscaldamento"];
     }
-    if (query[9]["casa"] != ins_modifica_s.casaFlag) {
-      ins_modifica_s.casaFlag = query[9]["casa"];
+    if (query[10]["frigorifero"] != ins_modifica_s.frigoriferoFlag) {
+      ins_modifica_s.frigoriferoFlag = query[10]["frigorifero"];
     }
-    if (query[9]["bnb"] != ins_modifica_s.bnbFlag) {
-      ins_modifica_s.bnbFlag = query[9]["bnb"];
+    if (query[10]["casa"] != ins_modifica_s.casaFlag) {
+      ins_modifica_s.casaFlag = query[10]["casa"];
     }
-    if (query[9]["parcheggio"] != ins_modifica_s.parcheggioFlag) {
-      ins_modifica_s.parcheggioFlag = query[9]["parcheggio"];
+    if (query[10]["bnb"] != ins_modifica_s.bnbFlag) {
+      ins_modifica_s.bnbFlag = query[10]["bnb"];
     }
-    if (query[9]["ascensore"] != ins_modifica_s.ascensoreFlag) {
-      ins_modifica_s.ascensoreFlag = query[9]["ascensore"];
+    if (query[10]["parcheggio"] != ins_modifica_s.parcheggioFlag) {
+      ins_modifica_s.parcheggioFlag = query[10]["parcheggio"];
     }
-    if (query[9]["cucina"] != ins_modifica_s.cucinaFlag) {
-      ins_modifica_s.cucinaFlag = query[9]["cucina"];
+    if (query[10]["ascensore"] != ins_modifica_s.ascensoreFlag) {
+      ins_modifica_s.ascensoreFlag = query[10]["ascensore"];
     }
-    if (query[9]["essenziali"] != ins_modifica_s.essenzialiFlag) {
-      ins_modifica_s.essenzialiFlag = query[9]["essenziali"];
+    if (query[10]["cucina"] != ins_modifica_s.cucinaFlag) {
+      ins_modifica_s.cucinaFlag = query[10]["cucina"];
     }
-    if (query[9]["piscina"] != ins_modifica_s.piscinaFlag) {
-      ins_modifica_s.piscinaFlag = query[9]["piscina"];
+    if (query[10]["essenziali"] != ins_modifica_s.essenzialiFlag) {
+      ins_modifica_s.essenzialiFlag = query[10]["essenziali"];
+    }
+    if (query[10]["piscina"] != ins_modifica_s.piscinaFlag) {
+      ins_modifica_s.piscinaFlag = query[10]["piscina"];
     }
     await ins_modifica.save();
     await ins_modifica_s.save();
