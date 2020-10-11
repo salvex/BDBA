@@ -16,7 +16,7 @@ router.put(
 router.get(
   "/",
   [JwtToken.verifyHost],
-  HostControl.visualizza_inserzioni_get,
+  HostControl.gestione_host_get,
   (req, res) => {
     res.render("host");
   }

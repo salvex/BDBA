@@ -1,6 +1,15 @@
 <script>
+  //RICHIESTE STATO 1
+  //PRENOTAZIONI ACCETTATE STATO 2
   $(document).ready(() => {
     /* Vars */
+    // Data
+    const inserzioni = JSON.parse("<%= inserzioni %>".replace(/&#34;/g, '"'));
+    const prenotazioni = JSON.parse(
+      "<%= prenotazioni %>".replace(/&#34;/g, '"')
+    );
+    // Variabili
+    const immagini = {};
     const imgToDel = [];
     let folderPath = "";
 
@@ -52,9 +61,6 @@
     /* ------------------------------------------------- */
 
     /* VISUALIZZA INSERZIONI */
-    const inserzioni = JSON.parse("<%= inserzioni %>".replace(/&#34;/g, '"'));
-
-    const immagini = {};
     inserzioni.forEach((inserzione, index) => {
       immagini[`${index}`] = inserzione.galleryPath.split(",");
     });
@@ -72,7 +78,6 @@
           </div>
         `);
     } else {
-      // modificare il for each
       inserzioni.forEach((inserzione, index) => {
         $("#visualizza").append(`
           <div class="row">
@@ -81,9 +86,9 @@
                 <div class="card-body no-padding">
                   <div class="row">
                     <div class="col-md-12 col-lg-4">
-                      <img src="/uploads/fotoInserzione/<%= user.id %>${
+                      <div class="card-i" style="background-image: url(/uploads/fotoInserzione/<%= user.id %>${
                         immagini[index][0]
-                      }" class="card-i" alt="img" style="width:100%">
+                      }); background-size:cover; background-position:bottom; width:100%; height: 200px"></div>
                     </div>
                     <div class="col-md-12 col-lg-8 add-padding">
                       <b>${inserzione.nome_inserzione}</b>
@@ -189,7 +194,7 @@
                     display: "flex",
                     "background-image": `url("/uploads/fotoInserzione/<%= user.id %>${immagini[index][i]}")`,
                     "background-size": "cover",
-                    "background-position": "center",
+                    "background-position": "bottom",
                     height: "200px",
                     opacity: 1,
                   })
@@ -369,6 +374,116 @@
         .catch((err) => console.log(err));
     });
 
+    /* ------------------------------------------------- */
+
+    /* GESTIONE PRENOTAZIONI */
+    prenotazioni.forEach((prenotazione, index) => {
+      if (prenotazione.stato_prenotazione === 1) {
+        $("#req").append(
+          `
+            <div class="card req-card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12">
+                    ${prenotazione.utente.nome}&nbsp;${
+            prenotazione.utente.cognome
+          }
+                  </div>
+                  <div class="col-12">
+                    <a href="mailto:${prenotazione.utente.email}"><i>${
+            prenotazione.utente.email
+          }</i></a>
+                  </div>
+                  <div class="col-12">
+                    dal: <b>${prenotazione.check_in}</b>
+                  </div>
+                  <div class="col-12">
+                    al: <b>${prenotazione.check_out}</b>
+                  </div>
+                  <div class="col-12">
+                    ${prenotazione.n_ospiti_pren} ${
+            prenotazione.n_ospiti_pren === 1 ? "ospite" : "ospiti"
+          }
+                  </div>
+                </div>
+                <hr />
+                <div clas="row justify-content-center">
+                  <div class="col accDen">
+                    <button class="btn btn-success accept">&check;</button>
+                    <button class="btn btn-danger deny">&times;</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `
+        );
+      } else if (prenotazione.stato_prenotazione === 2) {
+        $("#pren").append(
+          `
+            <div class="card pren-card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12">
+                    ${prenotazione.utente.nome}&nbsp;${
+            prenotazione.utente.cognome
+          }, <a href="mailto:${prenotazione.utente.email}"><i>${
+            prenotazione.utente.email
+          }</i></a>
+                  </div>
+                  <div class="col-12">
+                    <b>${prenotazione.check_in}</b> &#8594; <b>${
+            prenotazione.check_out
+          }</b>, ${prenotazione.n_ospiti_pren} ${
+            prenotazione.n_ospiti_pren === 1 ? "ospite" : "ospiti"
+          }
+                  </div>
+                </div>
+              </div>
+            </div>
+          `
+        );
+      }
+    });
+
+    if ($(".req-card").length === 0) {
+      $("#req").append(
+        `
+        <div
+          class="row justify-content-center"
+          style="margin-top: 45px; margin-bottom: 30px"
+        >
+          <img
+            style="
+            width: 65%;
+            opacity: 0.25;
+            align-self: center;
+            "
+            src="/assets/images/nessuna_richiesta.png"
+          />
+        </div>
+        `
+      );
+    }
+
+    if ($(".pren-card").length === 0) {
+      $("#pren").append(
+        `
+        <div
+          class="row justify-content-center"
+          style="margin-top: 45px; margin-bottom: 30px"
+        >
+          <img
+            style="
+            width: 45%;
+            opacity: 0.25;
+            align-self: center;
+            "
+            src="/assets/images/nessuna_prenotazione.png"
+          />
+        </div>
+        `
+      );
+    }
     /* ------------------------------------------------- */
 
     $(window).resize(() => {

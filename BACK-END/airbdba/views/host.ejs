@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <%- include("./partials/head.ejs", {title: "Host"}) %>
-  
+
   <!-- MODAL -->
   <%- include("./partials/confirmDel.ejs") %>
   <!-- MODAL -->
@@ -53,24 +53,7 @@
                               role="tab"
                               aria-controls="v-pills-prenotazioni"
                               aria-selected="false"
-                              >Gestioni prenotazioni</a
-                            >
-                            <div>
-                              <hr />
-                            </div>
-                            <a
-                              id="questura"
-                              class="nav-link"
-                              href="/host"
-                              role="tab"
-                              >Questura</a
-                            >
-                            <a
-                              class="nav-link"
-                              id="turismo"
-                              href="/host"
-                              role="tab"
-                              >Ufficio del turismo</a
+                              >Gestione prenotazioni</a
                             >
                           </div>
                         </div>
@@ -516,23 +499,93 @@
                           role="tabpanel"
                           aria-labelledby="v-pills-prenotazioni-tab"
                         >
-                          Prenotazioni
-                        </div>
-                        <div
-                          class="tab-pane fade"
-                          id="v-pills-questura"
-                          role="tabpanel"
-                          aria-labelledby="v-pills-questura-tab"
-                        >
-                          Questura
-                        </div>
-                        <div
-                          class="tab-pane fade"
-                          id="v-pills-turismo"
-                          role="tabpanel"
-                          aria-labelledby="v-pills-turismo-tab"
-                        >
-                          Turismo
+                          <!-- CODE HERE -->
+                          <div class="row">
+                            <div class="col-12">
+                              <ul
+                                class="nav nav-tabs"
+                                id="prenotazioniTab"
+                                role="tablist"
+                              >
+                                <li class="nav-item">
+                                  <a
+                                    class="nav-link active"
+                                    id="prenotazioni-tab"
+                                    data-toggle="tab"
+                                    href="#prenotazioni"
+                                    role="tab"
+                                    aria-controls="prenotazioni"
+                                    aria-selected="true"
+                                    >Visualizza prenotazioni</a
+                                  >
+                                </li>
+                                <li class="nav-item">
+                                  <a
+                                    class="nav-link"
+                                    id="contattaQ-tab"
+                                    data-toggle="tab"
+                                    href="#contattaQ"
+                                    role="tab"
+                                    aria-controls="contattaQ"
+                                    aria-selected="false"
+                                    >Contatta questura</a
+                                  >
+                                </li>
+                                <li class="nav-item">
+                                  <a
+                                    class="nav-link"
+                                    id="contattaT-tab"
+                                    data-toggle="tab"
+                                    href="#contattaT"
+                                    role="tab"
+                                    aria-controls="contattaT"
+                                    aria-selected="false"
+                                    >Contatta ufficio del turismo</a
+                                  >
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12">
+                              <div
+                                class="tab-content"
+                                id="prenotazioniTabContent"
+                              >
+                                <div
+                                  class="tab-pane fade show active"
+                                  id="prenotazioni"
+                                  role="tabpanel"
+                                  aria-labelledby="prenotazioni-tab"
+                                >
+                                  <div class="row">
+                                    <div class="col-md-12 col-lg-5" id="req">
+                                      <h3><b>Richieste</b></h3>
+                                    </div>
+                                    <div class="col-md-12 col-lg-7" id="pren">
+                                      <h3><b>Prenotazioni</b></h3>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div
+                                  class="tab-pane fade"
+                                  id="contattaQ"
+                                  role="tabpanel"
+                                  aria-labelledby="contattaQ-tab"
+                                >
+                                  ...
+                                </div>
+                                <div
+                                  class="tab-pane fade"
+                                  id="contattaT"
+                                  role="tabpanel"
+                                  aria-labelledby="contattaT-tab"
+                                >
+                                  ...
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

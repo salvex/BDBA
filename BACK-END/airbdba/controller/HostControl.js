@@ -249,11 +249,20 @@ const aggiungi_inserzione_post = async (req, res) => {
   }
 }; */
 
-const visualizza_inserzioni_get = async (req, res, next) => {
+const gestione_host_get = async (req, res, next) => {
   try {
-    const id_host = JwtToken.decodedId(req);
+    const id_host = req.session.utente.id;
+    var prenotazioni = await Prenotazione.findAll({
+      where: { ref_host: id_host },
+      include: {
+        model: Utente,
+        required: true,
+        attributes: ["email", "nome", "cognome"],
+      },
+    });
     var lista = await Inserzione.processaLista(id_host);
     res.locals.inserzioni = JSON.stringify(lista);
+    res.locals.prenotazioni = JSON.stringify(prenotazioni);
     next();
   } catch (err) {
     const errors = errorsHandler(err); //
@@ -506,7 +515,7 @@ const contatta_utente_post = async (req, res) => {
 module.exports = {
   become_host_get,
   aggiungi_inserzione_post,
-  visualizza_inserzioni_get,
+  gestione_host_get,
   modifica_inserzione_put,
   /* modifica_inserzione_put_img, */
   cancella_inserzione_delete,

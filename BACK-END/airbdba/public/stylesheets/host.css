@@ -26,7 +26,10 @@
 }
 /* INSERZIONI */
 #visualizza,
-#aggiungi {
+#aggiungi,
+#prenotazioni,
+#contattaQ,
+#contattaT {
   padding: 30px;
 }
 #preview {
@@ -62,6 +65,30 @@ textarea {
   opacity: 0.5;
 }
 
+/* PRENOTAZIONI */
+.pren-card,
+.req-card {
+  margin-bottom: 20px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+#req {
+  border-right: 3px dashed rgba(0, 0, 0, 0.125);
+}
+.accept {
+  margin-right: 20px;
+}
+.accept,
+.deny {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+}
+.accDen {
+  display: flex;
+  justify-content: center;
+}
 @media (min-width: 992px) {
   .no-padding {
     padding: 0;
@@ -84,6 +111,9 @@ textarea {
   } */
   .card-i {
     margin-bottom: 20px;
+  }
+  #req {
+    border: none;
   }
 }
 
