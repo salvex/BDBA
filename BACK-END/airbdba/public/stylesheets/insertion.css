@@ -61,7 +61,7 @@
 #showcase {
   display: flex;
   flex-flow: row wrap;
-  margin-bottom: 100px;
+  margin-bottom: 20px;
 }
 
 #carousel-container {

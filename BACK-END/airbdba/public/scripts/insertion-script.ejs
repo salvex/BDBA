@@ -481,13 +481,6 @@
         // Heading
         $("#insertion-heading > h1").append(response.show.nome_inserzione);
         // Showcase
-        // -- Carousel
-        $(".carousel-item > img").each((index, element) => {
-          $(element).attr(
-            "src",
-            `${response.show.galleryPath}homePage${index + 1}.jpg`
-          );
-        });
         // -- Description
         $("#citta > h3").append(response.show.citta);
         $("#desc > p").append(response.show.descrizione);
@@ -501,6 +494,37 @@
         &q=${response.show.citta},${response.show.indirizzo}`
         );
 
+        // Carousel
+        imgs = response.show.galleryPath.split(",");
+        for (let i = 0; i < imgs.length; i += 1) {
+          if (i === 0) {
+            $(".carousel-inner").append(
+              `
+                <div class="carousel-item active">
+                  <img
+                    src="/uploads/fotoInserzione/1${imgs[i]}"
+                    class="d-block w-100"
+                    alt="..."
+                  />
+                </div>
+              `
+            );
+          } else {
+            $(".carousel-inner").append(
+              `
+                <div class="carousel-item">
+                  <img
+                    src="/uploads/fotoInserzione/1${imgs[i]}"
+                    class="d-block w-100"
+                    alt="..."
+                  />
+                </div>
+              `
+            );
+          }
+        }
+
+        // Riepilogo
         // Imposto il valore massimo dell'ìnput ospiti
         $("#guestNum").attr("max", response.show.n_ospiti);
 
@@ -571,6 +595,16 @@
             $("#total").html("0 &euro;");
           }, 1000);
         }
+
+        // SERVIZI
+        servizi = Object.keys(response.show.servizi);
+        servizi.forEach((servizio, index) => {
+          if (response.show.servizi[servizio] && index !== 0) {
+            $("#servicesList").append(
+              `<li>${servizio.slice(0, servizio.length - 4)}</li>`
+            );
+          }
+        });
       })
       .catch((err) => console.log(err));
 

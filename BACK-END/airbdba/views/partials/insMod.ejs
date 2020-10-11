@@ -95,6 +95,7 @@
                 />
                 <label
                   class="custom-file-label"
+                  id="customFileModalLabel"
                   for="customFileLangHTML"
                   data-browse="Sfoglia"
                   style="overflow: hidden"
@@ -107,9 +108,12 @@
             <div class="col">
               <h3>Le tue foto</h3>
               <br />
-              <p class="text-justify">
-                Clicca sulle foto per eliminare quelle che non ti piacciono più.
-              </p>
+              <div class="alert alert-primary">
+                <b>
+                  Clicca sulle foto per <u>eliminare</u> quelle che non ti
+                  piacciono più.
+                </b>
+              </div>
             </div>
           </div>
           <div class="row" style="margin-bottom: 30px; padding: 20px">
@@ -285,7 +289,9 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Salva</button>
+        <button type="button" id="saveChanges" class="btn btn-primary">
+          Salva
+        </button>
         <button type="button" class="btn btn-danger" data-dismiss="modal">
           Chiudi
         </button>

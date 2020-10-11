@@ -18,6 +18,7 @@ const storage = multer.diskStorage({
       cb(null, path);
     } else {
       let path = "public/uploads" + "/" + type + "/" + id + "/" + folder;
+      console.log(path);
       fs.mkdirSync(path, { recursive: true }); //crea il percorso qualora non ci fosse
       cb(null, path);
     }

@@ -23,7 +23,7 @@ router.get(
 );
 
 router.put(
-  "/modifica/:type/:id",
+  "/modifica/:type/:id/:folder",
   [JwtToken.verifyHost],
   FileUpload.upFiles,
   HostControl.modifica_inserzione_put

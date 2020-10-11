@@ -1,5 +1,9 @@
 <script>
   $(document).ready(() => {
+    /* Vars */
+    const imgToDel = [];
+    let folderPath = "";
+
     /* ON RELOAD */
     bsCustomFileInput.init();
     if ($(window).width() < "448") {
@@ -68,6 +72,7 @@
           </div>
         `);
     } else {
+      // modificare il for each
       inserzioni.forEach((inserzione, index) => {
         $("#visualizza").append(`
           <div class="row">
@@ -98,17 +103,122 @@
                   </div>
                 </div>
                 <div class="card-footer inserzione-footer">
-                  <button id="${index}" inserzione="${
-          inserzione.id_inserzione
-        }" class="btn btn-primary mod">Modifica</button>
-                  <button inserzione="${
-                    inserzione.id_inserzione
-                  }" class="btn btn-danger del">Elimina</button>
+                  <button
+                    id="${index}"
+                    inserzione="${index}"
+                    class="btn btn-primary mod"
+                  >
+                    Modifica
+                  </button>
+                  <button
+                    inserzione="${inserzione.id_inserzione}"
+                    class="btn btn-danger del"
+                  >
+                    Elimina
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         `);
+
+        // Modifica inserzione
+        $(`button#${index}`).on("click", function () {
+          $("#insMod")
+            .attr("index", index)
+            .attr("inserzione", inserzione.id_inserzione)
+            .on("show.bs.modal", function () {
+              // Salvo il path della cartella
+              folderPath = immagini[index][0].slice(0, 14);
+              console.log(folderPath);
+
+              // Compilo i campi dell'inserzione con i valori attuali
+              $("#inputTitoloModal").val(inserzione.nome_inserzione);
+              $("#inputCityModal").val(inserzione.citta);
+              $("#inputInitModal").val(inserzione.inizioDisponibilita);
+              $("#inputFinModal").val(inserzione.fineDisponibilita);
+              $("#inputOspitiModal").val(inserzione.n_ospiti);
+              $("#inputDescModal").val(inserzione.descrizione);
+              $("#inputPriceModal").val(inserzione.prezzo_base);
+              $("#inputTassaModal").val(inserzione.tassa_soggiorno);
+              // Dato che l'indirizzo è nel formato "Via Roma 18"
+              // devo prelevare il numero civico poi prendere il resto
+              // della stringa.
+
+              // Divido la stringa in base agli spazi
+              // ["Via", "Roma", "18"]
+              const ind = inserzione.indirizzo.split(" ");
+              $("#inputNumModal").val(ind[ind.length - 1]);
+
+              // Rimuovo il numero civico
+              // ["Via", "Roma"]
+              ind.pop();
+
+              // Concateno i valori
+              // "Via Roma"
+              const via = ind.reduce((x, y) => x + " " + y);
+              $("#inputAddressModal").val(via);
+
+              // Inserisco un avviso sul campo per inserire le immagini
+              $("#customFileModalLabel").text(
+                `Solo altre ${10 - immagini[index].length}`
+              );
+
+              // TODO
+              /* $("#customFileModalLabel").on("click", function () {
+                console.log($(this).prop("files"));
+              }); */
+
+              /* Attivo anche le checkbox dei servizi in modo corretto */
+              let serviziKeys = Object.keys(inserzione.servizi);
+              for (let j = 1; j < serviziKeys.length - 1; j += 1) {
+                let servizio = serviziKeys[j].slice(
+                  0,
+                  serviziKeys[j].length - 4
+                );
+                if (inserzione.servizi[serviziKeys[j]]) {
+                  $(`#${servizio}Modal`).prop("checked", true);
+                } else {
+                  $(`#${servizio}Modal`).prop("checked", false);
+                }
+              }
+
+              for (let i = 0; i < immagini[index].length; i += 1) {
+                $(`.img${i}`)
+                  .css({
+                    display: "flex",
+                    "background-image": `url("/uploads/fotoInserzione/<%= user.id %>${immagini[index][i]}")`,
+                    "background-size": "cover",
+                    "background-position": "center",
+                    height: "200px",
+                    opacity: 1,
+                  })
+                  .attr("path", immagini[index][i])
+                  .on("click", function () {
+                    imgToDel.push($(this).attr("path"));
+                    console.log(imgToDel);
+                    $(this).animate({ opacity: 0 }, 125, function () {
+                      $(this).css({
+                        "background-image": "none",
+                        display: "none",
+                      });
+                    });
+                  });
+              }
+            })
+            .on("hidden.bs.modal", function () {
+              for (let i = 0; i < immagini[index].length; i += 1) {
+                $(`.img${i}`).removeAttr("style path").off("click");
+                $("#customFileModalLabel").off("click");
+                $("#insMod").off("show.bs.modal hidden.bs.modal");
+              }
+              while (imgToDel.length > 0) {
+                imgToDel.pop();
+                console.log(imgToDel);
+              }
+            })
+            .modal("show");
+        });
       });
     }
     /* ------------------------------------------------- */
@@ -173,56 +283,69 @@
     /* ------------------------------------------------- */
 
     /* MODIFICA INSERZIONE */
-    // Aptro il modal
+    // Array che contiene i nomi delle immagini che vanno eliminate
 
-    $(".mod").on("click", function () {
-      $("#insMod").prop("inserzione", $(this).prop("id")).modal("show");
-    });
+    $("#saveChanges").on("click", () => {
+      // Sottraggo dalla lista di tutte le immagini, quelle rimosse
+      // dall'utente
+      const imgToSave = immagini[$("#insMod").attr("index")].filter((x) => {
+        return !imgToDel.includes(x);
+      });
 
-    $("#insMod").on("show.bs.modal", function () {
-      for (let i = 0; i < immagini[$(this).prop("inserzione")].length; i++) {
-        $(`div.img${i}`)
-          .css({
-            "background-image": `url("/uploads/fotoInserzione/1${
-              immagini[$(this).prop("inserzione")][i]
-            }")`,
-            "background-size": "cover",
-            "background-position": "center",
-            height: "200px",
-            opacity: 1,
-          })
-          .addClass(immagini[$(this).prop("inserzione")][i])
-          .on("click", function () {
-            $(this).animate({ opacity: 0 }, 125, function () {
-              $(this).css({ display: "none" });
-            });
-          });
-      }
-      console.log($(this).prop("inserzione"));
-    });
-
-    $("#insMod").on("hide.bs.modal", function () {
-      for (let i = 0; i < immagini[$(this).prop("inserzione")].length; i++) {
-        $(`div.img${i}`)
-          .css({
-            "background-image": `none`,
-          })
-          .removeClass(immagini[$(this).prop("inserzione")][i]);
-      }
-      $(this).prop("inserzione", "");
-    });
-
-    // Chiudo il modal
-    /* $("#insMod")
-      .on("show.bs.modal", function (e) {
-        for (let i = 0; i < immagini[$(this).attr("inserzione")].length; i++) {
-          $(`div.img${i}`).css({
-            display: "flex",
-            opacity: 1,
-          });
+      // Creo un arrai per i servizi
+      let servizi = {};
+      $(`input[type=checkbox][id$="Modal"]`).each((index, element) => {
+        if ($(element).prop("checked")) {
+          servizi[$(element).prop("id")] = 1;
+        } else {
+          servizi[$(element).prop("id")] = 0;
         }
+      });
+
+      console.log(immagini[$("#insMod").attr("index")], imgToDel, imgToSave);
+
+      const formData = new FormData();
+      const images = $("input[type=file][multiple][id$='Modal']").prop("files");
+
+      for (let i = 0; i < images.length; i++) {
+        formData.append("gallery", images[i]);
+      }
+
+      const insModal = JSON.stringify({
+        nome: $("#inputTitoloModal").val(),
+        citta: $("#inputCityModal").val(),
+        inizioDisp: $("#inputInitModal").val(),
+        fineDisp: $("#inputFinModal").val(),
+        nospiti: $("#inputOspitiModal").val(),
+        desc: $("#inputDescModal").val(),
+        indirizzo:
+          $("#inputAddressModal").val() + " " + $("#inputNumModal").val(),
+        prezzo: $("#inputPriceModal").val(),
+        tassa: $("#inputTassaModal").val(),
+        servizi,
+        imgToSave,
+        imgToDel,
+        id_ins: $("#insMod").attr("inserzione"),
+      });
+
+      console.log(insModal);
+
+      formData.append("inserzione", insModal);
+
+      fetch(`/host/modifica/fotoInserzione/<%= user.id %>${folderPath}`, {
+        method: "PUT",
+        body: formData,
       })
-      .attr("inserzione", ""); */
+        .then(async (res) => {
+          const response = await res.json();
+          if (response.success) {
+            console.log("Caricamento completato!");
+            window.location.reload();
+          }
+        })
+        .catch((err) => console.log(err));
+    });
+
     /* ------------------------------------------------- */
 
     /* ELIMINA INSERZIONE */

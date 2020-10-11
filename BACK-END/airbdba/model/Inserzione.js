@@ -312,6 +312,10 @@ Inserzione.mostra = async (idInserzione) => {
     where: {
       id_inserzione: idInserzione,
     },
+    include: {
+      model: Servizi,
+      required: true,
+    },
   });
   if (risultato) {
     return risultato;
@@ -331,6 +335,7 @@ Inserzione.processaLista = async (id_host) => {
       "descrizione",
       "indirizzo",
       "prezzo_base",
+      "tassa_soggiorno",
       "galleryPath",
     ],
     where: {
@@ -340,6 +345,10 @@ Inserzione.processaLista = async (id_host) => {
       model: Utente,
       required: true,
       attributes: ["isHost"],
+    },
+    include: {
+      model: Servizi,
+      required: true,
     },
   });
   if (lista) {
@@ -454,5 +463,28 @@ Inserzione.cancellaInserzione = async (id_ins) => {
 
   return ins_cancella;
 };
+
+/* Inserzione.getEmailUtentiPren = async (id_ins) => {
+  let MailArray = [];
+  const prenAss = await Inserzione.findAll({
+    where: {
+      id_inserzione : id_ins
+    },
+    include: {
+      model: Prenotazione,
+      required: true,
+      attributes: ["id_prenotazione","ref_utente"]
+    } 
+  })
+  if (prenAss) {
+    prenAss.forEach((pren) => {
+      const mailUtente = await Utente.findByPk(pren.ref_utente);
+      MailArray.push(mailUtente.email);
+    })
+    return MailArray
+  } else {
+    throw new Error("prenotazioni non trovate");
+  }
+} */
 
 module.exports = Inserzione;

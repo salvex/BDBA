@@ -1,6 +1,7 @@
 const db = require("../utils/connection.js");
 const Utente = require("../model/Utente");
 const Inserzione = require("../model/Inserzione");
+const Servizi = require("../model/Servizi");
 require("dotenv").config();
 const JwtToken = require("../utils/JwtToken");
 var jwt = require("jsonwebtoken");
@@ -262,8 +263,8 @@ const visualizza_inserzioni_get = async (req, res, next) => {
 
 const modifica_inserzione_put = async (req, res) => {
   try {
+    console.log(req.files["gallery"]);
     const {
-      id_inserzione,
       nome,
       citta,
       inizioDisp,
@@ -272,12 +273,67 @@ const modifica_inserzione_put = async (req, res) => {
       desc,
       indirizzo,
       prezzo,
+      tassa,
       servizi,
-    } = req.body;
+      imgToSave,
+      imgToDel,
+      id_ins,
+    } = JSON.parse(req.body.inserzione);
+
     const id_host = req.session.utente.id;
-    var path = req.files["gallery"][0].path;
+
+    let path;
+    if (imgToSave.length > 0) {
+      path = imgToSave.reduce((x, y) => x + "," + y) + ",";
+    } else {
+      path = "";
+    }
+
+    if (req.files["gallery"]) {
+      for (let i = 0; i < req.files["gallery"].length - 1; i++) {
+        path += req.files["gallery"][i].path.slice(31) + ",";
+      }
+      path += req.files["gallery"][req.files["gallery"].length - 1].path.slice(
+        31
+      );
+    }
+
     path = path.replace(/\\/g, "/");
-    var fields = await parseField(
+
+    imgToDel.forEach((img, index) => {
+      fs.unlink(`public/uploads/fotoInserzione/${id_host}${img}`, (err) => {
+        if (err) throw err;
+        console.log(img + " eliminata!");
+      });
+    });
+
+    let inserzioneM = await Inserzione.findByPk(id_ins);
+    inserzioneM.nome_inserzione = nome;
+    inserzioneM.citta = citta;
+    inserzioneM.inizioDisponibilita = inizioDisp;
+    inserzioneM.fineDisponibilita = fineDisp;
+    inserzioneM.n_ospiti = nospiti;
+    inserzioneM.descrizione = desc;
+    inserzioneM.indirizzo = indirizzo;
+    inserzioneM.tassa_soggiorno = tassa;
+    inserzioneM.prezzo_base = prezzo;
+    inserzioneM.galleryPath = path;
+    await inserzioneM.save();
+
+    let serviziM = await Servizi.findByPk(id_ins);
+    console.log();
+    serviziM.wifiFlag = servizi["wifiModal"];
+    serviziM.riscaldamentoFlag = servizi["riscaldamentoModal"];
+    serviziM.frigoriferoFlag = servizi["frigoriferoModal"];
+    serviziM.casaFlag = servizi["casaModal"];
+    serviziM.bnbFlag = servizi["bnbModal"];
+    serviziM.parcheggioFlag = servizi["parcheggioModal"];
+    serviziM.ascensoreFlag = servizi["ascensoreModal"];
+    serviziM.cucinaFlag = servizi["cucinaModal"];
+    serviziM.essenzialiFlag = servizi["essenzialiModal"];
+    serviziM.piscinaFlag = servizi["piscinaModal"];
+    await serviziM.save();
+    /* var fields = await parseField(
       nome,
       citta,
       inizioDisp,
@@ -289,21 +345,18 @@ const modifica_inserzione_put = async (req, res) => {
       path,
       id_host,
       servizi
-    );
-    console.log(fields);
-    var inserzione_m = await Inserzione.modificaInserzione(
+    ); */
+
+    /* var inserzione_m = await Inserzione.modificaInserzione(
       id_inserzione,
       fields
-    );
+    ); */
     /* var path = req.files["gallery"][0].path;
     var inserzione_m = await Inserzione.modificaInserzione_img(
       id_inserzione,
       path
     ); */
-    res.status(200).json({
-      message: "hai modificato questa inserzione con successo!",
-      inserzione_m,
-    });
+    res.status(200).json({ success: true });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });
