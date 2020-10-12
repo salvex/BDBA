@@ -60,14 +60,24 @@ const Prenotazione = db.sequelize.define(
   }
 );
 
-//-------ASSOCIAZIONE [1-N] UTENTE-PRENOTAZIONE----------/
+//-------ASSOCIAZIONE [1-N] UTENTE-PRENOTAZIONE (PARTE UTENTE)----------/
 Utente.hasMany(Prenotazione, {
-  //as: 'user',
+  as: 'prenotazioni_u',
   foreignKey: "ref_utente",
 });
 Prenotazione.belongsTo(Utente, {
   foreignKey: "ref_utente",
 });
+
+//-------ASSOCIAZIONE [1-N] UTENTE-PRENOTAZIONE (PARTE HOST)----------/
+Utente.hasMany(Prenotazione, {
+  as: 'prenotazioni_h',
+  foreignKey: "ref_host",
+});
+Prenotazione.belongsTo(Utente, {
+  foreignKey: "ref_host",
+});
+
 
 Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
   let yearBefore = moment().format("YYYY") - 1;

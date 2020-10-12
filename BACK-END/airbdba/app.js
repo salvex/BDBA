@@ -10,6 +10,7 @@ var moment = require("moment");
 var session = require("express-session");
 var sessionStore = require("./utils/sessionStore");
 var { checkRendiconto } = require("./utils/checkRendiconto");
+var { checkPrenotazioneData } = require("./utils/checkPrenotazioneData");
 var HostControl = require("./controller/HostControl");
 
 dotenv.config();
@@ -67,7 +68,9 @@ app.use(cors());
 app.use("*", checkUser);
 app.use("/", indexRouter);
 app.use(authRouter);
+//CONTROLLI GLOBALI
 setInterval(checkRendiconto, 60 * 60 * 24 * 1000);
+setInterval(checkPrenotazioneData,60 * 60 * 24 * 1000 );
 
 /*app.get("/data", (req, res) => {
   var annoCorrente = moment().format("YYYY");
@@ -82,22 +85,7 @@ app.get("/prova", (req, res) => {
     res.send("nessuno utente loggato");
   }
 });*/
-app.post("/prova", async (req, res) => {
-  let bodyMail = {
-    from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
-    to: req.body.destinatario,
-    subject: req.body.oggetto, // Subject line
-    text: "Comunicazione", // plain text body
-    html: "<b>Hello ?</b>", // html body
-  };
 
-  await transporter.sendMail(bodyMail, (error, info) => {
-    if (error) {
-      return console.log(error);
-    }
-    console.log("Messaggio inviato: %s", info.messageId);
-  });
-});
 app.use("/profilo", verifyToken, utenteRouter);
 app.use("/signup", regRouter);
 app.use("/host", verifyToken, hostRouter);
