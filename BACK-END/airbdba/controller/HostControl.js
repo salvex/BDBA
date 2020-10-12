@@ -254,11 +254,17 @@ const gestione_host_get = async (req, res, next) => {
     const id_host = req.session.utente.id;
     var prenotazioni = await Prenotazione.findAll({
       where: { ref_host: id_host },
-      include: {
-        model: Utente,
-        required: true,
-        attributes: ["email", "nome", "cognome"],
-      },
+      include: [
+        {
+          model: Utente,
+          required: true,
+          attributes: ["email", "nome", "cognome"],
+        },
+        {
+          model: Inserzione,
+          required: true,
+        },
+      ],
     });
     var lista = await Inserzione.processaLista(id_host);
     res.locals.inserzioni = JSON.stringify(lista);
@@ -436,13 +442,14 @@ const accetta_prenotazione_get = async (req, res) => {
 
 const rifiuta_prenotazione_get = async (req, res) => {
   try {
-    var refusePren = await Prenotazione.findByPk(req.params.id_pren);
-    if (refusePren) {
-      refusePren.stato_prenotazione = 0;
-      await refusePren.save();
-    } else {
-      throw new Error("prenotazione inesistente");
-    }
+    var refusePren = await Prenotazione.update(
+      { stato_prenotazione: 0 },
+      {
+        where: {
+          id_prenotazione: req.params.id_pren,
+        },
+      }
+    );
     res.status(200).json({
       success: true,
     });
@@ -454,23 +461,16 @@ const rifiuta_prenotazione_get = async (req, res) => {
 
 const cancella_prenotazione_delete = async (req, res) => {
   try {
-    var deletePren = await Prenotazione.findByPk(req.params.id_pren);
-    if (deletePren) {
-      if (deletePren.stato_ordine == 2) {
-        await deletePren.destroy();
-      } else {
-        res.status(304).json({
-          message: "Non puoi cancellare questa prenotazione!",
-        });
+    var deletePren = await Prenotazione.update(
+      { stato_prenotazione: 0 },
+      {
+        where: {
+          id_prenotazione: req.params.id_pren,
+        },
       }
-      res.status(200).json({
-        message: "hai cancellato l'ordine con successo!",
-      });
-    } else {
-      throw new Error("prenotazione inesistente");
-    }
+    );
     res.status(200).json({
-      message: "hai rifiutato l'ordine con successo!",
+      success: true,
     });
   } catch (err) {
     const errors = errorsHandler(err);
@@ -486,7 +486,7 @@ const contatta_utente_post = async (req, res) => {
 
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
-      to: user_mail,
+      to: "",
       replyTo: req.session.utente.email,
       subject:
         "Comunicazione dall'Host " +

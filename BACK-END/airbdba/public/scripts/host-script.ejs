@@ -30,6 +30,10 @@
       $("#visualizza-tab").text("Visualizza inserzioni");
       $("#aggiungi-tab").text("Aggiungi inserzione");
     }
+
+    $("#v-pills-prenotazioni-tab").on("click", function () {
+      $(this).html("Gestione prenotazioni");
+    });
     /* ------------------------------------------------- */
 
     /* INPUT FILE */
@@ -412,6 +416,9 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-12">
+                    <b>${prenotazione.inserzione.nome_inserzione}</b>
+                  </div>
+                  <div class="col-12">
                     ${prenotazione.utente.nome}&nbsp;${
             prenotazione.utente.cognome
           }
@@ -487,6 +494,9 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-12">
+                    <b>${prenotazione.inserzione.nome_inserzione}</b>
+                  </div>
+                  <div class="col-12">
                     ${prenotazione.utente.nome}&nbsp;${
             prenotazione.utente.cognome
           }, <a href="mailto:${prenotazione.utente.email}"><i>${
@@ -512,12 +522,6 @@
 
         // PULSANTI
         // Contatta
-        /* let contact = {
-          user_email: prenotazione.utente.email,
-          message,
-          titolo,
-        }; */
-
         $(`.contact[indice=${index}]`).on("click", function () {
           $("#contactModal")
             .attr("indice", index)
@@ -528,16 +532,8 @@
                   let contact = {
                     user_email: prenotazione.utente.email,
                     message: $("#msg").val(),
+                    titolo: prenotazione.inserzione.nome_inserzione,
                   };
-                  for (let i = 0; i < inserzioni.length; i += 1) {
-                    if (
-                      inserzioni[i].id_inserzione ===
-                      prenotazione.ref_inserzione
-                    ) {
-                      contact.titolo = inserzioni[i].nome_inserzione;
-                      break;
-                    }
-                  }
 
                   contact = JSON.stringify(contact);
 
@@ -563,18 +559,34 @@
             .modal("show");
         });
 
-        /* fetch(`/host/accetta/${prenotazione.id_prenotazione}`, {
-            method: "get",
-          })
-            .then(async (res) => {
-              const response = await res.json();
-              if (response.success) {
-                window.location.reload();
-              }
-            })
-            .catch((err) => console.log(err)); */
-
         // Annulla
+        $(`.cancel[indice=${index}]`).on("click", function () {
+          $("#confirmCanc")
+            .attr("indice", index)
+            .on("show.bs.modal", function () {
+              $(".confirmC")
+                .attr("indice", index)
+                .on("click", function () {
+                  fetch(`/host/delete_pren/${prenotazione.id_prenotazione}`, {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                  })
+                    .then(async (res) => {
+                      const response = await res.json();
+                      if (response.success) {
+                        window.location.reload();
+                      }
+                    })
+                    .catch((err) => console.log(err));
+                });
+            })
+            .on("hidden.bs.modal", function () {
+              $(this).off("show.bs.modal hidden.bs.modal").removeAttr("indice");
+              $(".confirmM").off("click").removeAttr("indice");
+              $("#msg").val("");
+            })
+            .modal("show");
+        });
         /* $(`.cancel[indice=${index}]`).on("click", function () {
           fetch(`/host/delete_pren/${prenotazione.id_prenotazione}`, {
             method: "delete",
@@ -643,7 +655,7 @@
     } else {
       // Inserisco un indicatore nella tab
       $("#v-pills-prenotazioni-tab").html(
-        `Gesitone Prenot...&nbsp;&nbsp;<span style="border-radius:50%" class="badge badge-danger">${richieste}</span>`
+        `Gesitone prenot...&nbsp;&nbsp;<span style="border-radius:50%" class="badge badge-danger">${richieste}</span>`
       );
     }
 
