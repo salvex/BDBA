@@ -481,23 +481,24 @@ const cancella_prenotazione_delete = async (req, res) => {
 const contatta_utente_post = async (req, res) => {
   //DA MODIFICARE CON GET
   try {
-    const result = await Prenotazione.getUserMail(
-      req.params.id_pren,
-      req.session.utente.id
-    );
+    const { user_email, message, titolo } = req.body;
+    console.log(user_email, message, titolo);
+
     let bodyMail = {
-      from: '"Sistema AIRBDBA" <bdba_services@gmail.com>',
-      to: result.utente.email,
+      from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
+      to: user_mail,
       replyTo: req.session.utente.email,
       subject:
         "Comunicazione dall'Host " +
         req.session.utente.nome +
         " " +
-        req.session.utente.cognome +
-        " relativa alla Prenotazione ID " +
-        req.params.id_pren,
-      text: "Comunicazione relativa alla prenotazione ID " + req.params.id_pren,
-      html: "<b>RIEPILOGO PLACEHOLDER</b>",
+        req.session.utente.cognome,
+      text:
+        'Comunicazione relativa alla prenotazione "' +
+        titolo +
+        '"\n\n' +
+        message,
+      /* html: "<b>RIEPILOGO PLACEHOLDER</b>", */
     };
 
     await transporter.sendMail(bodyMail, (error, info) => {
@@ -506,6 +507,7 @@ const contatta_utente_post = async (req, res) => {
       }
       console.log("Messaggio inviato: %s", info.messageId);
     });
+    res.status(200).json({ success: true });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });

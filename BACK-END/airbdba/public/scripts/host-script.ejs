@@ -389,7 +389,7 @@
     /* ------------------------------------------------- */
 
     /* GESTIONE PRENOTAZIONI */
-    console.log(prenotazioni);
+    console.log(prenotazioni, inserzioni);
     prenotazioni.forEach((prenotazione, index) => {
       // Variabili per il calcolo dei guadagni
       /* checkin = prenotazione.check_in;
@@ -500,12 +500,122 @@
             prenotazione.n_ospiti_pren === 1 ? "ospite" : "ospiti"
           }
                   </div>
+                  <div class="col-12 pren-btns">
+                    <button indice="${index}" class="btn btn-primary contact"><i class="fas fa-comment-alt"></i> Contatta</button>
+                    <button indice="${index}" class="btn btn-danger cancel">&times; Annulla</button>
+                  </div>
                 </div>
               </div>
             </div>
           `
         );
-      }
+
+        // PULSANTI
+        // Contatta
+        /* let contact = {
+          user_email: prenotazione.utente.email,
+          message,
+          titolo,
+        }; */
+
+        $(`.contact[indice=${index}]`).on("click", function () {
+          $("#contactModal")
+            .attr("indice", index)
+            .on("show.bs.modal", function () {
+              $(".confirmM")
+                .attr("indice", index)
+                .on("click", function () {
+                  let contact = {
+                    user_email: prenotazione.utente.email,
+                    message: $("#msg").val(),
+                  };
+                  for (let i = 0; i < inserzioni.length; i += 1) {
+                    if (
+                      inserzioni[i].id_inserzione ===
+                      prenotazione.ref_inserzione
+                    ) {
+                      contact.titolo = inserzioni[i].nome_inserzione;
+                      break;
+                    }
+                  }
+
+                  contact = JSON.stringify(contact);
+
+                  fetch(`/host/contact/${prenotazione.id_prenotazione}`, {
+                    method: "post",
+                    body: contact,
+                    headers: { "Content-Type": "application/json" },
+                  })
+                    .then(async (res) => {
+                      const response = await res.json();
+                      if (response.success) {
+                        window.location.reload();
+                      }
+                    })
+                    .catch((err) => console.log(err));
+                });
+            })
+            .on("hidden.bs.modal", function () {
+              $(this).off("show.bs.modal hidden.bs.modal").removeAttr("indice");
+              $(".confirmM").off("click").removeAttr("indice");
+              $("#msg").val("");
+            })
+            .modal("show");
+        });
+
+        /* fetch(`/host/accetta/${prenotazione.id_prenotazione}`, {
+            method: "get",
+          })
+            .then(async (res) => {
+              const response = await res.json();
+              if (response.success) {
+                window.location.reload();
+              }
+            })
+            .catch((err) => console.log(err)); */
+
+        // Annulla
+        /* $(`.cancel[indice=${index}]`).on("click", function () {
+          fetch(`/host/delete_pren/${prenotazione.id_prenotazione}`, {
+            method: "delete",
+          })
+            .then(async (res) => {
+              const response = await res.json();
+              if (response.success) {
+                window.location.reload();
+              }
+            })
+            .catch((err) => console.log(err));
+        }); */
+      } /*  else {
+        $("#pren").append(
+          `
+            <div class="card pren-card" style="background-color:rgba(0,0,0,0.3)">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12 text-danger">
+                    <b><i>Rifiutata/annullata</i></b>
+                  </div>
+                  <div class="col-12">
+                    ${prenotazione.utente.nome}&nbsp;${
+            prenotazione.utente.cognome
+          }, <a href="mailto:${prenotazione.utente.email}"><i>${
+            prenotazione.utente.email
+          }</i></a>
+                  </div>
+                  <div class="col-12">
+                    <b>${prenotazione.check_in}</b> &#8594; <b>${
+            prenotazione.check_out
+          }</b>, ${prenotazione.n_ospiti_pren} ${
+            prenotazione.n_ospiti_pren === 1 ? "ospite" : "ospiti"
+          }
+                  </div>
+                </div>
+              </div>
+            </div>
+          `
+        );
+      } */
     });
 
     $("#v-pills-host").append(
