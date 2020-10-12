@@ -420,13 +420,13 @@ const accetta_prenotazione_get = async (req, res) => {
   try {
     var acceptPren = await Prenotazione.findByPk(req.params.id_pren);
     if (acceptPren) {
-      acceptPren.stato_ordine = 2;
+      acceptPren.stato_prenotazione = 2;
       await acceptPren.save();
     } else {
       throw new Error("prenotazione inesistente");
     }
     res.status(200).json({
-      message: "hai accettato l'ordine con successo!",
+      success: true,
     });
   } catch (err) {
     const errors = errorsHandler(err);
@@ -438,13 +438,13 @@ const rifiuta_prenotazione_get = async (req, res) => {
   try {
     var refusePren = await Prenotazione.findByPk(req.params.id_pren);
     if (refusePren) {
-      refusePren.stato_ordine = 0;
+      refusePren.stato_prenotazione = 0;
       await refusePren.save();
     } else {
       throw new Error("prenotazione inesistente");
     }
     res.status(200).json({
-      message: "hai rifiutato l'ordine con successo!",
+      success: true,
     });
   } catch (err) {
     const errors = errorsHandler(err);

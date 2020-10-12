@@ -9,9 +9,17 @@
       "<%= prenotazioni %>".replace(/&#34;/g, '"')
     );
     // Variabili
-    const immagini = {};
-    const imgToDel = [];
-    let folderPath = "";
+    const immagini = {},
+      imgToDel = [];
+    let folderPath = "",
+      richieste = 0,
+      checkin,
+      checkout,
+      checkinDate,
+      checkoutDate,
+      notti,
+      guadagniStimati = 0,
+      guadagniAttuali = 0;
 
     /* ON RELOAD */
     bsCustomFileInput.init();
@@ -73,7 +81,11 @@
                 Non hai ancora nessuna inserzione. Vai su <u>Aggiungi inserzione</u> per iniziare!!
                 <br>
               </p>
-              <img src="/assets/images/notFound.png" style="width:100%; opacity:.35; margin-top: 30px">
+              <div class="row">
+                <div class="col-12" style="display:flex; justify-content:center">
+                  <img src="/assets/images/notFound.png" style="width:50%; opacity:.35; margin-top: 30px">
+                </div>
+              </div>
             </div>
           </div>
         `);
@@ -377,8 +389,23 @@
     /* ------------------------------------------------- */
 
     /* GESTIONE PRENOTAZIONI */
+    console.log(prenotazioni);
     prenotazioni.forEach((prenotazione, index) => {
+      // Variabili per il calcolo dei guadagni
+      /* checkin = prenotazione.check_in;
+      checkout = prenotazione.check_out;
+      checkinDate = new Date(checkin);
+      checkoutDate = new Date(checkout);
+
+      if (checkin === checkout) {
+        notti = 1;
+      } else {
+        notti = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
+      } */
+
       if (prenotazione.stato_prenotazione === 1) {
+        // Contatore di richieste
+        richieste += 1;
         $("#req").append(
           `
             <div class="card req-card">
@@ -409,15 +436,51 @@
                 <hr />
                 <div clas="row justify-content-center">
                   <div class="col accDen">
-                    <button class="btn btn-success accept">&check;</button>
-                    <button class="btn btn-danger deny">&times;</button>
+                    <button indice="${index}" class="btn btn-success accept">&check;</button>
+                    <button indice="${index}" class="btn btn-danger deny">&times;</button>
                   </div>
                 </div>
               </div>
             </div>
           `
         );
+
+        // PULSANTI
+        // accetta
+        $(`.accept[indice=${index}]`).on("click", function () {
+          fetch(`/host/accetta/${prenotazione.id_prenotazione}`, {
+            method: "get",
+          })
+            .then(async (res) => {
+              const response = await res.json();
+              if (response.success) {
+                window.location.reload();
+              }
+            })
+            .catch((err) => console.log(err));
+        });
+        // rifiuta
+        $(`.deny[indice=${index}]`).on("click", function () {
+          fetch(`/host/rifiuta/${prenotazione.id_prenotazione}`, {
+            method: "get",
+          })
+            .then(async (res) => {
+              const response = await res.json();
+              if (response.success) {
+                window.location.reload();
+              }
+            })
+            .catch((err) => console.log(err));
+        });
       } else if (prenotazione.stato_prenotazione === 2) {
+        // Guadagni stimati
+        if (new Date(prenotazione.check_in) < Date.now()) {
+          // Il soggiorno è iniziato o già terminato
+          guadagniAttuali += prenotazione.prezzo_finale;
+        } else {
+          guadagniStimati += prenotazione.prezzo_finale;
+        }
+
         $("#pren").append(
           `
             <div class="card pren-card">
@@ -445,6 +508,10 @@
       }
     });
 
+    $("#v-pills-host").append(
+      `<p>Guadagni stimati: ${guadagniStimati}&euro;<br/>Guadagni attuali: ${guadagniAttuali}&euro;</p>`
+    );
+
     if ($(".req-card").length === 0) {
       $("#req").append(
         `
@@ -462,6 +529,11 @@
           />
         </div>
         `
+      );
+    } else {
+      // Inserisco un indicatore nella tab
+      $("#v-pills-prenotazioni-tab").html(
+        `Gesitone Prenot...&nbsp;&nbsp;<span style="border-radius:50%" class="badge badge-danger">${richieste}</span>`
       );
     }
 
@@ -484,7 +556,6 @@
         `
       );
     }
-    /* ------------------------------------------------- */
 
     $(window).resize(() => {
       if ($(window).width() < "448") {
