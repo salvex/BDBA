@@ -468,7 +468,7 @@
     fetch(`/inserzione/res${window.location.search}`)
       .then(async (res) => {
         const response = await res.json();
-
+        console.log(response.show);
         /* checkin = $("#check-in").val();
       checkout = $("#check-out").val();
       nospiti = $("#guestNum").val(); */
@@ -494,6 +494,12 @@
         &q=${response.show.citta},${response.show.indirizzo}`
         );
 
+        /* <img
+                    src="/uploads/fotoInserzione/${response.show.ref_host_ins}${imgs[i]}"
+                    class="d-block w-100"
+                    alt="..."
+                  /> */
+
         // Carousel
         imgs = response.show.galleryPath.split(",");
         for (let i = 0; i < imgs.length; i += 1) {
@@ -501,11 +507,8 @@
             $(".carousel-inner").append(
               `
                 <div class="carousel-item active">
-                  <img
-                    src="/uploads/fotoInserzione/1${imgs[i]}"
-                    class="d-block w-100"
-                    alt="..."
-                  />
+                  <div style="background-image: url('/uploads/fotoInserzione/${response.show.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width:100%; height:350px; ">
+                  </div>
                 </div>
               `
             );
@@ -513,11 +516,8 @@
             $(".carousel-inner").append(
               `
                 <div class="carousel-item">
-                  <img
-                    src="/uploads/fotoInserzione/1${imgs[i]}"
-                    class="d-block w-100"
-                    alt="..."
-                  />
+                  <div style="background-image: url('/uploads/fotoInserzione/${response.show.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width:100%; height:350px; ">
+                  </div>
                 </div>
               `
             );
@@ -538,6 +538,7 @@
           autoclose: true,
           todayHighlight: true,
           startDate: new Date(),
+          endDate: response.show.fineDisponibilita,
           datesDisabled: date,
         });
 
@@ -546,6 +547,7 @@
           autoclose: true,
           todayHighlight: true,
           startDate: new Date(),
+          endDate: response.show.fineDisponibilita,
           datesDisabled: date,
         });
 

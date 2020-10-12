@@ -15,6 +15,15 @@
     }
     $("#guestNum").val(params.get("nospiti"));
 
+    $(window).resize(() => {
+      if ($(window).width() < 450) {
+        $(".card-img").css({ height: "150px" });
+      } else {
+        $(".card-img").css({ height: "350px" });
+      }
+    });
+    /* --------------------------------------------------------- */
+
     /* TOOLTIP */
     $("#location").tooltip("disable");
 
@@ -117,42 +126,42 @@
             // per ogni record nell'array. I record corrispondono
             // alle tuple risultato della della query eseguita sul
             // database.
+            imgs = element.galleryPath.split(",");
             const card = `
             <div class="card">
                 <div class="card-body-container">
                     <div class="img-container">
-                        <img
-                            class="card-img-top"
-                            src="${element.galleryPath}"
-                            alt="Card image cap"
-                        />
+                      <div class="card-img-top">
+                        <div class="card-img" style="background-image: url('/uploads/fotoInserzione/${element.ref_host_ins}${imgs[0]}'); background-size:cover; background-position: center; width:100%; height:350px; ">
+                        </div>
+                      </div>
                     </div>
                     <div class="card-body">
-                    <div class="title">
-                        <h2>
-                        <strong> ${element.nome_inserzione} </strong>
-                        </h2>
-                    </div>
-                    <div class="citta">
-                        <h4>
-                        <i> ${element.citta} </i>
-                        </h4>
-                    </div>
-                    <div class="descrizione">
-                        <p>${element.descrizione}</p>
-                    </div>
-                    </div>
-                </div>
-                <div class="card-footer text-success">
-                    <div class="btn-container">
-                    <button id="${element.id_inserzione}" class="btn btn-primary">
-                        Visita inserzione
-                    </button>
-                    </div>
-                    <div class="price">
-                    <i>${element.prezzo_base} &euro;</i>
+                      <div class="title">
+                          <h2>
+                          <strong> ${element.nome_inserzione} </strong>
+                          </h2>
+                      </div>
+                      <div class="citta">
+                          <h4>
+                          <i> ${element.citta} </i>
+                          </h4>
+                      </div>
+                      <div class="descrizione">
+                          <p>${element.descrizione}</p>
+                      </div>
                     </div>
                 </div>
+                  <div class="card-footer text-success">
+                      <div class="btn-container">
+                      <button id="${element.id_inserzione}" class="btn btn-primary">
+                          Visita inserzione
+                      </button>
+                      </div>
+                      <div class="price">
+                      <strong><i>${element.prezzo_base} &euro;</i></strong>
+                      </div>
+                  </div>
                 </div>`;
 
             // Inserisco la card nel contenitore
@@ -164,6 +173,9 @@
               window.location.href = `/inserzione${window.location.search}&id=${element.id_inserzione}`;
             });
           });
+          if ($(window).width() < 450) {
+            $(".card-img").css({ height: "150px" });
+          }
         }
       })
       .catch((err) => console.log(err));
