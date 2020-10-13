@@ -24,6 +24,37 @@
   background-color: #007bff;
   color: #ffffff;
 }
+
+/* DASHBOARD */
+
+.dashboard {
+  height: 400px;
+}
+.info-tab {
+  margin: 10px 5px 10px 5px;
+  padding: 10px 0;
+}
+.info-tab-item {
+  display: flex;
+  justify-content: center;
+}
+.info-tab-item > img {
+  width: 50px;
+}
+.guadagni {
+  background-color: rgb(166, 255, 0);
+}
+.guadagni-value,
+.previsti-value {
+  font-size: 30px;
+  padding: 0;
+}
+.previsti {
+  background-color: #007bff;
+}
+.richieste {
+  background-color: red;
+}
 /* INSERZIONI */
 #visualizza,
 #aggiungi,

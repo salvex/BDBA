@@ -105,6 +105,9 @@ Prenotazione.getPrenotazioni = async (id_ins) => {
     attributes: ["id_prenotazione", "check_in", "check_out"],
     where: {
       ref_inserzione: id_ins,
+      stato_prenotazione: {
+        [Op.gte]: 1,
+      },
     },
   });
   return result;

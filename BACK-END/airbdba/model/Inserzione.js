@@ -117,6 +117,11 @@ Inserzione.verRicerca = async (query, checkin, checkout) => {
         model: Prenotazione,
         as: "prenotazioni",
         required: false,
+        where: {
+          stato_prenotazione: {
+            [Op.gte]: 1,
+          },
+        },
         attributes: ["ref_inserzione", "check_in", "check_out"],
       },
     ],

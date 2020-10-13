@@ -645,9 +645,8 @@
       );
     });
 
-    $("#v-pills-host").append(
-      `<p>Guadagni stimati: ${guadagniStimati}&euro;<br/>Guadagni attuali: ${guadagniAttuali}&euro;</p>`
-    );
+    $(".guadagni-value").append(`<b>${guadagniAttuali}&nbsp;&euro;</b>`);
+    $(".previsti-value").append(`<b>${guadagniStimati}&nbsp;&euro;</b>`);
 
     if ($(".req-card").length === 0) {
       $("#req").append(
@@ -737,7 +736,7 @@
           formData.append("rendiconto", JSON.stringify(rendiconto));
 
           fetch("/host/turismo/rendiconta", {
-            method: "post",
+            method: "POST",
             body: formData,
           })
             .then(async (res) => {

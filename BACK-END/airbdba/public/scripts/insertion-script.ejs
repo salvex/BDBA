@@ -312,6 +312,7 @@
           );
         } else {
           let flag = 1;
+          console.log(date);
           for (let i = 0; i < date.length; i += 1) {
             let currentCheckIn = new Date(date[i]);
             if (currentCheckIn > checkinDate) {

@@ -5,6 +5,9 @@ const ContattaQuestura = require("../controller/ContattaQuesturaControl");
 const FileUpload = require("../utils/FileUpload");
 const ContattaQuesturaControl = require("../controller/ContattaQuesturaControl");
 const JwtToken = require("../utils/JwtToken");
+const formidableMiddleware = require("express-formidable");
+
+/* router.use(formidableMiddleware()); */
 
 router.put(
   "/crea_ins/:type/:id/:folder",
@@ -67,7 +70,11 @@ router.post(
 );
 
 router.post("/turismo", HostControl.contatta_turismo_get);
-router.post("/turismo/rendiconta", HostControl.contatta_turismo_post);
+router.post(
+  "/turismo/rendiconta",
+  formidableMiddleware(),
+  HostControl.contatta_turismo_post
+);
 
 router.get("", ContattaQuesturaControl.contattaQuestura_get);
 router.post("", ContattaQuesturaControl.contattaQuestura_post);

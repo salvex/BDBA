@@ -1,10 +1,9 @@
 const Inserzione = require("../model/Inserzione");
 const Prenotazione = require("../model/Prenotazione");
-const Moment = require('moment');
-const MomentRange = require('moment-range');
+const Moment = require("moment");
+const MomentRange = require("moment-range");
 
 const moment = MomentRange.extendMoment(Moment);
-
 
 const errorsHandler = (err) => {
   let error = { message: "" };
@@ -16,28 +15,32 @@ const errorsHandler = (err) => {
 
 const mostra_get = async (req, res) => {
   try {
-    // inserzione sarebbe show 
+    // inserzione sarebbe show
 
     let date = []; //array contenente le date di check-in e check-out associate alle inserzioni
 
     let show = await Inserzione.mostra(req.query.id);
 
     let dates = await Prenotazione.getPrenotazioni(req.query.id);
-    
-    dates.forEach(d => {
-      let range = moment().range(d.check_in,d.check_out);
+
+    dates.forEach((d) => {
+      let range = moment().range(d.check_in, d.check_out);
       let array = Array.from(range.by("days"));
       date = date.concat(array);
       console.log(date);
-    })
+    });
 
-    date = date.map(res => {
-      return res.format("YYYY-MM-DD"); 
+    date = date.map((res) => {
+      return res.format("YYYY-MM-DD");
+    });
+
+    date.sort((a, b) => {
+      return new Date(a) - new Date(b);
     });
 
     req.session.inserzione = show;
     //console.log(req.session.inserzione);
-    res.status(200).json( {show,date} );
+    res.status(200).json({ show, date });
   } catch (err) {
     const error = errorsHandler(err);
     res.status(500).json({ error });

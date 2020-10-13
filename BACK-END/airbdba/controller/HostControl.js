@@ -11,6 +11,8 @@ const Prenotazione = require("../model/Prenotazione.js");
 var transporter = require("../utils/mailSender");
 const fs = require("fs");
 const moment = require("moment");
+const path = require("path");
+const PDFDocument = require("pdfkit");
 
 const maxAge = 60 * 60 * 24;
 
@@ -429,6 +431,60 @@ const cancella_inserzione_delete = async (req, res) => {
   }
 };
 
+/* const cancella_inserzione_delete = async (req, res) => { //MODIFICATO, DA INSERIRE CON DANIEL
+  try {
+    const { id_inserzione } = req.body;
+
+    console.log(id_inserzione); // DA INSERIRE 
+
+    // Cerco l'inserzione da cancellare 
+    var deleteIns = await Inserzione.findByPk(id_inserzione); // DA INSERIRE 
+
+    let path =
+      `public/uploads/fotoInserzione/` +
+      req.session.utente.id +
+      deleteIns.galleryPath.slice(0, 14);
+
+    //Prendo le email degli utenti associati alle prenotazioni della relativa insserzione // DA INSERIRE
+    const mailList = await Inserzione.getEmailUtentiPren(id_inserzione);
+
+    if(mailList) { 
+      
+      let bodyMail = { 
+        from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
+        to: mailList,
+        subject: "Cancellazione Prenotazione a Struttura: " + deleteIns.nome_inserzione ,
+        text: "Comunicazione relativa alla presenza di ospiti presso una struttura",
+        html: "<b>Le comunichiamo che la sua prenotazione è stata annullata/cancellata</b><br><br><b>Cordiali Saluti, Team AIRBDBA</b>",
+      };
+
+      await transporter.sendMail(bodyMail, (error, info) => {
+        if (error) {
+          return console.log(error);
+        }
+        console.log("Messaggio inviato: %s", info.messageId);
+      });
+
+    }
+
+    console.log(path, deleteIns);
+
+    //elimino l'inserzione 
+    await deleteIns.destroy(); //DA INSERIRE
+
+    // elimino ricorsivamente le la cartella e i file all'interno
+    fs.rmdir(path, { recursive: true }, (err) => {
+      if (err) {
+        throw err;
+      }
+      console.log(`File eliminati`);
+    });
+    res.status(200).json({ success: true });
+  } catch (err) {
+    const errors = errorsHandler(err);
+    res.status(400).json({ errors });
+  } */
+
 const accetta_prenotazione_get = async (req, res) => {
   try {
     var acceptPren = await Prenotazione.findByPk(req.params.id_pren);
@@ -551,30 +607,96 @@ const contatta_turismo_get = async (req, res) => {
   }
 };
 
+// const contatta_turismo_post = /* async */ (req, res) => {
+//   /* const rendiconto = req.body.rendiconto;
+//   const ricevuta = req.body.ricevuta;
+//   const doc = new PDFDocument();
+//   doc.text("Rendiconto tasse di soggiorno", {
+//     width: 400,
+//     align: "center",
+//   });
+//   doc.text(`Totale rendiconto: ${rendiconto.totaleRendiconto}`);
+//   rendiconto.forEach((element) => {
+//     doc.text(
+//       `Arrivo: ${rendiconto.check_in}  Partenza: ${rendiconto.check_out}`
+//     );
+//     element.ospiti.forEach((ospite) => {
+//       doc.text(`Nome: ${ospite.nome} `);
+//     });
+//   });
+
+//   let bodyMail = {
+//     from: req.session.utente.email,
+//     to: indirizzo_questura,
+//     subject: "Rendiconto tasse di soggiorno",
+//     text: "ricevuta pagamento e generalita ospiti",
+//     //html: "<b>RIEPILOGO PLACEHOLDER</b>",
+//   };
+
+//   await transporter.sendMail(bodyMail, (error, info) => {
+//     if (error) {
+//       return console.log(error);
+//     }
+//     console.log("Messaggio inviato: %s", info.messageId);
+//   }); */
+//   console.log(req.fields);
+//   res.status(200).json({ success: true });
+// };
+
 const contatta_turismo_post = async (req, res) => {
-  const rendiconto = req.body.rendiconto;
-  const ricevuta = req.body.ricevuta;
-  const doc = new PDFDocument();
-  doc.text("Rendiconto tasse di soggiorno", {
-    width: 400,
-    align: "center",
-  });
-  doc.text(`Totale rendiconto: ${rendiconto.totaleRendiconto}`);
-  rendiconto.forEach((element) => {
-    doc.text(
-      `Arrivo: ${rendiconto.check_in}  Partenza: ${rendiconto.check_out}`
-    );
-    element.ospiti.forEach((ospite) => {
-      doc.text(`Nome: ${ospite.nome} `);
-    });
+  let { rendiconto, totaleRendiconto } = JSON.parse(req.fields.rendiconto);
+  const newpathfile =
+    req.files.ricevuta.path + path.extname(req.files.ricevuta.name);
+  console.log(newpathfile);
+
+  fs.rename(req.files.ricevuta.path, newpathfile, () => {
+    console.log("File rinominato");
   });
 
+  //console.log(ricevuta);
+  //console.log(rendiconto);
+  const doc = new PDFDocument();
+  doc
+    .text("Rendiconto tasse di soggiorno", {
+      width: 400,
+      align: "center",
+    })
+    .moveDown();
+  doc.text(
+    `Proprietario struttura: ${req.session.utente.nome} ${req.session.utente.cognome}`
+  );
+  doc.text(`Totale rendiconto: ${totaleRendiconto}`).moveDown();
+  rendiconto.forEach((element) => {
+    doc.text(`Arrivo: ${element.check_in}  Partenza: ${element.check_out}`);
+    element.ospiti.forEach((ospite) => {
+      doc.text(`Nome: ${ospite.nome}`);
+      doc.text(`Cognome: ${ospite.cognome}`);
+      doc.text(`Data di nascita: ${ospite.data_nascita}`);
+      doc.text(`Data di nascita: ${ospite.nazionalita}`);
+      if (ospite.isEsente === 1) {
+        doc.text("Esente").moveDown();
+      } else {
+        doc.text("Non esente").moveDown();
+      }
+    });
+  });
+  doc.end();
+
   let bodyMail = {
-    from: req.session.utente.email,
-    to: indirizzo_questura,
+    from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
+    to: "",
     subject: "Rendiconto tasse di soggiorno",
     text: "ricevuta pagamento e generalita ospiti",
-    //html: "<b>RIEPILOGO PLACEHOLDER</b>",
+    attachments: [
+      {
+        filename: "rendiconto.pdf",
+        content: doc,
+      },
+      {
+        filename: "generalita" + path.extname(req.files.ricevuta.name),
+        content: fs.createReadStream(newpathfile),
+      },
+    ],
   };
 
   await transporter.sendMail(bodyMail, (error, info) => {

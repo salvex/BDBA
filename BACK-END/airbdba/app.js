@@ -14,7 +14,7 @@ var { checkPrenotazioneData } = require("./utils/checkPrenotazioneData");
 var HostControl = require("./controller/HostControl");
 
 dotenv.config();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 //AUTH MIDDLEWARE
 const { checkUser, verifyToken, verifyHost } = require("./utils/JwtToken");
 //Router init
@@ -70,7 +70,7 @@ app.use("/", indexRouter);
 app.use(authRouter);
 //CONTROLLI GLOBALI
 setInterval(checkRendiconto, 60 * 60 * 24 * 1000);
-setInterval(checkPrenotazioneData,60 * 60 * 24 * 1000 );
+setInterval(checkPrenotazioneData, 60 * 60 * 24 * 1000);
 
 /*app.get("/data", (req, res) => {
   var annoCorrente = moment().format("YYYY");
