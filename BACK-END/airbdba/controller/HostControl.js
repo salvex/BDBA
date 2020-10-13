@@ -2,6 +2,7 @@ const db = require("../utils/connection.js");
 const Utente = require("../model/Utente");
 const Inserzione = require("../model/Inserzione");
 const Servizi = require("../model/Servizi");
+const Ospite = require("../model/Ospite");
 require("dotenv").config();
 const JwtToken = require("../utils/JwtToken");
 var jwt = require("jsonwebtoken");
@@ -9,6 +10,7 @@ var bcrypt = require("bcrypt");
 const Prenotazione = require("../model/Prenotazione.js");
 var transporter = require("../utils/mailSender");
 const fs = require("fs");
+const moment = require("moment");
 
 const maxAge = 60 * 60 * 24;
 
@@ -264,6 +266,11 @@ const gestione_host_get = async (req, res, next) => {
           model: Inserzione,
           required: true,
         },
+        {
+          model: Ospite,
+          required: true,
+          as: "ospiti",
+        },
       ],
     });
     var lista = await Inserzione.processaLista(id_host);
@@ -514,6 +521,71 @@ const contatta_utente_post = async (req, res) => {
   }
 };
 
+const contatta_turismo_get = async (req, res) => {
+  try {
+    var totaleRendiconto = 0;
+    var rendiconto = [];
+    const prenotazioni = req.body;
+    console.log(prenotazioni);
+    prenotazioni.forEach((prenotazione) => {
+      prenotazione.ospiti.forEach((ospite) => {
+        if (ospite.isEsente === 0) {
+          totaleRendiconto +=
+            prenotazione.inserzione.tassa_soggiorno *
+            moment(prenotazione.check_out).diff(
+              moment(prenotazione.check_in),
+              "days"
+            );
+        }
+      });
+      var value = {
+        check_in: prenotazione.check_in,
+        check_out: prenotazione.check_out,
+        ospiti: prenotazione.ospiti,
+      };
+      rendiconto.push(value);
+    });
+    res.json({ rendiconto, totaleRendiconto });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const contatta_turismo_post = async (req, res) => {
+  const rendiconto = req.body.rendiconto;
+  const ricevuta = req.body.ricevuta;
+  const doc = new PDFDocument();
+  doc.text("Rendiconto tasse di soggiorno", {
+    width: 400,
+    align: "center",
+  });
+  doc.text(`Totale rendiconto: ${rendiconto.totaleRendiconto}`);
+  rendiconto.forEach((element) => {
+    doc.text(
+      `Arrivo: ${rendiconto.check_in}  Partenza: ${rendiconto.check_out}`
+    );
+    element.ospiti.forEach((ospite) => {
+      doc.text(`Nome: ${ospite.nome} `);
+    });
+  });
+
+  let bodyMail = {
+    from: req.session.utente.email,
+    to: indirizzo_questura,
+    subject: "Rendiconto tasse di soggiorno",
+    text: "ricevuta pagamento e generalita ospiti",
+    //html: "<b>RIEPILOGO PLACEHOLDER</b>",
+  };
+
+  await transporter.sendMail(bodyMail, (error, info) => {
+    if (error) {
+      return console.log(error);
+    }
+    console.log("Messaggio inviato: %s", info.messageId);
+  });
+  res.status(200).json({ success: true });
+};
+
 module.exports = {
   become_host_get,
   aggiungi_inserzione_post,
@@ -525,4 +597,6 @@ module.exports = {
   rifiuta_prenotazione_get,
   cancella_prenotazione_delete,
   contatta_utente_post,
+  contatta_turismo_get,
+  contatta_turismo_post,
 }; //

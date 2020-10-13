@@ -4,6 +4,7 @@
   $(document).ready(() => {
     /* Vars */
     // Data
+
     const inserzioni = JSON.parse("<%= inserzioni %>".replace(/&#34;/g, '"'));
     const prenotazioni = JSON.parse(
       "<%= prenotazioni %>".replace(/&#34;/g, '"')
@@ -19,7 +20,10 @@
       checkoutDate,
       notti,
       guadagniStimati = 0,
-      guadagniAttuali = 0;
+      guadagniAttuali = 0,
+      citta = [],
+      prenPerCitta = [],
+      rendiconto;
 
     /* ON RELOAD */
     bsCustomFileInput.init();
@@ -34,6 +38,8 @@
     $("#v-pills-prenotazioni-tab").on("click", function () {
       $(this).html("Gestione prenotazioni");
     });
+
+    $("#cittaSelect").val("none");
     /* ------------------------------------------------- */
 
     /* INPUT FILE */
@@ -480,6 +486,7 @@
             .catch((err) => console.log(err));
         });
       } else if (prenotazione.stato_prenotazione === 2) {
+        citta.push(prenotazione.inserzione.citta);
         // Guadagni stimati
         if (new Date(prenotazione.check_in) < Date.now()) {
           // Il soggiorno è iniziato o già terminato
@@ -629,6 +636,14 @@
         );
       } */
     });
+    citta = new Set(citta);
+    citta.forEach((elem, index) => {
+      $("#cittaSelect").append(
+        `
+        <option value="${elem.toLowerCase()}">${elem}</option>
+        `
+      );
+    });
 
     $("#v-pills-host").append(
       `<p>Guadagni stimati: ${guadagniStimati}&euro;<br/>Guadagni attuali: ${guadagniAttuali}&euro;</p>`
@@ -678,6 +693,110 @@
         `
       );
     }
+
+    /* CONTATTA QUESTURA */
+    /* ------------------------------------------------- */
+
+    /* CONTATTA UFFICIO DEL TURISMO */
+    $("#cittaSelect").on("change", function () {
+      $(".rend").remove();
+      while (prenPerCitta.length > 0) {
+        prenPerCitta.pop();
+      }
+      prenotazioni.forEach((prenotazione) => {
+        if (prenotazione.inserzione.citta.toLowerCase() === $(this).val()) {
+          prenPerCitta.push(prenotazione);
+        }
+      });
+      if ($(".resBtn").length === 0) {
+        $("#contattaT").append(
+          `
+            <div class="row justify-content-center resBtn">
+              <div
+                class="col-sm-12 col-md-6"
+                style="margin-top: 5px"
+              >
+                <label id="ricevuta-upload" class="btn btn-primary">
+                  <input
+                    type="file"
+                    name="Carica"
+                    id="ricevuta"
+                  />
+                  Carica&nbsp;&nbsp;
+                </label>
+              </div>
+              <div class="col-sm-12 col-md-6" id="send-container" >
+                <button id="send" class="btn btn-primary">Invia rendiconto</button>
+              </div>
+            </div>
+        `
+        );
+        $("#send").on("click", () => {
+          const formData = new FormData();
+          formData.append("ricevuta", $("#ricevuta").prop("files")[0]);
+          formData.append("rendiconto", JSON.stringify(rendiconto));
+
+          fetch("/host/turismo/rendiconta", {
+            method: "post",
+            body: formData,
+          })
+            .then(async (res) => {
+              const response = await res.json();
+              if (response.success) {
+                window.location.reload();
+              }
+            })
+            .catch((err) => console.log(err));
+        });
+      }
+
+      fetch("/host/turismo", {
+        method: "POST",
+        body: JSON.stringify(prenPerCitta),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then(async (res) => {
+          const response = await res.json();
+          rendiconto = response;
+          if (response) {
+            console.log(response);
+            response.rendiconto.forEach((rend, index) => {
+              rend.ospiti.forEach((ospite, index) => {
+                $("#rendiconto").append(
+                  `
+                  <div class="row rend" style="margin-top:20px">
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-sm-6 col-md-3">
+                              ${ospite.nome}
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                              ${ospite.cognome}
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                              ${ospite.data_nascita}
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                              <i>${
+                                ospite.isEsente ? "Esente" : "Non Esente"
+                              }</i>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  `
+                );
+              });
+            });
+          }
+        })
+        .catch((err) => console.log(err));
+    });
+    /* ------------------------------------------------- */
 
     $(window).resize(() => {
       if ($(window).width() < "448") {

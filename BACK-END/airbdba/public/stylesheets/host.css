@@ -97,6 +97,22 @@ textarea {
 .contact {
   margin-right: 10px;
 }
+
+/* TURSIMO */
+#ricevuta-label {
+  margin-top: 20px;
+}
+
+#ricevuta-upload #ricevuta {
+  overflow: hidden;
+  width: 0;
+}
+
+#send-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
 @media (min-width: 992px) {
   .no-padding {
     padding: 0;

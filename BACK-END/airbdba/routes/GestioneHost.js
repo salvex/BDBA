@@ -66,6 +66,9 @@ router.post(
   HostControl.contatta_utente_post
 );
 
+router.post("/turismo", HostControl.contatta_turismo_get);
+router.post("/turismo/rendiconta", HostControl.contatta_turismo_post);
+
 router.get("", ContattaQuesturaControl.contattaQuestura_get);
 router.post("", ContattaQuesturaControl.contattaQuestura_post);
 
