@@ -31,7 +31,7 @@ var errorsHandler = (err) => {
 };
 
 const registrazione_get = (req, res) => {
-  if (req.session.utente) {
+  if (req.cookies.jwt) {
     res.redirect("/");
   } else {
     res.render("signup");

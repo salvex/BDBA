@@ -49,7 +49,7 @@ const login_post = async (req, res) => {
 };
 
 const login_get = (req, res) => {
-  if (req.session.utente) {
+  if (req.cookies.jwt) {
     res.redirect("/");
   } else {
     res.render("login");
