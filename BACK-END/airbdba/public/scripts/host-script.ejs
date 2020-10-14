@@ -491,12 +491,9 @@
         if (new Date(prenotazione.check_in) < Date.now()) {
           // Il soggiorno è iniziato o già terminato
           guadagniAttuali += prenotazione.prezzo_finale;
-        } else {
-          guadagniStimati += prenotazione.prezzo_finale;
-        }
 
-        $("#pren").append(
-          `
+          $("#pren").append(
+            `
             <div class="card pren-card">
               <div class="card-body">
                 <div class="row">
@@ -505,27 +502,66 @@
                   </div>
                   <div class="col-12">
                     ${prenotazione.utente.nome}&nbsp;${
-            prenotazione.utente.cognome
-          }, <a href="mailto:${prenotazione.utente.email}"><i>${
-            prenotazione.utente.email
-          }</i></a>
+              prenotazione.utente.cognome
+            }, <a href="mailto:${prenotazione.utente.email}"><i>${
+              prenotazione.utente.email
+            }</i></a>
                   </div>
                   <div class="col-12">
                     <b>${prenotazione.check_in}</b> &#8594; <b>${
-            prenotazione.check_out
-          }</b>, ${prenotazione.n_ospiti_pren} ${
-            prenotazione.n_ospiti_pren === 1 ? "ospite" : "ospiti"
-          }
+              prenotazione.check_out
+            }</b>, ${prenotazione.n_ospiti_pren} ${
+              prenotazione.n_ospiti_pren === 1 ? "ospite" : "ospiti"
+            }
                   </div>
                   <div class="col-12 pren-btns">
                     <button indice="${index}" class="btn btn-primary contact"><i class="fas fa-comment-alt"></i> Contatta</button>
-                    <button indice="${index}" class="btn btn-danger cancel">&times; Annulla</button>
                   </div>
                 </div>
               </div>
             </div>
           `
-        );
+          );
+        } else {
+          guadagniStimati += prenotazione.prezzo_finale;
+
+          $("#pren").append(
+            `
+            <div class="card pren-card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12">
+                    <b>${prenotazione.inserzione.nome_inserzione}</b>
+                  </div>
+                  <div class="col-12">
+                    ${prenotazione.utente.nome}&nbsp;${
+              prenotazione.utente.cognome
+            }, <a href="mailto:${prenotazione.utente.email}"><i>${
+              prenotazione.utente.email
+            }</i></a>
+                  </div>
+                  <div class="col-12">
+                    <b>${prenotazione.check_in}</b> &#8594; <b>${
+              prenotazione.check_out
+            }</b>, ${prenotazione.n_ospiti_pren} ${
+              prenotazione.n_ospiti_pren === 1 ? "ospite" : "ospiti"
+            }
+                  </div>
+                  <div class="col-12 pren-btns">
+                    <div class="row">
+                      <div class="col">
+                        <button indice="${index}" class="btn btn-primary contact"><i class="fas fa-comment-alt"></i> Contatta</button>
+                        <button indice="${index}" class="btn btn-primary identify"><i class="fas fa-user"></i> identifica</button>
+                        <button indice="${index}" class="btn btn-danger cancel">&times; Annulla</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `
+          );
+        }
 
         // PULSANTI
         // Contatta
@@ -593,6 +629,11 @@
               $("#msg").val("");
             })
             .modal("show");
+        });
+
+        // Identifica ospiti
+        $(`.identify`).on("click", () => {
+          window.location.href = `/host/identify?id=${prenotazione.id_prenotazione}&ospiti=${prenotazione.n_ospiti_pren}`;
         });
         /* $(`.cancel[indice=${index}]`).on("click", function () {
           fetch(`/host/delete_pren/${prenotazione.id_prenotazione}`, {

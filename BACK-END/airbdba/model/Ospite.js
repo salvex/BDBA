@@ -32,6 +32,10 @@ const Ospite = db.sequelize.define(
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+    numero_documento: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
     data_nascita: {
       type: DataTypes.DATEONLY(),
       allowNull: false,

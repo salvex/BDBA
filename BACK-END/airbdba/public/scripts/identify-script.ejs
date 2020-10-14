@@ -3,9 +3,71 @@
     /* LETs & CONSTs */
     const params = new URLSearchParams(window.location.search);
     /* --------------------------------------------------------- */
-
     /* TOOLTIP */
     $('[data-toggle="tooltip"]').tooltip();
+    /* --------------------------------------------------------- */
+
+    /* GENERATE FORMS */
+    for (let i = 0; i < params.get("ospiti"); i++) {
+      let card = `
+            <div class="card guest">
+              <div class="card-header">
+                <b>Ospite ${i + 1}</b>
+              </div>
+              <div class="card-body">
+                <form>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputEmail4">Email</label>
+                      <input type="email" class="form-control" id="inputEmail4">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputPassword4">Password</label>
+                      <input type="password" class="form-control" id="inputPassword4">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputAddress">Address</label>
+                    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputAddress2">Address 2</label>
+                    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputCity">City</label>
+                      <input type="text" class="form-control" id="inputCity">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="inputState">State</label>
+                      <select id="inputState" class="form-control">
+                        <option selected>Choose...</option>
+                        <option>...</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="inputZip">Zip</label>
+                      <input type="text" class="form-control" id="inputZip">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          `;
+
+      $("#content").append(card);
+      $(`input[type=text][id$="${i}"]`).on("focusout input", function () {
+        if ($(this).val() === "") {
+          $(this).addClass("is-invalid");
+        } else {
+          $(this).removeClass("is-invalid");
+        }
+      });
+    }
+    $("#content").append(
+      "<button class='btn btn-primary send-btn'>Invia</button>"
+    );
     /* --------------------------------------------------------- */
 
     /* OPERAZIONE DI FETCH */
@@ -14,7 +76,6 @@
       // in queste circostanze l'evento submit
       // viene fermato
       let flag = true;
-
       $("input[type=text]").each((index, element) => {
         if (
           $(element).prop("class").includes("is-invalid") ||
@@ -25,7 +86,6 @@
           return;
         }
       });
-
       $("div[id^='gender']").each((index, element) => {
         if ($(`input[name="gender-${index}"]:checked`).length === 0) {
           $("div[id^='gender'] > small").text("Hai dimenticato questo campo");
@@ -33,16 +93,13 @@
           return;
         }
       });
-
       if (!flag) {
         return;
       }
       /* -------- */
       $("div[id^='gender'] > small").text("");
-
       // Generazione array di oggetti
       let ospiti = [];
-
       for (let i = 0; i < params.get("nospiti"); i += 1) {
         let ospite = {
           nome: $(`#name-${i}`).val(),
@@ -53,9 +110,7 @@
         };
         ospiti.push(ospite);
       }
-
       console.log(ospiti);
-
       fetch(`/inserzione/prenota/identify`, {
         method: "POST",
         headers: {

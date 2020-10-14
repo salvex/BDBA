@@ -270,7 +270,7 @@ const gestione_host_get = async (req, res, next) => {
         },
         {
           model: Ospite,
-          required: true,
+          required: false,
           as: "ospiti",
         },
       ],
@@ -287,7 +287,6 @@ const gestione_host_get = async (req, res, next) => {
 
 const modifica_inserzione_put = async (req, res) => {
   try {
-    console.log(req.files["gallery"]);
     const {
       nome,
       citta,
@@ -307,22 +306,27 @@ const modifica_inserzione_put = async (req, res) => {
     const id_host = req.session.utente.id;
 
     let path;
-    if (imgToSave.length > 0) {
-      path = imgToSave.reduce((x, y) => x + "," + y) + ",";
-    } else {
-      path = "";
-    }
-
     if (req.files["gallery"]) {
+      if (imgToSave.length > 0) {
+        path = imgToSave.reduce((x, y) => x + "," + y) + ",";
+      } else {
+        path = "";
+      }
       for (let i = 0; i < req.files["gallery"].length - 1; i++) {
         path += req.files["gallery"][i].path.slice(31) + ",";
       }
       path += req.files["gallery"][req.files["gallery"].length - 1].path.slice(
         31
       );
+    } else {
+      if (imgToSave.length > 0) {
+        path = imgToSave.reduce((x, y) => x + "," + y);
+      } else {
+        path = "";
+      }
     }
-
     path = path.replace(/\\/g, "/");
+    console.log(path);
 
     imgToDel.forEach((img, index) => {
       fs.unlink(`public/uploads/fotoInserzione/${id_host}${img}`, (err) => {

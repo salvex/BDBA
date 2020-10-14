@@ -125,9 +125,10 @@ textarea {
   display: flex;
   margin-top: 15px;
 }
-.contact {
+/* .contact,
+.identify {
   margin-right: 10px;
-}
+} */
 
 /* TURSIMO */
 #ricevuta-label {
@@ -160,6 +161,12 @@ textarea {
   }
 }
 
+@media (max-width: 1232px) {
+  .cancel {
+    margin-top: 5px;
+  }
+}
+
 @media (max-width: 992px) {
   /* .inserzione-info {
     padding: 0 10px;
@@ -169,6 +176,9 @@ textarea {
   }
   #req {
     border: none;
+  }
+  .cancel {
+    margin-top: 0;
   }
 }
 
@@ -196,17 +206,28 @@ textarea {
   }
 }
 
-@media (max-width: 408px) {
+@media (max-width: 508px) {
+  .cancel {
+    margin-top: 5px;
+  }
+}
+
+@media (max-width: 410px) {
   .pren-btns {
     flex-direction: column;
     align-items: center;
   }
-  .contact {
+  .contact,
+  .identify {
     margin: 0 0 10px 0;
   }
   .contact,
+  .identify,
   .cancel {
     width: 100%;
+  }
+  .cancel {
+    margin-top: 0;
   }
 }
 /* ----------- */

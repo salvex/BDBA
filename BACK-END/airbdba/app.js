@@ -14,7 +14,7 @@ var { checkPrenotazioneData } = require("./utils/checkPrenotazioneData");
 var HostControl = require("./controller/HostControl");
 
 dotenv.config();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 //AUTH MIDDLEWARE
 const { checkUser, verifyToken, verifyHost } = require("./utils/JwtToken");
 //Router init

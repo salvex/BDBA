@@ -504,6 +504,7 @@
         // Carousel
         imgs = response.show.galleryPath.split(",");
         for (let i = 0; i < imgs.length; i += 1) {
+          console.log(response.show.ref_host_ins, imgs[i], imgs);
           if (i === 0) {
             $(".carousel-inner").append(
               `
@@ -541,6 +542,7 @@
           startDate: new Date(),
           endDate: response.show.fineDisponibilita,
           datesDisabled: date,
+          clearBtn: true,
         });
 
         $("#check-out").datepicker({
@@ -550,6 +552,7 @@
           startDate: new Date(),
           endDate: response.show.fineDisponibilita,
           datesDisabled: date,
+          clearBtn: true,
         });
 
         // Per rendere le cose graficamente mugliori
