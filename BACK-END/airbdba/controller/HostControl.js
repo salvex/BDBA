@@ -409,7 +409,7 @@ const modifica_inserzione_put = async (req, res) => {
   }
 }; */
 
-const cancella_inserzione_delete = async (req, res) => {
+/* const cancella_inserzione_delete = async (req, res) => {
   try {
     const { id_inserzione } = req.body;
     console.log(id_inserzione);
@@ -421,6 +421,56 @@ const cancella_inserzione_delete = async (req, res) => {
 
     console.log(path, deleteIns);
     await deleteIns.destroy();
+    // elimino ricorsivamente le la cartella e i file all'interno
+    fs.rmdir(path, { recursive: true }, (err) => {
+      if (err) {
+        throw err;
+      }
+      console.log(`File eliminati`);
+    });
+    res.status(200).json({ success: true });
+  } catch (err) {
+    const errors = errorsHandler(err);
+    res.status(400).json({ errors });
+  }
+}; */
+const cancella_inserzione_delete = async (req, res) => {
+  //MODIFICATO, DA INSERIRE CON DANIEL
+  try {
+    const { id_inserzione } = req.body;
+
+    console.log(id_inserzione); // DA INSERIRE
+
+    // Cerco l'inserzione da cancellare
+    var deleteIns = await Inserzione.findByPk(id_inserzione); // DA INSERIRE
+
+    let path =
+      `public/uploads/fotoInserzione/` +
+      req.session.utente.id +
+      deleteIns.galleryPath.slice(0, 14);
+    //Prendo le email degli utenti associati alle prenotazioni della relativa insserzione // DA INSERIRE
+    const mailList = await Prenotazione.getEmailUtentiPren(id_inserzione);
+    let bodyMail = {
+      from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
+      bcc: mailList,
+      subject:
+        "Cancellazione Prenotazione a Struttura: " + deleteIns.nome_inserzione,
+      text:
+        "Comunicazione relativa alla presenza di ospiti presso una struttura",
+      html:
+        "<b>Le comunichiamo che la sua prenotazione è stata cancellata</b><br><br><b>Cordiali Saluti, Team AIRBDBA</b>",
+    };
+
+    await transporter.sendMail(bodyMail, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log("Messaggio inviato: %s", info.messageId);
+    });
+
+    //elimino l'inserzione
+    await deleteIns.destroy(); //DA INSERIRE
+
     // elimino ricorsivamente le la cartella e i file all'interno
     fs.rmdir(path, { recursive: true }, (err) => {
       if (err) {

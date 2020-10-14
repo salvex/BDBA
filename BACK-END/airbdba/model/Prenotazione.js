@@ -148,4 +148,31 @@ Prenotazione.getUserMail = async (id_pren, id_host) => {
   }
 };*/
 
+Prenotazione.getEmailUtentiPren = async (id_ins) => {
+  let MailArray = [];
+  console.log("Panini al salmone");
+  const prenAss = await Prenotazione.findAll({
+    where: {
+      ref_inserzione: id_ins,
+      stato_prenotazione: {
+        [Op.gte]: 1,
+      },
+    },
+    include: {
+      model: Utente,
+      required: true,
+      attributes: ["email"],
+    },
+  });
+  if (prenAss) {
+    prenAss.forEach(async (pren) => {
+      MailArray.push(pren.utente.email);
+    });
+    console.log(MailArray);
+    return MailArray;
+  } else {
+    throw new Error("prenotazioni non trovate");
+  }
+};
+
 module.exports = Prenotazione;
