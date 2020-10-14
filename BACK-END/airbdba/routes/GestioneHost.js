@@ -69,10 +69,10 @@ router.post(
   HostControl.contatta_utente_post
 );
 
-router.get("/identify", (req, res) => {
+router.get("/identifica-ospiti", (req, res) => {
   res.render("identify");
 });
-/* router.post("/identify", HostControl.identifica_get); */
+router.post("/identifica-ospiti", HostControl.identifica_post);
 
 router.post("/turismo", HostControl.contatta_turismo_get);
 router.post(

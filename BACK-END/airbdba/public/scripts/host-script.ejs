@@ -59,21 +59,37 @@
 
     /* CHECKBOXES */
     // initial value
-    $("#casa, #casaModal").prop("checked", true);
-    $("#bnb, #bnbModal").prop("checked", false);
+    $("#casa").prop("checked", true);
+    $("#bnb").prop("checked", false);
 
     $("#casa, #casaModal").on("click", function () {
-      if ($("#bnb, #bnbModal").prop("checked")) {
-        $("#bnb, #bnbModal").prop("checked", false);
+      if ($(this).prop("id") === "casa") {
+        if ($("#bnb").prop("checked")) {
+          $("#bnb").prop("checked", false);
+        } else {
+          $(this).prop("checked", true);
+        }
       } else {
-        $(this).prop("checked", true);
+        if ($("#bnbModal").prop("checked")) {
+          $("#bnbModal").prop("checked", false);
+        } else {
+          $(this).prop("checked", true);
+        }
       }
     });
     $("#bnb, #bnbModal").on("click", function () {
-      if ($("#casa, #casaModal").prop("checked")) {
-        $("#casa, #casaModal").prop("checked", false);
+      if ($(this).prop("id") === "bnb") {
+        if ($("#casa").prop("checked")) {
+          $("#casa").prop("checked", false);
+        } else {
+          $(this).prop("checked", true);
+        }
       } else {
-        $(this).prop("checked", true);
+        if ($("#casaModal").prop("checked")) {
+          $("#casaModal").prop("checked", false);
+        } else {
+          $(this).prop("checked", true);
+        }
       }
     });
     /* ------------------------------------------------- */
@@ -485,10 +501,10 @@
             })
             .catch((err) => console.log(err));
         });
-      } else if (prenotazione.stato_prenotazione === 2) {
+      } else if (prenotazione.stato_prenotazione >= 2) {
         citta.push(prenotazione.inserzione.citta);
         // Guadagni stimati
-        if (new Date(prenotazione.check_in) < Date.now()) {
+        if (new Date(prenotazione.check_out) < new Date()) {
           // Il soggiorno è iniziato o già terminato
           guadagniAttuali += prenotazione.prezzo_finale;
 
@@ -549,9 +565,9 @@
                   </div>
                   <div class="col-12 pren-btns">
                     <div class="row">
-                      <div class="col">
+                      <div class="col pren-btns-cont">
                         <button indice="${index}" class="btn btn-primary contact"><i class="fas fa-comment-alt"></i> Contatta</button>
-                        <button indice="${index}" class="btn btn-primary identify"><i class="fas fa-user"></i> identifica</button>
+                        <button indice="${index}" class="btn btn-warning identify"><i class="fas fa-user"></i> identifica</button>
                         <button indice="${index}" class="btn btn-danger cancel">&times; Annulla</button>
                       </div>
                     </div>
@@ -561,6 +577,10 @@
             </div>
           `
           );
+
+          if (prenotazione.stato_prenotazione === 3) {
+            $(`.identify[indice=${index}]`).remove();
+          }
         }
 
         // PULSANTI
@@ -633,7 +653,7 @@
 
         // Identifica ospiti
         $(`.identify`).on("click", () => {
-          window.location.href = `/host/identify?id=${prenotazione.id_prenotazione}&ospiti=${prenotazione.n_ospiti_pren}`;
+          window.location.href = `/host/identifica-ospiti?id=${prenotazione.id_prenotazione}&ospiti=${prenotazione.n_ospiti_pren}`;
         });
         /* $(`.cancel[indice=${index}]`).on("click", function () {
           fetch(`/host/delete_pren/${prenotazione.id_prenotazione}`, {
@@ -744,51 +764,13 @@
         prenPerCitta.pop();
       }
       prenotazioni.forEach((prenotazione) => {
-        if (prenotazione.inserzione.citta.toLowerCase() === $(this).val()) {
+        if (
+          prenotazione.inserzione.citta.toLowerCase() === $(this).val() &&
+          prenotazione.stato_prenotazione === 3
+        ) {
           prenPerCitta.push(prenotazione);
         }
       });
-      if ($(".resBtn").length === 0) {
-        $("#contattaT").append(
-          `
-            <div class="row justify-content-center resBtn">
-              <div
-                class="col-sm-12 col-md-6"
-                style="margin-top: 5px"
-              >
-                <label id="ricevuta-upload" class="btn btn-primary">
-                  <input
-                    type="file"
-                    name="Carica"
-                    id="ricevuta"
-                  />
-                  Carica&nbsp;&nbsp;
-                </label>
-              </div>
-              <div class="col-sm-12 col-md-6" id="send-container" >
-                <button id="send" class="btn btn-primary">Invia rendiconto</button>
-              </div>
-            </div>
-        `
-        );
-        $("#send").on("click", () => {
-          const formData = new FormData();
-          formData.append("ricevuta", $("#ricevuta").prop("files")[0]);
-          formData.append("rendiconto", JSON.stringify(rendiconto));
-
-          fetch("/host/turismo/rendiconta", {
-            method: "POST",
-            body: formData,
-          })
-            .then(async (res) => {
-              const response = await res.json();
-              if (response.success) {
-                window.location.reload();
-              }
-            })
-            .catch((err) => console.log(err));
-        });
-      }
 
       fetch("/host/turismo", {
         method: "POST",
@@ -830,6 +812,84 @@
                   </div>
                   `
                 );
+
+                if ($(".resBtn").length === 0) {
+                  $("#contattaT").append(
+                    `
+                      <div class="row justify-content-center resBtn">
+                        <div class="col-12" id="tatRend">
+                          <h3>Totale: ${rendiconto.totaleRendiconto}&euro;</h3>
+                        </div>
+                        <div
+                          class="col-12"
+                          id="ricevuta-container"
+                        >
+                          <label id="ricevuta-upload" class="btn btn-warning">
+                            <input
+                              type="file"
+                              name="Carica"
+                              id="ricevuta"
+                            />
+                            Carica&nbsp;&nbsp;
+                          </label>
+                        </div>
+                        <div class="col-12 text-danger inputFileHelp" style="margin-bottom:5px"></div>
+                        <div class="col-12">
+                          <div class="card inputValue-cont">
+                            <div class="card-body" id="inputValue"></div>
+                          </div>
+                        </div>
+                        <div class="col-12" id="send-container" >
+                          <button id="send" class="btn btn-primary">Invia rendiconto</button>
+                        </div>
+                      </div>
+                  `
+                  );
+                  $("#ricevuta").on("change", function () {
+                    $("#inputValue").html(
+                      `<i class="fas fa-file"></i>&nbsp;&nbsp;` +
+                        $(this).prop("files")[0].name
+                    );
+
+                    $(".inputValue-cont").slideDown(500);
+
+                    if ($(this).prop("files")[0].name.split(".")[1] !== "pdf") {
+                      $(".inputFileHelp").text("Il file deve effere un pdf!");
+                    } else {
+                      $(".inputFileHelp").text("");
+                    }
+                  });
+                  $("#send").on("click", () => {
+                    const formData = new FormData();
+                    formData.append(
+                      "ricevuta",
+                      $("#ricevuta").prop("files")[0]
+                    );
+                    formData.append("rendiconto", JSON.stringify(rendiconto));
+
+                    if (
+                      $("#ricevuta").val() === "" ||
+                      $("#ricevuta").val() === null ||
+                      $("#ricevuta").prop("files")[0].name.split(".")[1] !==
+                        "pdf"
+                    ) {
+                      $(".inputFileHelp").text("Devi caricare un file pdf!");
+                      return;
+                    }
+
+                    fetch("/host/turismo/rendiconta", {
+                      method: "POST",
+                      body: formData,
+                    })
+                      .then(async (res) => {
+                        const response = await res.json();
+                        if (response.success) {
+                          window.location.reload();
+                        }
+                      })
+                      .catch((err) => console.log(err));
+                  });
+                }
               });
             });
           }

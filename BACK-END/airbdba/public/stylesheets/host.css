@@ -139,10 +139,30 @@ textarea {
   overflow: hidden;
   width: 0;
 }
+#ricevuta-upload {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#tatRend {
+  margin-top: 20px;
+}
+#ricevuta-container {
+  margin: 20px 0 20px 0;
+}
+
+.inputValue-cont {
+  display: none;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.125);
+  margin: 0 0 20px 0;
+}
 
 #send-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 @media (min-width: 992px) {

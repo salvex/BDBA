@@ -309,7 +309,7 @@
     /* --------------------------------------------------------- */
 
     /* OPERAZIONE DI FETCH */
-    $("button").on("click", () => {
+    $(".send-guest").on("click", () => {
       // controllo sui campi vuoti o errati
       // in queste circostanze l'evento submit
       // viene fermato
@@ -353,21 +353,21 @@
         };
         ospiti.push(ospite);
       }
-      console.log(ospiti);
-      // fetch(`/inserzione/prenota/identify`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ ospiti }),
-      // })
-      //   .then(async (res) => {
-      //     const response = await res.json();
-      //     if (response.success) {
-      //       window.location.href = `/inserzione/prenota/pagamento${window.location.search}`;
-      //     }
-      //   })
-      //   .catch((err) => console.log(err));
+
+      fetch(`/host/identifica-ospiti`, {
+        method: "POST",
+        body: JSON.stringify(ospiti),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then(async (res) => {
+          const response = await res.json();
+          if (response.success) {
+            window.location.href = `/host`;
+          }
+        })
+        .catch((err) => console.log(err));
     });
   });
 </script>

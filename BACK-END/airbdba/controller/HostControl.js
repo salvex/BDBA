@@ -636,7 +636,6 @@ const contatta_turismo_get = async (req, res) => {
     var totaleRendiconto = 0;
     var rendiconto = [];
     const prenotazioni = req.body;
-    console.log(prenotazioni);
     prenotazioni.forEach((prenotazione) => {
       prenotazione.ospiti.forEach((ospite) => {
         if (ospite.isEsente === 0) {
@@ -762,6 +761,20 @@ const contatta_turismo_post = async (req, res) => {
   res.status(200).json({ success: true });
 };
 
+const identifica_post = async (req, res) => {
+  try {
+    const ospiti = req.body;
+    const result = await Ospite.bulkCreate(ospiti);
+    await Prenotazione.update(
+      { stato_prenotazione: 3 },
+      { where: { id_prenotazione: ospiti[0].ref_prenotazione_u } }
+    );
+    res.status(200).json({ success: true });
+  } catch (error) {
+    res.status(400).json({ success: false });
+  }
+};
+
 module.exports = {
   become_host_get,
   aggiungi_inserzione_post,
@@ -775,4 +788,5 @@ module.exports = {
   contatta_utente_post,
   contatta_turismo_get,
   contatta_turismo_post,
+  identifica_post,
 }; //
