@@ -2,72 +2,310 @@
   $(document).ready(() => {
     /* LETs & CONSTs */
     const params = new URLSearchParams(window.location.search);
-    /* --------------------------------------------------------- */
-    /* TOOLTIP */
-    $('[data-toggle="tooltip"]').tooltip();
+    let cardsNumber = Number(params.get("ospiti"));
     /* --------------------------------------------------------- */
 
     /* GENERATE FORMS */
+    let card;
     for (let i = 0; i < params.get("ospiti"); i++) {
-      let card = `
-            <div class="card guest">
+      if (i === params.get("ospiti") - 1) {
+        card = `
+            <div class="card guest ${i}" index="${i}">
               <div class="card-header">
                 <b>Ospite ${i + 1}</b>
+                <button type="button" class="close close-guest${i}" parent="${i}" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
               <div class="card-body">
                 <form>
                   <div class="form-row">
-                    <div class="form-group col-md-6">
-                      <label for="inputEmail4">Email</label>
-                      <input type="email" class="form-control" id="inputEmail4">
+                    <div class="form-group col-md-5">
+                      <label for="inputName${i}">Nome</label>
+                      <input type="text" class="form-control" id="inputName${i}">
                     </div>
-                    <div class="form-group col-md-6">
-                      <label for="inputPassword4">Password</label>
-                      <input type="password" class="form-control" id="inputPassword4">
+                    <div class="form-group col-md-5">
+                      <label for="inputSurname${i}">Cognome</label>
+                      <input type="text" class="form-control" id="inputSurname${i}">
                     </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="inputAddress">Address</label>
-                    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-                  </div>
-                  <div class="form-group">
-                    <label for="inputAddress2">Address 2</label>
-                    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+                    <div class="form-group col-md-2">
+                      <label for="inputSesso${i}">Sesso</label>
+                      <select class="form-control" id="inputSesso${i}">
+                        <option value="none" selected="true" disabled="disabled">Scegli..</option>
+                        <option value=maschio>Maschio</option>
+                        <option value=femmina>Femmina</option>
+                        <option value=altro>Altro</option>
+                      </select>
+                    </div>
                   </div>
                   <div class="form-row">
                     <div class="form-group col-md-6">
-                      <label for="inputCity">City</label>
-                      <input type="text" class="form-control" id="inputCity">
+                      <label for="inputNascita${i}">Data nascita</label>
+                      <input data-provide="datepicker" class="form-control" id="inputNascita${i}">
                     </div>
-                    <div class="form-group col-md-4">
-                      <label for="inputState">State</label>
-                      <select id="inputState" class="form-control">
-                        <option selected>Choose...</option>
-                        <option>...</option>
+                    <div class="form-group col-md-6">
+                      <label for="inputNazionalita${i}">Nazionalità</label>
+                      <input type="text" class="form-control" id="inputNazionalita${i}">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputDocument${i}">Tipo documento</label>
+                      <select class="form-control" id="inputDocument${i}">
+                        <option value="none" selected="true" disabled="disabled">Scegli..</option>
+                        <option value=ci>Carta identità</option>
+                        <option value=pat>Patente</option>
                       </select>
                     </div>
-                    <div class="form-group col-md-2">
-                      <label for="inputZip">Zip</label>
-                      <input type="text" class="form-control" id="inputZip">
+                    <div class="form-group col-md-6">
+                      <label for="inputCodiceDoc${i}">Numero documento</label>
+                      <input type="text" class="form-control" id="inputCodiceDoc${i}">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputEsenzione${i} data-toggle="tooltip" data-html="true" title="Eventuali verifiche sulla veridicità di quanto dichiarato verranno fatte <u>in presenza</u> dal host della struttura"">Esenzione&nbsp;&#8505;&nbsp;&nbsp;</u></label>
+                      <input type="checkbox" id="inputEsenzione${i}">
                     </div>
                   </div>
                 </form>
               </div>
             </div>
           `;
+      } else {
+        card = `
+            <div class="card guest ${i}" index="${i}">
+              <div class="card-header">
+                <b>Ospite ${i + 1}</b>
+              </div>
+              <div class="card-body">
+                <form>
+                  <div class="form-row">
+                    <div class="form-group col-md-5">
+                      <label for="inputName${i}">Nome</label>
+                      <input type="text" class="form-control" id="inputName${i}">
+                    </div>
+                    <div class="form-group col-md-5">
+                      <label for="inputSurname${i}">Cognome</label>
+                      <input type="text" class="form-control" id="inputSurname${i}">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="inputSesso${i}">Sesso</label>
+                      <select class="form-control" id="inputSesso${i}">
+                        <option value="none" selected="true" disabled="disabled">Scegli..</option>
+                        <option value=maschio>Maschio</option>
+                        <option value=femmina>Femmina</option>
+                        <option value=altro>Altro</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputNascita${i}">Data nascita</label>
+                      <input data-provide="datepicker" class="form-control" id="inputNascita${i}">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputNazionalita${i}">Nazionalità</label>
+                      <input type="text" class="form-control" id="inputNazionalita${i}">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputDocument${i}">Tipo documento</label>
+                      <select class="form-control" id="inputDocument${i}">
+                        <option value="none" selected="true" disabled="disabled">Scegli..</option>
+                        <option value=ci>Carta identità</option>
+                        <option value=pat>Patente</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputCodiceDoc${i}">Numero documento</label>
+                      <input type="text" class="form-control" id="inputCodiceDoc${i}">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputEsenzione${i} data-toggle="tooltip" data-html="true" title="Eventuali verifiche sulla veridicità di quanto dichiarato verranno fatte <u>in presenza</u> dal host della struttura"">Esenzione&nbsp;&#8505;&nbsp;&nbsp;</u></label>
+                      <input type="checkbox" id="inputEsenzione${i}">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          `;
+      }
 
       $("#content").append(card);
-      $(`input[type=text][id$="${i}"]`).on("focusout input", function () {
-        if ($(this).val() === "") {
-          $(this).addClass("is-invalid");
-        } else {
-          $(this).removeClass("is-invalid");
+      $(`input[id$="${i}"], select[id$="${i}"]`).on(
+        "focusout input",
+        function () {
+          if ($(this).val() === "" || $(this).val() === null) {
+            $(this).addClass("is-invalid");
+          } else {
+            $(this).removeClass("is-invalid");
+          }
         }
+      );
+      $(`#inputNascita${i}`).datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        endDate: new Date(),
       });
+
+      function closeGuest(e) {
+        e.preventDefault();
+
+        $(`.${$(this).attr("parent")}`).slideUp(500, function () {
+          $(this).remove();
+        });
+
+        if ($(this).attr("parent") > 1) {
+          $(`.${$(this).attr("parent") - 1} > .card-header`).append(
+            `
+            <button type="button" class="close close-guest${
+              $(this).attr("parent") - 1
+            }" parent="${$(this).attr("parent") - 1}" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            `
+          );
+          $(`.close-guest${$(this).attr("parent") - 1}`).on(
+            "click",
+            closeGuest
+          );
+        }
+
+        if ($(this).attr("parent") > 0) {
+          cardsNumber -= 1;
+        }
+        $(this).off("click");
+      }
+      $(`.close-guest${i}`).on("click", closeGuest);
     }
-    $("#content").append(
-      "<button class='btn btn-primary send-btn'>Invia</button>"
+    $("#content-btns").append(
+      `<button id="addGuest" class='btn btn-primary send-btn'>Aggiungi <i class="fas fa-plus"></i></button>`
     );
+
+    $("#addGuest").on("click", function () {
+      cardsNumber += 1;
+      card = `
+            <div class="card guest ${cardsNumber - 1}" index="${
+        cardsNumber - 1
+      }" style="display: none">
+              <div class="card-header">
+                <b>Ospite ${cardsNumber}</b>
+                <button type="button" class="close close-guest${
+                  cardsNumber - 1
+                }" parent="${cardsNumber - 1}" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="card-body">
+                <form>
+                  <div class="form-row">
+                    <div class="form-group col-md-5">
+                      <label for="inputName${cardsNumber - 1}">Nome</label>
+                      <input type="text" class="form-control" id="inputName${
+                        cardsNumber - 1
+                      }">
+                    </div>
+                    <div class="form-group col-md-5">
+                      <label for="inputSurname${
+                        cardsNumber - 1
+                      }">Cognome</label>
+                      <input type="text" class="form-control" id="inputSurname${
+                        cardsNumber - 1
+                      }">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="inputSesso${cardsNumber - 1}">Sesso</label>
+                      <select class="form-control" id="inputSesso${
+                        cardsNumber - 1
+                      }">
+                        <option value="none" selected="true" disabled="disabled">Scegli..</option>
+                        <option value=maschio>Maschio</option>
+                        <option value=femmina>Femmina</option>
+                        <option value=altro>Altro</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputNascita${
+                        cardsNumber - 1
+                      }">Data nascita</label>
+                      <input data-provide="datepicker" class="form-control" id="inputNascita${
+                        cardsNumber - 1
+                      }">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputNazionalita${
+                        cardsNumber - 1
+                      }">Nazionalità</label>
+                      <input type="text" class="form-control" id="inputNazionalita${
+                        cardsNumber - 1
+                      }">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputDocument${
+                        cardsNumber - 1
+                      }">Tipo documento</label>
+                      <select class="form-control" id="inputDocument${
+                        cardsNumber - 1
+                      }">
+                        <option value="none" selected="true" disabled="disabled">Scegli..</option>
+                        <option value=ci>Carta identità</option>
+                        <option value=pat>Patente</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputCodiceDoc${
+                        cardsNumber - 1
+                      }">Numero documento</label>
+                      <input type="text" class="form-control" id="inputCodiceDoc${
+                        cardsNumber - 1
+                      }">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputEsenzione${
+                        cardsNumber - 1
+                      } data-toggle="tooltip" data-html="true" title="Eventuali verifiche sulla veridicità di quanto dichiarato verranno fatte <u>in presenza</u> dal host della struttura"">Esenzione&nbsp;&#8505;&nbsp;&nbsp;</u></label>
+                      <input type="checkbox" id="inputEsenzione${
+                        cardsNumber - 1
+                      }">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          `;
+      $(`${card}`).appendTo("#content").slideDown(500);
+      $(`.close-guest${cardsNumber - 1}`).on("click", closeGuest);
+      $(`.close-guest${cardsNumber - 2}`).remove();
+      $(`input[id$="${cardsNumber - 1}"], select[id$="${cardsNumber - 1}"]`).on(
+        "focusout input",
+        function () {
+          if ($(this).val() === "" || $(this).val() === null) {
+            $(this).addClass("is-invalid");
+          } else {
+            $(this).removeClass("is-invalid");
+          }
+        }
+      );
+      $(`#inputNascita${cardsNumber - 1}`).datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        endDate: new Date(),
+      });
+    });
+
+    /* --------------------------------------------------------- */
+    /* TOOLTIP */
+    $(`label[for^="inputEsenzione"]`).tooltip();
     /* --------------------------------------------------------- */
 
     /* OPERAZIONE DI FETCH */
@@ -76,10 +314,11 @@
       // in queste circostanze l'evento submit
       // viene fermato
       let flag = true;
-      $("input[type=text]").each((index, element) => {
+      $(`input, select`).each((index, element) => {
         if (
           $(element).prop("class").includes("is-invalid") ||
-          $(element).val() === ""
+          $(element).val() === "" ||
+          $(element).val() === null
         ) {
           $(element).addClass("is-invalid");
           flag = false;
@@ -100,31 +339,35 @@
       $("div[id^='gender'] > small").text("");
       // Generazione array di oggetti
       let ospiti = [];
-      for (let i = 0; i < params.get("nospiti"); i += 1) {
+      for (let i = 0; i < cardsNumber; i += 1) {
         let ospite = {
-          nome: $(`#name-${i}`).val(),
-          cognome: $(`#surname-${i}`).val(),
-          sesso: $(`input[name=gender-${i}]:checked`).val(),
-          isEsente: $(`#es-${i}`).prop("checked") ? 1 : 0,
-          ref_prenotazione_u: "",
+          nome: $(`#inputName${i}`).val(),
+          cognome: $(`#inputSurname${i}`).val(),
+          sesso: $(`#inputSesso${i}`).val(),
+          nazionalita: $(`#inputNazionalita${i}`).val(),
+          tipo_documento: $(`#inputDocument${i}`).val(),
+          numero_documento: $(`#inputCodiceDoc${i}`).val(),
+          data_nascita: $(`#inputNascita${i}`).val(),
+          isEsente: $(`#inputEsenzione${i}`).prop("checked") ? 1 : 0,
+          ref_prenotazione_u: params.get("id"),
         };
         ospiti.push(ospite);
       }
       console.log(ospiti);
-      fetch(`/inserzione/prenota/identify`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ospiti }),
-      })
-        .then(async (res) => {
-          const response = await res.json();
-          if (response.success) {
-            window.location.href = `/inserzione/prenota/pagamento${window.location.search}`;
-          }
-        })
-        .catch((err) => console.log(err));
+      // fetch(`/inserzione/prenota/identify`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ ospiti }),
+      // })
+      //   .then(async (res) => {
+      //     const response = await res.json();
+      //     if (response.success) {
+      //       window.location.href = `/inserzione/prenota/pagamento${window.location.search}`;
+      //     }
+      //   })
+      //   .catch((err) => console.log(err));
     });
   });
 </script>
