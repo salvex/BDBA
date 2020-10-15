@@ -788,7 +788,8 @@
       prenotazioni.forEach((prenotazione, index) => {
         if (
           prenotazione.inserzione.citta.toLowerCase() === $(this).val() &&
-          prenotazione.stato_prenotazione === 3
+          prenotazione.stato_prenotazione === 3 &&
+          prenotazione.questuraFlag === 0
         ) {
           prenPerCitta.push(prenotazione);
           $("#schedine").append(
@@ -994,9 +995,10 @@
           if (response) {
             console.log(response);
             response.rendiconto.forEach((rend, index) => {
-              rend.ospiti.forEach((ospite, index) => {
-                $("#rendiconto").append(
-                  `
+              if (rend.turismoFlag === 0) {
+                rend.ospiti.forEach((ospite, index) => {
+                  $("#rendiconto").append(
+                    `
                   <div class="row rend" style="margin-top:20px">
                     <div class="col-12">
                       <div class="card">
@@ -1022,11 +1024,11 @@
                     </div>
                   </div>
                   `
-                );
+                  );
 
-                if ($(".resBtn").length === 0) {
-                  $("#contattaT").append(
-                    `
+                  if ($(".resBtn").length === 0) {
+                    $("#contattaT").append(
+                      `
                       <div class="row justify-content-center resBtn">
                         <div class="col-12" id="tatRend">
                           <h3>Totale: ${rendiconto.totaleRendiconto}&euro;</h3>
@@ -1055,53 +1057,56 @@
                         </div>
                       </div>
                   `
-                  );
-                  $("#ricevuta").on("change", function () {
-                    $("#inputValue").html(
-                      `<i class="fas fa-file"></i>&nbsp;&nbsp;` +
-                        $(this).prop("files")[0].name
                     );
+                    $("#ricevuta").on("change", function () {
+                      $("#inputValue").html(
+                        `<i class="fas fa-file"></i>&nbsp;&nbsp;` +
+                          $(this).prop("files")[0].name
+                      );
 
-                    $(".inputValue-cont").slideDown(500);
+                      $(".inputValue-cont").slideDown(500);
 
-                    if ($(this).prop("files")[0].name.split(".")[1] !== "pdf") {
-                      $(".inputRicHelp").text("Il file deve effere un pdf!");
-                    } else {
-                      $(".inputRicHelp").text("");
-                    }
-                  });
-                  $("#send").on("click", () => {
-                    const formData = new FormData();
-                    formData.append(
-                      "ricevuta",
-                      $("#ricevuta").prop("files")[0]
-                    );
-                    formData.append("rendiconto", JSON.stringify(rendiconto));
+                      if (
+                        $(this).prop("files")[0].name.split(".")[1] !== "pdf"
+                      ) {
+                        $(".inputRicHelp").text("Il file deve effere un pdf!");
+                      } else {
+                        $(".inputRicHelp").text("");
+                      }
+                    });
+                    $("#send").on("click", () => {
+                      const formData = new FormData();
+                      formData.append(
+                        "ricevuta",
+                        $("#ricevuta").prop("files")[0]
+                      );
+                      formData.append("rendiconto", JSON.stringify(rendiconto));
 
-                    if (
-                      $("#ricevuta").val() === "" ||
-                      $("#ricevuta").val() === null ||
-                      $("#ricevuta").prop("files")[0].name.split(".")[1] !==
-                        "pdf"
-                    ) {
-                      $(".inputRicHelp").text("Devi caricare un file pdf!");
-                      return;
-                    }
+                      if (
+                        $("#ricevuta").val() === "" ||
+                        $("#ricevuta").val() === null ||
+                        $("#ricevuta").prop("files")[0].name.split(".")[1] !==
+                          "pdf"
+                      ) {
+                        $(".inputRicHelp").text("Devi caricare un file pdf!");
+                        return;
+                      }
 
-                    fetch("/host/turismo/rendiconta", {
-                      method: "POST",
-                      body: formData,
-                    })
-                      .then(async (res) => {
-                        const response = await res.json();
-                        if (response.success) {
-                          window.location.reload();
-                        }
+                      fetch("/host/turismo/rendiconta", {
+                        method: "POST",
+                        body: formData,
                       })
-                      .catch((err) => console.log(err));
-                  });
-                }
-              });
+                        .then(async (res) => {
+                          const response = await res.json();
+                          if (response.success) {
+                            window.location.reload();
+                          }
+                        })
+                        .catch((err) => console.log(err));
+                    });
+                  }
+                });
+              }
             });
           }
         })

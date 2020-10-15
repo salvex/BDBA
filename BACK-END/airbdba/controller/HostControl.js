@@ -651,6 +651,8 @@ const contatta_turismo_get = async (req, res) => {
       var value = {
         check_in: prenotazione.check_in,
         check_out: prenotazione.check_out,
+        questuraFlag: prenotazione.questuraFlag,
+        turismoFlag: prenotazione.turismoFlag,
         ospiti: prenotazione.ospiti,
       };
       rendiconto.push(value);
@@ -753,12 +755,27 @@ const contatta_turismo_post = async (req, res) => {
     ],
   };
 
-  /* await transporter.sendMail(bodyMail, (error, info) => {
+  await transporter.sendMail(bodyMail, (error, info) => {
     if (error) {
       return console.log(error);
     }
     console.log("Messaggio inviato: %s", info.messageId);
-  }); */
+  });
+
+  let prenList = [];
+  rendiconto.forEach((rend) => {
+    prenList.push(rend.ospiti[0].ref_prenotazione_u);
+  });
+
+  prenList = new Set(prenList);
+
+  prenList.forEach(async (pren) => {
+    await Prenotazione.update(
+      { turismoFlag: 1 },
+      { where: { id_prenotazione: pren } }
+    );
+  });
+
   res.status(200).json({ success: true });
 };
 
@@ -855,7 +872,7 @@ const contatta_questura_post = async (req, res) => {
 
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
-      to: "marcodaleo114@gmail.com ",
+      to: "",
       subject: "Comunicazione presenza ospiti",
       text: "lista ospiti e documenti",
       attachments: allegati,
