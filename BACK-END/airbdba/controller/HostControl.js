@@ -779,7 +779,16 @@ const identifica_post = async (req, res) => {
 const contatta_questura_post = async (req, res) => {
   try {
     let prenotazioni = JSON.parse(req.fields.prenQuestura);
-    let documenti = req.files.documenti;
+    let documenti;
+    console.log(req.files);
+    console.log(req.files.documenti);
+    if (!req.files.documenti.length) {
+      documenti = [];
+      documenti.push(req.files.documenti);
+    } else {
+      documenti = req.files.documenti;
+    }
+    console.log(documenti);
 
     let newpathfile = new Array(documenti.length);
 
@@ -833,7 +842,6 @@ const contatta_questura_post = async (req, res) => {
       allegato.content = documento.path;
       allegati.push(allegato);
     }); */
-
     const allegati = [];
     allegati.push({ filename: "documento.pdf", content: doc });
     documenti.forEach((documento, index) => {
@@ -859,6 +867,14 @@ const contatta_questura_post = async (req, res) => {
       }
       console.log("Messaggio inviato: %s", info.messageId);
     });
+
+    prenotazioni.forEach(async (prenotazione) => {
+      await Prenotazione.update(
+        { questuraFlag: 1 },
+        { where: { id_prenotazione: prenotazione.id_prenotazione } }
+      );
+    });
+
     res.status(200).json({ success: true });
   } catch (error) {
     console.log(error);

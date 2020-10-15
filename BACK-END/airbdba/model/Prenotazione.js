@@ -49,6 +49,16 @@ const Prenotazione = db.sequelize.define(
       type: DataTypes.INTEGER(11),
       allowNull: false,
     },
+    questuraFlag: {
+      type: DataTypes.INTEGER(1),
+      defaultValue: 0,
+      allowNull: false,
+    },
+    turismoFlag: {
+      type: DataTypes.INTEGER(1),
+      defaultValue: 0,
+      allowNull: false,
+    },
     /*    tassa_soggiorno_totale : {
       type: DataTypes.INTEGER(11),
       allowNull: false,

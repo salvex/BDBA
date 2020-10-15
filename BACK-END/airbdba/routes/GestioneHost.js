@@ -1,9 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const HostControl = require("../controller/HostControl");
-const ContattaQuestura = require("../controller/ContattaQuesturaControl");
 const FileUpload = require("../utils/FileUpload");
-const ContattaQuesturaControl = require("../controller/ContattaQuesturaControl");
 const JwtToken = require("../utils/JwtToken");
 const formidableMiddleware = require("express-formidable");
 
