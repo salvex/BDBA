@@ -287,6 +287,7 @@ const gestione_host_get = async (req, res, next) => {
 
 const modifica_inserzione_put = async (req, res) => {
   try {
+    console.log("ciao");
     const {
       nome,
       citta,
@@ -752,12 +753,12 @@ const contatta_turismo_post = async (req, res) => {
     ],
   };
 
-  await transporter.sendMail(bodyMail, (error, info) => {
+  /* await transporter.sendMail(bodyMail, (error, info) => {
     if (error) {
       return console.log(error);
     }
     console.log("Messaggio inviato: %s", info.messageId);
-  });
+  }); */
   res.status(200).json({ success: true });
 };
 
@@ -771,6 +772,96 @@ const identifica_post = async (req, res) => {
     );
     res.status(200).json({ success: true });
   } catch (error) {
+    res.status(400).json({ success: false });
+  }
+};
+
+const contatta_questura_post = async (req, res) => {
+  try {
+    let prenotazioni = JSON.parse(req.fields.prenQuestura);
+    let documenti = req.files.documenti;
+
+    let newpathfile = new Array(documenti.length);
+
+    for (let i = 0; i < documenti.length; i++) {
+      newpathfile[i] = documenti[i].path + path.extname(documenti[i].name);
+      fs.rename(documenti[i].path, newpathfile[i], () => {
+        console.log("File rinominato");
+      });
+    }
+    console.log(newpathfile);
+
+    const doc = new PDFDocument();
+    doc
+      .text("Comunicazione presenza ospiti", {
+        width: 400,
+        align: "center",
+      })
+      .moveDown();
+    doc
+      .text(
+        `Proprietario struttura: ${req.session.utente.nome} ${req.session.utente.cognome}`
+      )
+      .moveDown();
+    prenotazioni.forEach((prenotazione) => {
+      doc
+        .text(
+          `Arrivo: ${prenotazione.check_in}  Partenza: ${prenotazione.check_out}`
+        )
+        .moveDown();
+      prenotazione.ospiti.forEach((ospite) => {
+        doc.text(`Nome: ${ospite.nome}`);
+        doc.text(`Cognome: ${ospite.cognome}`);
+        doc.text(`Data di nascita: ${ospite.data_nascita}`);
+        doc.text(`Nazionalita: ${ospite.nazionalita}`);
+        doc.text(`Sesso: ${ospite.sesso}`);
+        doc
+          .text(
+            `Documento: ${ospite.tipo_documento}    N°: ${ospite.numero_documento}`
+          )
+          .moveDown();
+      });
+    });
+    doc.end();
+
+    /* const allegati = [];
+    allegati.push({ filename: "documento.pdf", content: doc });
+    documenti.forEach((documento, index) => {
+      console.log(documento.path);
+      let allegato = {};
+      allegato.filename = `documento${index}` + path.extname(documento.name);
+      allegato.content = documento.path;
+      allegati.push(allegato);
+    }); */
+
+    const allegati = [];
+    allegati.push({ filename: "documento.pdf", content: doc });
+    documenti.forEach((documento, index) => {
+      console.log(newpathfile[index]);
+      let allegato = {};
+      allegato.filename =
+        `documento${index}` + path.extname(newpathfile[index]);
+      allegato.content = fs.createReadStream(newpathfile[index]);
+      allegati.push(allegato);
+    });
+
+    let bodyMail = {
+      from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
+      to: "marcodaleo114@gmail.com ",
+      subject: "Comunicazione presenza ospiti",
+      text: "lista ospiti e documenti",
+      attachments: allegati,
+    };
+
+    await transporter.sendMail(bodyMail, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log("Messaggio inviato: %s", info.messageId);
+    });
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.log(error);
     res.status(400).json({ success: false });
   }
 };
@@ -789,4 +880,5 @@ module.exports = {
   contatta_turismo_get,
   contatta_turismo_post,
   identifica_post,
+  contatta_questura_post,
 }; //

@@ -81,7 +81,10 @@ router.post(
   HostControl.contatta_turismo_post
 );
 
-router.get("", ContattaQuesturaControl.contattaQuestura_get);
-router.post("", ContattaQuesturaControl.contattaQuestura_post);
+router.post(
+  "/questura",
+  formidableMiddleware({ multiples: true }),
+  HostControl.contatta_questura_post
+);
 
 module.exports = router;

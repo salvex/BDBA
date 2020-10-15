@@ -11,7 +11,8 @@
     );
     // Variabili
     const immagini = {},
-      imgToDel = [];
+      imgToDel = [],
+      imgToSave = [];
     let folderPath = "",
       richieste = 0,
       checkin,
@@ -23,7 +24,8 @@
       guadagniAttuali = 0,
       citta = [],
       prenPerCitta = [],
-      rendiconto;
+      rendiconto,
+      questuraPrens = [];
 
     /* ON RELOAD */
     bsCustomFileInput.init();
@@ -39,7 +41,9 @@
       $(this).html("Gestione prenotazioni");
     });
 
-    $("#cittaSelect").val("none");
+    $("#cittaSelect, #cittaSelectQuestura").val("none");
+
+    $("#customFileModal").val("");
     /* ------------------------------------------------- */
 
     /* INPUT FILE */
@@ -98,7 +102,6 @@
     inserzioni.forEach((inserzione, index) => {
       immagini[`${index}`] = inserzione.galleryPath.split(",");
     });
-
     if (inserzioni.length === 0) {
       $("#visualizza").append(`
           <div class="row justify-content-center align-items-center">
@@ -225,28 +228,46 @@
                   $(`#${servizio}Modal`).prop("checked", false);
                 }
               }
-
-              for (let i = 0; i < immagini[index].length; i += 1) {
-                $(`.img${i}`)
-                  .css({
-                    display: "flex",
-                    "background-image": `url("/uploads/fotoInserzione/<%= user.id %>${immagini[index][i]}")`,
-                    "background-size": "cover",
-                    "background-position": "bottom",
-                    height: "200px",
-                    opacity: 1,
-                  })
-                  .attr("path", immagini[index][i])
-                  .on("click", function () {
-                    imgToDel.push($(this).attr("path"));
-                    console.log(imgToDel);
-                    $(this).animate({ opacity: 0 }, 125, function () {
-                      $(this).css({
-                        "background-image": "none",
-                        display: "none",
-                      });
+              console.log(immagini[index]);
+              if (immagini[index][0] !== "") {
+                $(".no-imgs").remove();
+                for (let i = 0; i < immagini[index].length; i += 1) {
+                  $(`.img${i}`)
+                    .css({
+                      display: "flex",
+                      "background-image": `url("/uploads/fotoInserzione/<%= user.id %>${immagini[index][i]}")`,
+                      "background-size": "cover",
+                      "background-position": "bottom",
+                      height: "200px",
+                      opacity: 1,
+                    })
+                    .attr("path", immagini[index][i])
+                    .on("click", function () {
+                      if (imgToDel.length < immagini[index].length - 1) {
+                        imgToDel.push($(this).attr("path"));
+                        console.log(imgToDel);
+                        $(this).animate({ opacity: 0 }, 125, function () {
+                          $(this).css({
+                            "background-image": "none",
+                            display: "none",
+                          });
+                        });
+                      } else {
+                        $(this).off("click");
+                        alert("Non puoi eliminare tutte le foto");
+                      }
                     });
-                  });
+                }
+              } else {
+                if ($(".no-imgs").length === 0) {
+                  $(".img-preview-container").append(
+                    `
+                    <div id="no-imgs">
+                      <img src="/assets/images/notFound.png" style="width:30%; opacity:0.125">
+                    </div>
+                  `
+                  );
+                }
               }
             })
             .on("hidden.bs.modal", function () {
@@ -345,8 +366,6 @@
         }
       });
 
-      console.log(immagini[$("#insMod").attr("index")], imgToDel, imgToSave);
-
       const formData = new FormData();
       const images = $("input[type=file][multiple][id$='Modal']").prop("files");
 
@@ -370,7 +389,6 @@
         imgToDel,
         id_ins: $("#insMod").attr("inserzione"),
       });
-
       console.log(insModal);
 
       formData.append("inserzione", insModal);
@@ -502,7 +520,6 @@
             .catch((err) => console.log(err));
         });
       } else if (prenotazione.stato_prenotazione >= 2) {
-        citta.push(prenotazione.inserzione.citta);
         // Guadagni stimati
         if (new Date(prenotazione.check_out) < new Date()) {
           // Il soggiorno è iniziato o già terminato
@@ -580,6 +597,7 @@
 
           if (prenotazione.stato_prenotazione === 3) {
             $(`.identify[indice=${index}]`).remove();
+            citta.push(prenotazione.inserzione.citta);
           }
         }
 
@@ -697,18 +715,24 @@
         );
       } */
     });
+
+    /* HOST DASHBOARD */
+    $(".guadagni-value").append(`<b>${guadagniAttuali}&nbsp;&euro;</b>`);
+    $(".previsti-value").append(`<b>${guadagniStimati}&nbsp;&euro;</b>`);
+    /* -------------- */
+
+    /* QUESTURA/TURISMO select*/
     citta = new Set(citta);
     citta.forEach((elem, index) => {
-      $("#cittaSelect").append(
+      $("#cittaSelect, #cittaSelectQuestura").append(
         `
         <option value="${elem.toLowerCase()}">${elem}</option>
         `
       );
     });
+    /* -------------- */
 
-    $(".guadagni-value").append(`<b>${guadagniAttuali}&nbsp;&euro;</b>`);
-    $(".previsti-value").append(`<b>${guadagniStimati}&nbsp;&euro;</b>`);
-
+    /* NESSUNA PRENOTAZIONI */
     if ($(".req-card").length === 0) {
       $("#req").append(
         `
@@ -753,8 +777,195 @@
         `
       );
     }
+    /* -------------- */
 
     /* CONTATTA QUESTURA */
+    $("#cittaSelectQuestura").on("change", function () {
+      $(".pren-card-questura-container").remove();
+      while (prenPerCitta.length > 0) {
+        prenPerCitta.pop();
+      }
+      prenotazioni.forEach((prenotazione, index) => {
+        if (
+          prenotazione.inserzione.citta.toLowerCase() === $(this).val() &&
+          prenotazione.stato_prenotazione === 3
+        ) {
+          prenPerCitta.push(prenotazione);
+          $("#schedine").append(
+            `
+            <div index="${index}" class="row pren-card-questura-container">
+              <div class="col-12">
+                <input index="${index}" type="checkbox" class="prenCheck">
+                <div index="${index}" class="card pren-card-questura">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-sm-12 col-md-4">
+                        ${prenotazione.inserzione.nome_inserzione}
+                      </div>
+                      <div class="col-sm-12 col-md-4">
+                        ${prenotazione.check_in}
+                      </div>
+                      <div class="col-sm-12 col-md-4">
+                        ${prenotazione.check_out}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div index=${index} class="col-12 guest-list">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            `
+          );
+          prenotazione.ospiti.forEach((ospite) => {
+            $(`.guest-list[index=${index}]`).append(
+              `
+              <div class="card guest-card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                      ${ospite.nome}
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      ${ospite.cognome}
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      ${ospite.data_nascita}
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      <i>${ospite.isEsente ? "Esente" : "Non Esente"}</i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              `
+            );
+          });
+          $(`.pren-card-questura[index=${index}]`).on("click", () => {
+            $(`.guest-list[index=${index}]`).slideToggle("slow");
+          });
+
+          if ($(".questBtn").length === 0) {
+            $("#contattaQ").append(
+              `
+              <div class="row justify-content-center questBtn">
+                <div
+                  class="col-12"
+                  id="documenti-container"
+                >
+                <label id="documenti-upload" class="btn btn-warning">
+                  <input
+                    type="file"
+                    name="Carica"
+                    id="documenti"
+                    multiple
+                  />
+                    Carica&nbsp;&nbsp;
+                </label>
+                </div>
+                <div class="col-12 text-danger inputDocHelp" style="margin-bottom:5px"></div>
+                  <div class="col-12">
+                    <div class="card inputDocValue-cont">
+                      <div class="card-body" id="inputDocValue"></div>
+                  </div>
+                </div>
+                <div class="col-12" id="sendQ-container" >
+                  <button class="btn btn-primary questBtnSend">Invia</button>
+                </div>
+              </div>
+              `
+            );
+            $("#documenti").on("change", function () {
+              let files = $(this).prop("files");
+              $(".single").remove();
+              for (let i = 0; i < files.length; i += 1) {
+                $("#inputDocValue").append(
+                  `
+                  <div class="single">
+                    <i class="fas fa-file"></i>&nbsp;&nbsp;${
+                      $(this).prop("files")[i].name
+                    }
+                  </div>
+                  `
+                );
+                if (
+                  /pdf|jpg|jpeg|png/.test(
+                    $(this).prop("files")[i].name.split(".")[1]
+                  )
+                ) {
+                  $(".inputDocHelp").text("");
+                } else {
+                  $(".inputDocHelp").text(
+                    "Il file deve avere uno dei seguenti formati: pdf,jpg,jpeg,png..."
+                  );
+                }
+              }
+
+              $(".inputDocValue-cont").slideDown(500);
+            });
+
+            $(".questBtnSend").on("click", () => {
+              while (questuraPrens.length > 0) {
+                questuraPrens.pop();
+              }
+              $(`.prenCheck:checked`).each(function (elem) {
+                questuraPrens.push(prenotazioni[$(this).attr("index")]);
+              });
+
+              if (questuraPrens.length === 0) {
+                $(".inputDocHelp").text(
+                  "Devi caricare almeno un file! (pdf,jpg,jpeg,png)"
+                );
+                return;
+              }
+
+              for (
+                let i = 0;
+                i < $("#documenti").prop("files").length;
+                i += 1
+              ) {
+                if (
+                  !/pdf|jpg|jpeg|png/.test(
+                    $("#documenti").prop("files")[i].name.split(".")[1]
+                  )
+                ) {
+                  $(".inputDocHelp").text(
+                    "Tutti i file devono rispettare i formati indicati! (pdf,jpg,jpeg,png)"
+                  );
+                  return;
+                }
+              }
+
+              const formData = new FormData();
+              for (
+                let i = 0;
+                i < $("#documenti").prop("files").length;
+                i += 1
+              ) {
+                formData.append("documenti", $("#documenti").prop("files")[i]);
+              }
+
+              formData.append("prenQuestura", JSON.stringify(questuraPrens));
+              console.log(formData.getAll("documenti"));
+              fetch("/host/questura", {
+                method: "POST",
+                body: formData,
+              })
+                .then(async (res) => {
+                  const response = await res.json();
+                  if (response.success) {
+                    window.location.reload();
+                  }
+                })
+                .catch((err) => console.log(err));
+            });
+          }
+        }
+      });
+    });
+
     /* ------------------------------------------------- */
 
     /* CONTATTA UFFICIO DEL TURISMO */
@@ -833,7 +1044,7 @@
                             Carica&nbsp;&nbsp;
                           </label>
                         </div>
-                        <div class="col-12 text-danger inputFileHelp" style="margin-bottom:5px"></div>
+                        <div class="col-12 text-danger inputRicHelp" style="margin-bottom:5px"></div>
                         <div class="col-12">
                           <div class="card inputValue-cont">
                             <div class="card-body" id="inputValue"></div>
@@ -854,9 +1065,9 @@
                     $(".inputValue-cont").slideDown(500);
 
                     if ($(this).prop("files")[0].name.split(".")[1] !== "pdf") {
-                      $(".inputFileHelp").text("Il file deve effere un pdf!");
+                      $(".inputRicHelp").text("Il file deve effere un pdf!");
                     } else {
-                      $(".inputFileHelp").text("");
+                      $(".inputRicHelp").text("");
                     }
                   });
                   $("#send").on("click", () => {
@@ -873,7 +1084,7 @@
                       $("#ricevuta").prop("files")[0].name.split(".")[1] !==
                         "pdf"
                     ) {
-                      $(".inputFileHelp").text("Devi caricare un file pdf!");
+                      $(".inputRicHelp").text("Devi caricare un file pdf!");
                       return;
                     }
 

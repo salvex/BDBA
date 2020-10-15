@@ -77,10 +77,31 @@
 .add-margin {
   margin-bottom: 30px;
 }
+.img-preview-container {
+  margin-bottom: 30px;
+  padding: 20px;
+}
+#no-imgs {
+  display: flex;
+  justify-content: center;
+}
 
 /* FORM */
 textarea {
   resize: none;
+}
+
+.img0,
+.img1,
+.img2,
+.img3,
+.img4,
+.img5,
+.img6,
+.img7,
+.img8,
+.img9 {
+  cursor: pointer;
 }
 
 .img0:hover,
@@ -129,16 +150,41 @@ textarea {
 .identify {
   margin-right: 10px;
 } */
+/*  QUESTURA */
+.pren-card-questura {
+  cursor: pointer;
+}
+.pren-card-questura-container {
+  margin-top: 20px;
+}
+.pren-card-questura-container:last-child {
+  margin-bottom: 20px;
+}
+.guest-card {
+  margin-top: 10px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.guest-list {
+  margin-top: 10px;
+  display: none;
+}
+.questBtn {
+  /* width: 100%; */
+}
+#documenti-container {
+  margin: 20px 0 20px 0;
+}
 
 /* TURSIMO */
 #ricevuta-label {
   margin-top: 20px;
 }
-
+#documenti-upload #documenti,
 #ricevuta-upload #ricevuta {
   overflow: hidden;
   width: 0;
 }
+#documenti-upload,
 #ricevuta-upload {
   height: 100%;
   display: flex;
@@ -151,13 +197,14 @@ textarea {
 #ricevuta-container {
   margin: 20px 0 20px 0;
 }
-
+.inputDocValue-cont,
 .inputValue-cont {
   display: none;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.125);
   margin: 0 0 20px 0;
 }
 
+#sendQ-container,
 #send-container {
   display: flex;
   justify-content: center;

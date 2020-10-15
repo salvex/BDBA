@@ -75,52 +75,7 @@
                           role="tabpanel"
                           aria-labelledby="v-pills-host-tab"
                         >
-                          <div class="row dashboard-container">
-                            <div class="col-12 dashboard">
-                              <div class="row">
-                                <div class="col info-tab guadagni">
-                                  <div class="row">
-                                    <div class="col-12 info-tab-item">
-                                      <h4>
-                                        <b><i>Guadagni attuali</i></b>
-                                      </h4>
-                                    </div>
-                                    <div class="col-12 info-tab-item">
-                                      <img
-                                        src="/assets/icons/Guadagni_effettivi.png"
-                                        alt=""
-                                      />
-                                    </div>
-                                    <div
-                                      class="col-12 info-tab-item guadagni-value"
-                                    ></div>
-                                  </div>
-                                </div>
-                                <!-- <div class="row info-tab-scontent">
-                                    <div class="col guadagni-value"></div>
-                                  </div> -->
-                                <div class="col info-tab previsti">
-                                  <div class="row">
-                                    <div class="col-12 info-tab-item">
-                                      <h4>
-                                        <b><i>Guadagni previsti</i></b>
-                                      </h4>
-                                    </div>
-                                    <div class="col-12 info-tab-item">
-                                      <img
-                                        src="/assets/icons/Guadagni_previsti.png"
-                                        alt=""
-                                      />
-                                    </div>
-                                    <div
-                                      class="col-12 info-tab-item previsti-value"
-                                    ></div>
-                                  </div>
-                                </div>
-                                <div class="col info-tab richieste">asd</div>
-                              </div>
-                            </div>
-                          </div>
+                        <!-- // asd asd -->
                         </div>
                         <div
                           class="tab-pane fade"
@@ -548,7 +503,6 @@
                           role="tabpanel"
                           aria-labelledby="v-pills-prenotazioni-tab"
                         >
-                          <!-- CODE HERE -->
                           <div class="row">
                             <div class="col-12">
                               <ul
@@ -622,7 +576,38 @@
                                   role="tabpanel"
                                   aria-labelledby="contattaQ-tab"
                                 >
-                                  ...
+                                  <div class="row">
+                                    <div class="col-12">
+                                      <h3>Selezione una città</h3>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-12">
+                                      <select
+                                        class="custom-select"
+                                        id="cittaSelectQuestura"
+                                      >
+                                        <option
+                                          value="none"
+                                          selected="true"
+                                          disabled="disabled"
+                                        >
+                                          Choose...
+                                        </option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div
+                                      id="schedine"
+                                      class="col-12"
+                                      style="
+                                        overflow: scroll;
+                                        min-height: 300px;
+                                        max-height: 300px;
+                                      "
+                                    ></div>
+                                  </div>
                                 </div>
                                 <div
                                   class="tab-pane fade"
