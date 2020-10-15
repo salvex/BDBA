@@ -15,6 +15,9 @@
       imgToSave = [];
     let folderPath = "",
       richieste = 0,
+      accettate = 0,
+      rendQuest = 0,
+      rendTur = 0,
       checkin,
       checkout,
       checkinDate,
@@ -37,6 +40,16 @@
       $("#aggiungi-tab").text("Aggiungi inserzione");
     }
 
+    if ($(window).width() < "807") {
+      $("#prenotazioni-tab").text("Visualizza");
+      $("#contattaQ-tab").text("Questura");
+      $("#contattaT-tab").text("Turismo");
+    } else {
+      $("#prenotazioni-tab").text("Visualizza prenotazioni");
+      $("#contattaQ-tab").text("Contatta questura");
+      $("#contattaT-tab").text("Contatta ufficio del turismo");
+    }
+
     $("#v-pills-prenotazioni-tab").on("click", function () {
       $(this).html("Gestione prenotazioni");
     });
@@ -44,7 +57,26 @@
     $("#cittaSelect, #cittaSelectQuestura").val("none");
 
     $("#customFileModal").val("");
+
+    $(".ins-val").text(inserzioni.length);
+    prenotazioni.forEach((prenotazione) => {
+      if (prenotazione.questuraFlag === 0) {
+        rendQuest += 1;
+      }
+
+      if (prenotazione.turismoFlag === 0) {
+        rendTur += 1;
+      }
+    });
+    $(".quest-val").text(rendQuest);
+    $(".tur-val").text(rendTur);
+
     /* ------------------------------------------------- */
+
+    /* TOOLTIP */
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
 
     /* INPUT FILE */
     $("#inputFile").on("change", () => {
@@ -599,6 +631,8 @@
             $(`.identify[indice=${index}]`).remove();
             citta.push(prenotazione.inserzione.citta);
           }
+
+          accettate += 1;
         }
 
         // PULSANTI
@@ -716,9 +750,31 @@
       } */
     });
 
+    $(".ric-val").text(richieste);
+    $(".pre-val").text(accettate);
+
     /* HOST DASHBOARD */
-    $(".guadagni-value").append(`<b>${guadagniAttuali}&nbsp;&euro;</b>`);
-    $(".previsti-value").append(`<b>${guadagniStimati}&nbsp;&euro;</b>`);
+    $(".guadagni-value").append(
+      `
+      <i class="fas fa-coins"></i>&nbsp;&nbsp;<span class="card-val"><b>${guadagniAttuali}&nbsp;&euro;</b></span>
+      `
+    );
+    $(".previsti-value").append(
+      `<i class="fas fa-chart-line"></i>&nbsp;&nbsp;<span class="card-val"><b>${guadagniStimati}&nbsp;&euro;</b></span>`
+    );
+    $(".rendiconto-value").append(
+      `<i class="fas fa-user-clock"></i>&nbsp;&nbsp;<span class="card-val"><b><%= user.ultimo_rendiconto %></b></span>`
+    );
+
+    $(".attuali").on("click", () => {
+      $(".guadagni-hidden").slideToggle("fast");
+    });
+    $(".attesi").on("click", () => {
+      $(".attesi-hidden").slideToggle("fast");
+    });
+    $(".ultimo-rendiconto").on("click", () => {
+      $(".rendiconto-hidden").slideToggle("fast");
+    });
     /* -------------- */
 
     /* QUESTURA/TURISMO select*/
@@ -1121,6 +1177,15 @@
       } else {
         $("#visualizza-tab").text("Visualizza inserzioni");
         $("#aggiungi-tab").text("Aggiungi inserzione");
+      }
+      if ($(window).width() < "807") {
+        $("#prenotazioni-tab").text("Visualizza");
+        $("#contattaQ-tab").text("Questura");
+        $("#contattaT-tab").text("Turismo");
+      } else {
+        $("#prenotazioni-tab").text("Visualizza prenotazioni");
+        $("#contattaQ-tab").text("Contatta questura");
+        $("#contattaT-tab").text("Contatta ufficio del turismo");
       }
     });
   });

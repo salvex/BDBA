@@ -755,12 +755,12 @@ const contatta_turismo_post = async (req, res) => {
     ],
   };
 
-  await transporter.sendMail(bodyMail, (error, info) => {
+  /* await transporter.sendMail(bodyMail, (error, info) => {
     if (error) {
       return console.log(error);
     }
     console.log("Messaggio inviato: %s", info.messageId);
-  });
+  }); */
 
   let prenList = [];
   rendiconto.forEach((rend) => {
@@ -775,6 +775,11 @@ const contatta_turismo_post = async (req, res) => {
       { where: { id_prenotazione: pren } }
     );
   });
+
+  let update = await Utente.update(
+    { ultimo_rendiconto: new Date() },
+    { where: { id: req.session.utente.id } }
+  );
 
   res.status(200).json({ success: true });
 };

@@ -27,34 +27,75 @@
 
 /* DASHBOARD */
 
-.dashboard {
-  height: 400px;
+.dash-cards {
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.125);
+  cursor: pointer;
 }
-.info-tab {
-  margin: 10px 5px 10px 5px;
-  padding: 10px 0;
+.dash-cards-info {
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.125);
 }
-.info-tab-item {
+.attuali {
+  background-color: rgb(0, 255, 110);
+}
+.attuali > .card-body {
   display: flex;
   justify-content: center;
 }
-.info-tab-item > img {
-  width: 50px;
+
+.attesi {
+  background-color: rgb(255, 255, 79);
 }
-.guadagni {
-  background-color: rgb(166, 255, 0);
+
+.ultimo-rendiconto {
+  background-color: tomato;
 }
+
+.attuali:hover {
+  background-color: rgb(0, 173, 75);
+}
+
+.attesi:hover {
+  background-color: rgb(194, 194, 60);
+}
+
+.attesi:hover {
+  background-color: rgb(194, 194, 60);
+}
+
+.ultimo-rendiconto:hover {
+  background-color: rgb(179, 69, 49);
+}
+
+.guadagni-hidden {
+  background-color: rgb(1, 223, 97);
+}
+.attesi-hidden {
+  background-color: rgb(216, 216, 66);
+}
+.rendiconto-hidden {
+  background-color: rgb(216, 83, 59);
+}
+.tabella-info {
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.125);
+}
+
+.previsti-value,
 .guadagni-value,
-.previsti-value {
-  font-size: 30px;
-  padding: 0;
+.rendiconto-value {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.previsti {
-  background-color: #007bff;
+
+.card-val {
+  font-size: 1.1em;
 }
-.richieste {
-  background-color: red;
+.fa-coins,
+.fa-chart-line,
+.fa-user-clock {
+  font-size: 2em;
 }
+
 /* INSERZIONI */
 #visualizza,
 #aggiungi,
@@ -251,12 +292,19 @@ textarea {
   /* .inserzione-info {
     padding: 0 10px;
   } */
+  .ultimo-rendiconto {
+    margin-top: 20px;
+  }
 }
 
 @media (max-width: 576px) {
   /* MODIFICA INS */
   .modal-dialog {
     margin: 0.5rem;
+  }
+  .attuali,
+  .attesi {
+    margin-top: 20px;
   }
 }
 
@@ -293,6 +341,16 @@ textarea {
   }
   .cancel {
     margin-top: 0;
+  }
+}
+
+@media (max-width: 332px) {
+  .ins,
+  .ric,
+  .pre,
+  .quest,
+  .tur {
+    font-size: 0.8em;
   }
 }
 /* ----------- */
