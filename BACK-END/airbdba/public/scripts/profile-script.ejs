@@ -2,16 +2,35 @@
   $(document).ready(() => {
     /* LETs & CONSTs */
     let $image = $("#image");
+    const prenotazioni = JSON.parse(
+      "<%= prenotazioni %>".replace(/&#34;/g, '"')
+    );
+    const metodiPagamento = JSON.parse(
+      "<%= metodiPagamento %>".replace(/&#34;/g, '"')
+    );
 
+    // Espressioni regolari
+    let intestatarioReg = /^[A-z]+\s[A-z]+/;
+    let cartaReg = /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/;
+    let meseReg = /^0[1-9]$|^1[0-2]$/;
+    let annoReg = /^[0-9]{2}$/;
+    let cvvReg = /^[0-9]{3}$/;
+
+    // Prendo la data di oggi
+    const anno = Number(String(new Date().getFullYear()).slice(2));
+    const mese = new Date().getMonth() + 1;
     /* --------------------------------------------------------- */
+
     /* ON REFRESH */
     // Modifico la navbar modificando l'opzione profilo,
     // ridondante in quanto riporta alla stessa pagina
     // e la trasformo nell'opzione "Home"
     $(".profile-nav").attr("href", "/").text("Home");
 
+    $(".value-cell").text(prenotazioni.length);
+
     $("#imgupload").val("");
-    $("#profile-pic").css({
+    $(".image-circle").css({
       "background-image": `
         <% if ( user.imagePath ) { %>
           url("<%= user.imagePath.slice(user.imagePath.indexOf("uploads")) %>")
@@ -22,8 +41,36 @@
     });
     /* --------------------------------------------------------- */
 
-    /* CROPPER */
-    // Mostro il modal contenente il cropper
+    /* PRENOTAZIONI */
+    prenotazioni.forEach((prenotazione, index) => {
+      $(".prenotazioni-container").append(
+        `
+            <div class="card pren-card">
+              <div class="card-body">                
+                <div class="row">
+                    <div class="col-sm-12 col-md-2">
+                    <b>#${index + 1}</b>
+                  </div>
+                  <div class="col-sm-12 col-md-4">
+                    <b>${prenotazione.inserzione.nome_inserzione}</b>
+                  </div>
+                  <div class="col-sm-12 col-md-3">
+                    <b>${prenotazione.check_in}</b>
+                  </div>
+                  <div class="col-sm-12 col-md-3">
+                    <b>${prenotazione.check_out}</b>
+                  </div>
+                </div>
+              </div>
+            </div>
+        `
+      );
+    });
+    /* --------------------------------------------------------- */
+
+    /* SETTINGS */
+    // GENERALI
+    // img cropper
     function readURL(input) {
       if (input.files && input.files[0]) {
         let reader = new FileReader();
@@ -52,7 +99,6 @@
         reader.readAsDataURL(input.files[0]); // convert to base64 string
       }
     }
-
     $("#image-crop").on("hidden.bs.modal", function (e) {
       $image.cropper("destroy");
       $image.attr("src", "");
@@ -64,17 +110,14 @@
       readURL(this);
     });
 
-    $("#edit-avatar").on("click", () => {
-      $("#image-crop").modal("show");
-    });
-
     $("#OpenImgUpload").on("click", function () {
       $("#imgupload").trigger("click");
     });
 
-    /* --------------------------------------------------------- */
+    $(".change-pic").on("click", () => {
+      $("#image-crop").modal("show");
+    });
 
-    /* OPERAZIONE DI FETCH */
     $("#save-avatar").on("submit", (e) => {
       e.preventDefault();
       if ($("#imgupload").val() === "") {
@@ -109,6 +152,214 @@
           })
           .catch((err) => console.log(err));
       }, "image/png");
+    });
+
+    // SICUREZZA
+    // metodi pagamento
+    $(".paymentBtn").on("click", () => {
+      $("#payment").modal("show");
+
+      metodiPagamento.forEach((metodo, index) => {
+        let owner = metodo.intestatario.split(" ");
+        if ($(".payment-cards").length < metodiPagamento.length) {
+          $(".payment-body").append(
+            `
+          <div class="card payment-cards metodo${index}">
+            <div class="card-body">
+              <button id="close${index}">&times;</button>
+              <div class="row" style="margin-bottom: 10px">
+                <div class="col-12">
+                  <div class="owner">
+                    <b>
+                    ${
+                      owner[0][0].toUpperCase() +
+                      owner[0].slice(1) +
+                      " " +
+                      owner[1][0].toUpperCase() +
+                      owner[1].slice(1)
+                    }
+                    </b>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 col-sm-9">
+                  <div class="general">
+                    <image class="credit-logo" src="/assets/icons/credit-card-solid.svg" style="width: 25px">
+                    &nbsp;
+                    ${
+                      metodo.nome_circuito[0].toUpperCase() +
+                      metodo.nome_circuito.slice(1)
+                    }
+                    &nbsp;
+                    <span class="pass-value">************${metodo.codice_carta.slice(
+                      12
+                    )}</span>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-3">
+                  <div class="date">
+                    ${metodo.data_scadenza}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          `
+          );
+        }
+        $(`#close${index}`).css({
+          position: "absolute",
+          right: -10,
+          top: -10,
+          "background-color": "red",
+          "border-radius": "50%",
+          border: "none",
+          color: "white",
+        });
+      });
+
+      if ($(".aggiungi-closed").length === 0) {
+        $(".payment-body").append(
+          `
+          <div class="card aggiungi-closed metodo-container">
+            <div class="card-body aggiungi-metodo">
+              <div id="select-metodo">
+                  <label>
+                    <b>Aggiungi un nuovo metodo di pagamento</b>
+                  </label>
+                </div>
+                <div id="payment-form-container">
+                  <form>
+                    <div class="form-group">
+                      <label for="inputIntestatario">Intestatario</label>
+                      <input type="text" class="form-control" id="inputIntestatario" placeholder="Mario Rossi">
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-md-8">
+                        <label for="inputCarta">Numero Carta</label>
+                        <input type="text" class="form-control" id="inputCarta" placeholder="**** **** **** ****">
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="inputCircuito">Circuito</label>
+                        <select id="inputCircuito" class="form-control">
+                          <option value="" selected disabled>Scegli...</option>
+                          <option value="mastercard">Mastercard</option>
+                          <option value="visa">Visa</option>
+                          <option value="american-express">American express</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-md-3">
+                        <label for="inputScadenza">Mese</label>
+                        <input type="text" class="form-control" id="inputScadenzaM" placeholder="mm">
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="inputScadenza">Anno</label>
+                        <input type="text" class="form-control" id="inputScadenzaA" placeholder="aa">
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="inputCvv">CVV</label>
+                        <input type="text" class="form-control" id="inputCvv" placeholder="cvv">
+                      </div>
+                      <div class="form-group col-12 add-container">
+                        <button class="btn btn-primary add">Aggiungi</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          `
+        );
+      }
+      $(".add").on("click", (e) => {
+        e.preventDefault();
+      });
+
+      $(".aggiungi-closed").on("click", function () {
+        $("#payment-form-container").slideDown("slow");
+        $(this).addClass("aggiungi-opened").removeClass("aggiungi-closed");
+      });
+
+      $("input[type=text], select").each(function (index, element) {
+        $(this).on("change focusout input", function () {
+          if ($(this).val() === "") {
+            $(this).addClass("is-invalid");
+          } else {
+            $(this).removeClass("is-invalid");
+          }
+
+          if ($(this).prop("id") === "inputIntestatario") {
+            if (intestatarioReg.test($(this).val())) {
+              $(this).removeClass("is-invalid");
+            } else {
+              $(this).addClass("is-invalid");
+            }
+          }
+
+          if ($(this).prop("id") === "inputCarta") {
+            if (cartaReg.test($(this).val())) {
+              $(this).removeClass("is-invalid");
+            } else {
+              $(this).addClass("is-invalid");
+            }
+          }
+
+          if ($(this).prop("id") === "inputScadenzaM") {
+            if (meseReg.test($(this).val())) {
+              $(this).removeClass("is-invalid");
+              // Verifico se la data di scadenza non è inferiore all'anno
+              // corrente
+              if ($("#inputScadenzaA").val() !== "") {
+                if (
+                  Number($(this).val()) < mese &&
+                  Number($("#inputScadenzaA").val()) <= anno
+                ) {
+                  $(this).addClass("is-invalid");
+                  $("#inputScadenzaA").addClass("is-invalid");
+                } else {
+                  $(this).removeClass("is-invalid");
+                  $("#inputScadenzaA").removeClass("is-invalid");
+                }
+              }
+            } else {
+              $(this).addClass("is-invalid");
+            }
+          }
+
+          if ($(this).prop("id") === "inputScadenzaA") {
+            if (annoReg.test($(this).val())) {
+              $(this).removeClass("is-invalid");
+              // Verifico se la data di scadenza non è inferiore all'anno
+              // corrente
+              if (
+                Number($(this).val()) < anno ||
+                (Number($(this).val()) === anno &&
+                  Number($("#inputScadenzaM").val()) < mese)
+              ) {
+                $(this).addClass("is-invalid");
+                $("#inputScadenzaM").addClass("is-invalid");
+              } else {
+                $(this).removeClass("is-invalid");
+                $("#inputScadenzaM").removeClass("is-invalid");
+              }
+            } else {
+              $(this).addClass("is-invalid");
+            }
+          }
+
+          if ($(this).prop("id") === "inputCvv") {
+            if (cvvReg.test($(this).val())) {
+              $(this).removeClass("is-invalid");
+            } else {
+              $(this).addClass("is-invalid");
+            }
+          }
+        });
+      });
     });
     /* --------------------------------------------------------- */
   });

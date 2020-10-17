@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <%- include("./partials/head.ejs", {title: "Profile"}) %>
+  <body>
+    <%- include("./partials/nav.ejs") %>
+    <!-- Cropper -->
+    <%- include("./partials/img-cropper.ejs") %>
+    <div id="profile-wrapper">
+      <div id="profile-content">
+        <div class="side"></div>
+        <div id="center">
+          <div id="nav">
+            <div class="card" id="nav-card">
+              <div class="card-body">
+                <div id="card-head">
+                  <div id="profile-pic"></div>
+                  <h5 class="card-title">
+                    <%= user.nome %> <%= user.cognome %>
+                  </h5>
+                </div>
+                <hr />
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <a
+                      class="nav-link active"
+                      id="pills-profile-tab"
+                      data-toggle="pill"
+                      href="#pills-profile"
+                      role="tab"
+                      aria-controls="pills-profile"
+                      aria-selected="true"
+                      >Profilo</a
+                    >
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a
+                      class="nav-link"
+                      id="pills-edit-profile-tab"
+                      data-toggle="pill"
+                      href="#pills-edit-profile"
+                      role="tab"
+                      aria-controls="pills-edit-profile"
+                      aria-selected="false"
+                      >Modifca</a
+                    >
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a
+                      class="nav-link"
+                      id="pills-prenotazioni-tab"
+                      data-toggle="pill"
+                      href="#pills-prenotazioni"
+                      role="tab"
+                      aria-controls="pills-prenotazioni"
+                      aria-selected="false"
+                      >Prenotazioni</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div id="showcase">
+            <div class="card" id="showcase-card">
+              <div class="card-body" id="showcase-card-body">
+                <div class="tab-content" id="pills-tabContent">
+                  <div
+                    class="tab-pane fade show active"
+                    id="pills-profile"
+                    role="tabpanel"
+                    aria-labelledby="pills-profile-tab"
+                  >
+                    <div id="overview">
+                      <div id="profile-header">
+                        <h2>Profilo</h2>
+                      </div>
+                      <form>
+                        <label for="name">Nome:</label><br />
+                        <input
+                          type="text"
+                          id="name"
+                          value="<%= user.nome %>"
+                          disabled
+                        />
+                        <hr />
+                        <label for="surname">Cognome:</label><br />
+                        <input
+                          type="text"
+                          id="surname"
+                          value="<%= user.cognome %>"
+                          disabled
+                        />
+                        <hr />
+                        <label for="email">Email:</label><br />
+                        <input
+                          type="text"
+                          id="email"
+                          value="<%= user.email %>"
+                          disabled
+                        />
+                      </form>
+                    </div>
+                  </div>
+                  <div
+                    class="tab-pane fade mod"
+                    id="pills-edit-profile"
+                    role="tabpanel"
+                    aria-labelledby="pills-edit-profile-tab"
+                  >
+                    <div id="mod-buttons">
+                      <div id="buttons-header">
+                        <h2>Modifica profilo</h2>
+                      </div>
+                      <div id="buttons">
+                        <a
+                          class="btn btn-primary active"
+                          href="/profilo/modifica-password"
+                          >Modifica password</a
+                        >
+                        <a
+                          class="btn btn-primary active"
+                          id="edit-avatar"
+                          href="#"
+                          >Modifica foto profilo</a
+                        >
+                        <a class="btn btn-primary active" href="/"
+                          >Metodo pagamento</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="pills-prenotazioni"
+                    role="tabpanel"
+                    aria-labelledby="pills-prenotazioni-tab"
+                  >
+                    Reservations
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="side"></div>
+      </div>
+      <div id="footer"><%- include("./partials/footer.ejs") %></div>
+    </div>
+    <!-- GENERAL SCRIPT -->
+    <%- include("../public/scripts/general-script.ejs") %>
+    <!-- PROFILE SCRIPT -->
+    <%- include("../public/scripts/profile-script.ejs") %>
+  </body>
+</html>

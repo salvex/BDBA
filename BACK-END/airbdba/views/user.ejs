@@ -1,150 +1,249 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <%- include("./partials/head.ejs", {title: "Profile"}) %>
   <body>
-    <%- include("./partials/nav.ejs") %>
-    <!-- Cropper -->
+    <!-- IMG CROPPER MODAL -->
     <%- include("./partials/img-cropper.ejs") %>
-    <div id="profile-wrapper">
-      <div id="profile-content">
-        <div class="side"></div>
-        <div id="center">
-          <div id="nav">
-            <div class="card" id="nav-card">
-              <div class="card-body">
-                <div id="card-head">
-                  <div id="profile-pic"></div>
-                  <h5 class="card-title">
-                    <%= user.nome %> <%= user.cognome %>
-                  </h5>
+    <!-- PAYMENT METHODS MODAL -->
+    <%- include("./partials/metodiPagamento.ejs") %>
+    <div class="container-fluid profile-container h-100">
+      <%- include("./partials/nav.ejs") %>
+      <div class="row content-footer h-100">
+        <div class="col body-col">
+          <div class="row content-container justify-content-center h-100">
+            <div class="col-12 col-sm-10">
+              <div class="row content h-100">
+                <div class="col-md-12 col-lg-3">
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-12 image-container">
+                          <div class="image-circle"></div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <hr />
+                        </div>
+                      </div>
+                      <div class="row nav-menu-row">
+                        <div class="col-12 nav-menu-container">
+                          <div
+                            class="nav flex-column nav-pills"
+                            id="v-pills-tab"
+                            role="tablist"
+                            aria-orientation="vertical"
+                          >
+                            <a
+                              class="nav-link active"
+                              id="v-pills-profile-tab"
+                              data-toggle="pill"
+                              href="#v-pills-profile"
+                              role="tab"
+                              aria-controls="v-pills-profile"
+                              aria-selected="true"
+                              >Profilo</a
+                            >
+                            <a
+                              class="nav-link"
+                              id="v-pills-book-tab"
+                              data-toggle="pill"
+                              href="#v-pills-book"
+                              role="tab"
+                              aria-controls="v-pills-book"
+                              aria-selected="false"
+                              >Prenotazioni</a
+                            >
+                            <a
+                              class="nav-link"
+                              id="v-pills-settings-tab"
+                              data-toggle="pill"
+                              href="#v-pills-settings"
+                              role="tab"
+                              aria-controls="v-pills-settings"
+                              aria-selected="false"
+                              >Impostazioni</a
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <hr />
-                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                  <li class="nav-item" role="presentation">
-                    <a
-                      class="nav-link active"
-                      id="pills-profile-tab"
-                      data-toggle="pill"
-                      href="#pills-profile"
-                      role="tab"
-                      aria-controls="pills-profile"
-                      aria-selected="true"
-                      >Profilo</a
+                <div class="col-md-12 col-lg-9">
+                  <div class="tab-content" id="v-pills-tabContent">
+                    <div
+                      class="tab-pane fade show active"
+                      id="v-pills-profile"
+                      role="tabpanel"
+                      aria-labelledby="v-pills-profile-tab"
                     >
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <a
-                      class="nav-link"
-                      id="pills-edit-profile-tab"
-                      data-toggle="pill"
-                      href="#pills-edit-profile"
-                      role="tab"
-                      aria-controls="pills-edit-profile"
-                      aria-selected="false"
-                      >Modifca</a
+                      <div class="row username-row">
+                        <div class="col-12 username-container">
+                          <h1><%= user.nome %>&nbsp;<%= user.cognome %></h1>
+                        </div>
+                      </div>
+                      <div class="row mail-status-row">
+                        <div class="col-12 mail-status-container">
+                          <% if (user.isHost) { %> <%= user.email %> -
+                          <span class="text-muted">Host</span> <% } else { %>
+                          <%= user.email %> -
+                          <span class="text-muted">Utente</span>
+                          <% } %>
+                        </div>
+                      </div>
+                      <div class="row prenotazioni-effettuate-row">
+                        <div class="col-12 prenotazioni-effettuate-container">
+                          <div class="value-cell"></div>
+                          &nbsp;&nbsp;&nbsp;<b>Prenotazioni effettuate!</b>
+                        </div>
+                      </div>
+                      <div class="row profile-info-row">
+                        <div
+                          class="col-12 col-sm-6 profile-info-container left"
+                        >
+                          <div class="row profile-info-item name">
+                            <div class="col-12 name-label text-muted">Nome</div>
+                            <div class="col-12 name-value">
+                              <%= user.nome %>
+                            </div>
+                          </div>
+                          <div class="row profile-info-item mail">
+                            <div class="col-12 mail-label text-muted">
+                              Email
+                            </div>
+                            <div class="col-12 mail-value">
+                              <%= user.email %>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="col-12 col-sm-6 profile-info-container right"
+                        >
+                          <div class="row profile-info-item surname">
+                            <div class="col-12 surname-label text-muted">
+                              Cognome
+                            </div>
+                            <div class="col-12 surname-value">
+                              <%= user.cognome %>
+                            </div>
+                          </div>
+                          <div class="row profile-info-item password">
+                            <div class="col-12 password-label text-muted">
+                              password
+                            </div>
+                            <div class="col-12 password-value">
+                              ****************
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="tab-pane fade"
+                      id="v-pills-book"
+                      role="tabpanel"
+                      aria-labelledby="v-pills-book-tab"
                     >
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <a
-                      class="nav-link"
-                      id="pills-prenotazioni-tab"
-                      data-toggle="pill"
-                      href="#pills-prenotazioni"
-                      role="tab"
-                      aria-controls="pills-prenotazioni"
-                      aria-selected="false"
-                      >Prenotazioni</a
+                      <div class="row title-row">
+                        <div class="col-12 title-container">
+                          <h1>Prenotazioni</h1>
+                        </div>
+                      </div>
+                      <div class="row prenotazioni-row">
+                        <div class="col-12 prenotazioni-container"></div>
+                      </div>
+                    </div>
+                    <div
+                      class="tab-pane fade"
+                      id="v-pills-settings"
+                      role="tabpanel"
+                      aria-labelledby="v-pills-settings-tab"
                     >
-                  </li>
-                </ul>
+                      <div class="row title-row">
+                        <div class="col-12 title-container">
+                          <h1>Impostazioni</h1>
+                        </div>
+                      </div>
+                      <div class="row general-settings-row">
+                        <div class="col-12 general-settings-container">
+                          <div class="row settings-item-row">
+                            <div class="col-12 settings-item-label">
+                              <h3>
+                                <b
+                                  ><i class="fas fa-cogs"></i
+                                  >&nbsp;&nbsp;Generali</b
+                                >
+                              </h3>
+                            </div>
+                            <div class="col-12 settings-item-nav">
+                              <div class="row">
+                                <div class="col-12 btn-label text-muted">
+                                  &bullet;&nbsp;Modifica foto profilo
+                                </div>
+                                <div class="col-12 btn-cont">
+                                  <button class="btn btn-primary change-pic">
+                                    Cambia
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col"><hr /></div>
+                          </div>
+                          <div class="row settings-item-row">
+                            <div class="col-12 settings-item-label">
+                              <h3>
+                                <b
+                                  ><i class="fas fa-lock"></i
+                                  >&nbsp;&nbsp;Sicurezza</b
+                                >
+                              </h3>
+                            </div>
+                            <div class="col-sm-12 col-md-6 settings-item-nav">
+                              <div class="row">
+                                <div class="col-12 btn-label text-muted">
+                                  &bullet;&nbsp;Modifica password
+                                </div>
+                                <div class="col-12 btn-cont">
+                                  <a
+                                    href="/profilo/modifica-password"
+                                    class="btn btn-primary"
+                                  >
+                                    Modifica
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 settings-item-nav">
+                              <div class="row">
+                                <div class="col-12 btn-label text-muted">
+                                  &bullet;&nbsp;Metodi di pagamento
+                                </div>
+                                <div class="col-12 btn-cont">
+                                  <button class="btn btn-primary paymentBtn">
+                                    Visualizza
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div id="showcase">
-            <div class="card" id="showcase-card">
-              <div class="card-body" id="showcase-card-body">
-                <div class="tab-content" id="pills-tabContent">
-                  <div
-                    class="tab-pane fade show active"
-                    id="pills-profile"
-                    role="tabpanel"
-                    aria-labelledby="pills-profile-tab"
-                  >
-                    <div id="overview">
-                      <div id="profile-header">
-                        <h2>Profilo</h2>
-                      </div>
-                      <form>
-                        <label for="name">Nome:</label><br />
-                        <input
-                          type="text"
-                          id="name"
-                          value="<%= user.nome %>"
-                          disabled
-                        />
-                        <hr />
-                        <label for="surname">Cognome:</label><br />
-                        <input
-                          type="text"
-                          id="surname"
-                          value="<%= user.cognome %>"
-                          disabled
-                        />
-                        <hr />
-                        <label for="email">Email:</label><br />
-                        <input
-                          type="text"
-                          id="email"
-                          value="<%= user.email %>"
-                          disabled
-                        />
-                      </form>
-                    </div>
-                  </div>
-                  <div
-                    class="tab-pane fade mod"
-                    id="pills-edit-profile"
-                    role="tabpanel"
-                    aria-labelledby="pills-edit-profile-tab"
-                  >
-                    <div id="mod-buttons">
-                      <div id="buttons-header">
-                        <h2>Modifica profilo</h2>
-                      </div>
-                      <div id="buttons">
-                        <a
-                          class="btn btn-primary active"
-                          href="/profilo/modifica-password"
-                          >Modifica password</a
-                        >
-                        <a
-                          class="btn btn-primary active"
-                          id="edit-avatar"
-                          href="#"
-                          >Modifica foto profilo</a
-                        >
-                        <a class="btn btn-primary active" href="/"
-                          >Metodo pagamento</a
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="tab-pane fade"
-                    id="pills-prenotazioni"
-                    role="tabpanel"
-                    aria-labelledby="pills-prenotazioni-tab"
-                  >
-                    Reservations
-                  </div>
-                </div>
-              </div>
+          <div class="row foot">
+            <div class="col foot-col">
+              <%- include("./partials/footer.ejs") %>
             </div>
           </div>
         </div>
-        <div class="side"></div>
       </div>
-      <div id="footer"><%- include("./partials/footer.ejs") %></div>
     </div>
     <!-- GENERAL SCRIPT -->
     <%- include("../public/scripts/general-script.ejs") %>

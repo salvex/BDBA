@@ -3,7 +3,9 @@ var router = express.Router();
 const FileUpload = require("../utils/FileUpload");
 const userController = require("../controller/UtenteControl");
 
-router.get("/", userController.user_get);
+router.get("/", userController.user_get, (req, res) => {
+  res.render("user");
+});
 /* router.get("/profilo", userController.profilo_get); */
 router.get("/modifica-password", userController.modificaPassword_get);
 router.post("/modifica-password", userController.modificaPassword_post);

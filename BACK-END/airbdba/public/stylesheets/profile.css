@@ -1,288 +1,115 @@
-#profile-wrapper {
-  width: 100%;
-  min-height: 100%;
-  display: flex;
-  flex-flow: column nowrap;
+.profile-container {
+  margin: 0;
+  padding: 0;
 }
-
-#profile-content {
-  height: 100%;
-  flex: 100;
-  display: flex;
-  flex-flow: row wrap;
+.content-footer,
+.content-container,
+.body-col,
+.foot-col,
+.foot {
+  padding: 0;
+  margin: 0;
 }
-
-.side {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.content {
+  padding: 30px;
 }
-
-#center {
-  flex: 5;
-  display: flex;
-  flex-flow: row wrap;
-  margin: 10px;
-  padding: 10px;
-}
-
-#nav {
-  flex: 1;
+.image-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-right: 10px;
 }
-
-#nav-card {
-  width: 100%;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-}
-
-#card-head {
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
-  align-items: center;
-}
-
-#profile-pic {
+.image-circle {
   width: 100px;
   height: 100px;
   background-size: cover;
   border-radius: 50%;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  cursor: pointer;
 }
-
-.nav-pills {
-  display: flex;
-  flex-flow: column wrap;
+.profile-info-item:not(:first-child) {
+  margin-top: 10px;
 }
-
-.nav-link {
-  text-align: center;
+.profile-info-row,
+.general-settings-row,
+.prenotazioni-effettuate-row {
+  margin-top: 25px;
 }
-
-#showcase {
-  height: 100%;
-  flex: 3;
-  display: flex;
-}
-
-#showcase-card {
-  width: 100%;
-  height: 100%;
-  display: flex;
-}
-
-#showcase-card-body {
-  width: 100%;
-  display: flex;
-}
-
-.tab-content {
-  width: 100%;
-  height: 100%;
-  display: flex;
-}
-
-.tab-pane {
-  width: 100%;
-  height: 100%;
-  display: flex;
-}
-
-#overview {
-  display: flex;
-  flex-flow: column wrap;
-  height: 100%;
-}
-
-#profile-header {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
-}
-
-form {
-  flex: 10;
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
-}
-
-.mod {
-  display: flex;
-}
-
-#mod-buttons {
-  height: 100%;
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
-}
-
-#mod-buttons > h2 {
-  text-align: center;
-}
-
-a.btn:not(:last-child) {
-  margin-bottom: 20px;
-}
-
-#buttons-header {
-  flex: 1;
-  margin-top: 60px;
-  display: flex;
-  justify-content: center;
-}
-
-#buttons {
-  flex: 10;
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
-  margin: 0 100px;
-}
-
-#buttons > a:not(:last-child) {
-  margin-bottom: 50px;
-}
-
-#footer {
-  flex: 1;
-}
-
-/* MODIFICA PASSWORD */
-#edit-pass {
-  flex: 1;
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: flex-start;
-  margin: 10px;
-  padding: 10px;
-}
-
-#header {
-  height: 20%;
+.prenotazioni-effettuate-container {
   display: flex;
   align-items: center;
-  justify-content: center;
 }
-
-#form {
-  height: 80%;
+.value-cell {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  width: 50px;
+  height: 50px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 25px;
+}
+.prenotazioni-row {
+  margin-top: 25px;
+}
+.pren-card {
+  box-shadow: 7px 7px 10px rgba(0, 0, 0, 0.125);
+}
+.pren-card:not(:first-child) {
+  margin-top: 20px;
+}
+.settings-item-nav:first-child {
+  margin-top: 15px;
+}
+.settings-item-nav {
+  margin-bottom: 25px;
+}
+.btn-label {
+  margin-bottom: 10px;
 }
 
-#form > form {
+/* metodi pagamento */
+.title-payment {
+  margin-top: 20px;
+}
+.payment-cards {
+  margin-top: 20px;
+  border: 1px solid black;
+  position: relative;
+  cursor: pointer;
+}
+.payment-cards:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+.aggiungi-closed {
+  margin-top: 20px;
+  border: 3px dashed rgba(0, 0, 0, 0.125);
+  cursor: pointer;
+}
+.aggiungi-opened {
+  margin-top: 20px;
+  border: 3px dashed rgba(0, 0, 0, 0.125);
+}
+.aggiungi-closed:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+#payment-form-container {
+  display: none;
+}
+.add-container {
   display: flex;
-  justify-content: center;
-  flex-flow: column nowrap;
-  width: 50%;
-}
-
-#form > form > *:not(:last-child) {
-  margin-bottom: 20px;
-}
-
-.modal-dialog {
-  min-width: 300px;
-  min-height: 300px;
-}
-
-.cropper-container {
-  display: flex;
-  justify-content: center;
-}
-
-.cropper-container {
-  width: 100%;
-}
-/* ----------------- */
-
-/* PASS COLOR SCHEMES */
-.strongPass {
-  border: 1px solid #5cb85c;
-}
-
-.mediumPass {
-  border: 1px solid #f0ad4e;
-}
-
-.weakPass {
-  border: 1px solid #d9534f;
-}
-
-.strongPassHelp {
-  color: #5cb85c;
-}
-
-.mediumPassHelp {
-  color: #f0ad4e;
-}
-
-.weakPassHelp {
-  color: #d9534f;
-}
-
-/* ----------------- */
-
-/* MEDIA QUERIES */
-
-@media (max-width: 992px) {
-  #center {
-    flex: 20;
-  }
-}
-
-@media (max-width: 768px) {
-  .side {
-    display: none;
-  }
-  #profile-header {
-    margin: 0;
-  }
-  #buttons-header {
-    margin: 0;
-    margin-bottom: 20px;
-  }
-  #buttons {
-    margin: 0;
-  }
+  justify-content: flex-end;
+  margin-top: 25px;
 }
 
 @media (max-width: 576px) {
-  #profile-content {
-    flex-flow: column wrap;
+  .date {
+    margin-top: 10px;
   }
-  #center {
-    flex-flow: column wrap;
-  }
-  #nav {
-    margin: 0 0 10px 0;
-  }
-  #edit-pass {
-    flex: 20;
+  .add {
+    width: 100%;
   }
 }
-
-@media (max-height: 550px) {
-  #form > form:last-child {
-    margin-bottom: 20px;
+@media (max-width: 374px) {
+  .title-container > h1,
+  .username-container > h1 {
+    font-size: 2em;
   }
 }
-/* 
-xs
-sm -> min-width: 576px
-md -> min-width: 768px
-lg -> min-width: 992px
-xl
-*/

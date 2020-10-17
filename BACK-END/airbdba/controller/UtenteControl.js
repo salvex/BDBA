@@ -1,5 +1,7 @@
 const Utente = require("../model/Utente");
 const MetodoPagamento = require("../model/MetodoPagamento");
+const Prenotazione = require("../model/Prenotazione");
+const Inserzione = require("../model/Inserzione");
 const { decodedId } = require("../utils/JwtToken");
 
 const errorsHandler = (err) => {
@@ -17,8 +19,26 @@ const errorsHandler = (err) => {
   return error;
 };
 
-const user_get = (req, res) => {
-  res.render("user");
+const user_get = async (req, res, next) => {
+  try {
+    const prenotazioni = await Prenotazione.findAll({
+      where: { ref_utente: req.query.id },
+      include: [
+        {
+          model: Inserzione,
+          required: true,
+        },
+      ],
+    });
+    const metodiPagamento = await MetodoPagamento.findAll({
+      where: { ref_utente: req.query.id },
+    });
+    res.locals.prenotazioni = JSON.stringify(prenotazioni);
+    res.locals.metodiPagamento = JSON.stringify(metodiPagamento);
+    next();
+  } catch (error) {
+    res.status(400).json({ success: false });
+  }
 };
 
 /* const profilo_get = (req, res) => {
