@@ -2,7 +2,6 @@ const Utente = require("../model/Utente");
 const MetodoPagamento = require("../model/MetodoPagamento");
 const Prenotazione = require("../model/Prenotazione");
 const Inserzione = require("../model/Inserzione");
-const { decodedId } = require("../utils/JwtToken");
 
 const errorsHandler = (err) => {
   let error = { message: "" };
@@ -22,7 +21,7 @@ const errorsHandler = (err) => {
 const user_get = async (req, res, next) => {
   try {
     const prenotazioni = await Prenotazione.findAll({
-      where: { ref_utente: req.query.id },
+      where: { ref_utente: req.session.utente.id },
       include: [
         {
           model: Inserzione,
@@ -31,7 +30,7 @@ const user_get = async (req, res, next) => {
       ],
     });
     const metodiPagamento = await MetodoPagamento.findAll({
-      where: { ref_utente: req.query.id },
+      where: { ref_utente: req.session.utente.id },
     });
     res.locals.prenotazioni = JSON.stringify(prenotazioni);
     res.locals.metodiPagamento = JSON.stringify(metodiPagamento);
@@ -68,29 +67,36 @@ const metodoPagamento_get = (req, res) => {
 };
 
 const metodoPagamento_post = async (req, res) => {
-  const UserId = decodedId(req);
-  const {
-    nomeInt,
-    cognomeInt,
-    ccn,
-    cvv,
-    meseScadenza,
-    annoScadenza,
-  } = req.body;
-
   try {
-    const result = await MetodoPagamento.SetUpdate(
-      UserId,
-      nomeInt,
-      cognomeInt,
-      ccn,
+    const {
+      intestatario,
+      codice_carta,
+      nome_circuito,
       cvv,
-      meseScadenza,
-      annoScadenza
-    );
-    console.log(result);
-    res.status(200).json({ result });
+      scadenza_mese,
+      scadenza_anno,
+    } = req.body.metodo;
+    let scadenza = scadenza_mese + "/" + scadenza_anno;
+    var metodo_pagamento = await MetodoPagamento.create({
+      ref_utente: req.session.utente.id,
+      intestatario: intestatario,
+      codice_carta: codice_carta,
+      nome_circuito: nome_circuito,
+      data_scadenza: scadenza,
+      cvv: cvv,
+    });
+    res.status(200).json({ success: true });
   } catch (err) {
+    const error = errorsHandler(err);
+    res.status(400).json({ error });
+  }
+};
+
+const metodoPagamento_delete = async (req, res) => {
+  try {
+    await MetodoPagamento.destroy({ where: { id_metodo: req.query.id } });
+    res.status(200).json({ success: true });
+  } catch {
     const error = errorsHandler(err);
     res.status(400).json({ error });
   }
@@ -115,6 +121,7 @@ module.exports = {
   modificaPassword_get,
   modificaPassword_post,
   metodoPagamento_post,
+  metodoPagamento_delete,
   metodoPagamento_get,
   modificaFotoProfilo_put,
   //diventaHost_post,

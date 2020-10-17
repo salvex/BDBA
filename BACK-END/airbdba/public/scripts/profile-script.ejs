@@ -157,7 +157,14 @@
     // SICUREZZA
     // metodi pagamento
     $(".paymentBtn").on("click", () => {
-      $("#payment").modal("show");
+      $("#payment")
+        .modal("show")
+        .on("hidden.bs.modal", () => {
+          $("#payment-form-container").hide();
+          $(".metodo-container")
+            .removeClass("aggiungi-opened")
+            .addClass("aggiungi-closed");
+        });
 
       metodiPagamento.forEach((metodo, index) => {
         let owner = metodo.intestatario.split(" ");
@@ -208,18 +215,36 @@
           `
           );
         }
-        $(`#close${index}`).css({
-          position: "absolute",
-          right: -10,
-          top: -10,
-          "background-color": "red",
-          "border-radius": "50%",
-          border: "none",
-          color: "white",
-        });
+        $(`#close${index}`)
+          .css({
+            position: "absolute",
+            right: -10,
+            top: -10,
+            "background-color": "red",
+            "border-radius": "50%",
+            border: "none",
+            color: "white",
+            width: "25px",
+            height: "25px",
+          })
+          .on("click", () => {
+            fetch(`/profilo/metodo-pagamento?id=${metodo.id_metodo}`, {
+              method: "DELETE",
+            })
+              .then(async (res) => {
+                const response = await res.json();
+                if (response.success) {
+                  window.location.href = "/profilo";
+                }
+              })
+              .catch((err) => console.log(err));
+          });
       });
 
-      if ($(".aggiungi-closed").length === 0) {
+      if (
+        $(".aggiungi-closed").length === 0 &&
+        $(".aggiungi-opened").length === 0
+      ) {
         $(".payment-body").append(
           `
           <div class="card aggiungi-closed metodo-container">
@@ -233,16 +258,16 @@
                   <form>
                     <div class="form-group">
                       <label for="inputIntestatario">Intestatario</label>
-                      <input type="text" class="form-control" id="inputIntestatario" placeholder="Mario Rossi">
+                      <input type="text" class="form-control metodo-pagamento" id="inputIntestatario" placeholder="Mario Rossi">
                     </div>
                     <div class="form-row">
                       <div class="form-group col-md-8">
                         <label for="inputCarta">Numero Carta</label>
-                        <input type="text" class="form-control" id="inputCarta" placeholder="**** **** **** ****">
+                        <input type="text" class="form-control metodo-pagamento" id="inputCarta" placeholder="**** **** **** ****">
                       </div>
                       <div class="form-group col-md-4">
                         <label for="inputCircuito">Circuito</label>
-                        <select id="inputCircuito" class="form-control">
+                        <select id="inputCircuito" class="form-control metodo-pagamento">
                           <option value="" selected disabled>Scegli...</option>
                           <option value="mastercard">Mastercard</option>
                           <option value="visa">Visa</option>
@@ -253,15 +278,15 @@
                     <div class="form-row">
                       <div class="form-group col-md-3">
                         <label for="inputScadenza">Mese</label>
-                        <input type="text" class="form-control" id="inputScadenzaM" placeholder="mm">
+                        <input type="text" class="form-control metodo-pagamento" id="inputScadenzaM" placeholder="mm">
                       </div>
                       <div class="form-group col-md-3">
                         <label for="inputScadenza">Anno</label>
-                        <input type="text" class="form-control" id="inputScadenzaA" placeholder="aa">
+                        <input type="text" class="form-control metodo-pagamento" id="inputScadenzaA" placeholder="aa">
                       </div>
                       <div class="form-group col-md-6">
                         <label for="inputCvv">CVV</label>
-                        <input type="text" class="form-control" id="inputCvv" placeholder="cvv">
+                        <input type="text" class="form-control metodo-pagamento" id="inputCvv" placeholder="cvv">
                       </div>
                       <div class="form-group col-12 add-container">
                         <button class="btn btn-primary add">Aggiungi</button>
@@ -277,6 +302,134 @@
       }
       $(".add").on("click", (e) => {
         e.preventDefault();
+
+        let flag = 1;
+        // Aggiungo nuovo metodo di pagamento
+        // Controllo che i campi siano pieni e corretti
+        $("input[class=metodo-pagamento], select[class=metodo-pagamento]").each(
+          function (index, element) {
+            if (
+              $(this).val() === "" ||
+              $(this).val() === null ||
+              $(this).hasClass("is-invalid")
+            ) {
+              flag = 0;
+              if ($(this).val() === "") {
+                console.log("si");
+                console.log($(this).prop("id"));
+              } else {
+                console.log("no");
+              }
+              if ($(this).val() === null) {
+                console.log("si");
+              } else {
+                console.log("no");
+              }
+              if ($(this).hasClass("is-invalid")) {
+                console.log("si");
+              } else {
+                console.log("no");
+              }
+
+              if (!$(this).hasClass("is-invalid")) {
+                $(this).addClass("is-invalid");
+              }
+            }
+
+            if ($(this).prop("id") === "inputIntestatario") {
+              if (intestatarioReg.test($(this).val())) {
+                $(this).removeClass("is-invalid");
+              } else {
+                $(this).addClass("is-invalid");
+              }
+            }
+
+            if ($(this).prop("id") === "inputCarta") {
+              if (cartaReg.test($(this).val())) {
+                $(this).removeClass("is-invalid");
+              } else {
+                $(this).addClass("is-invalid");
+              }
+            }
+
+            if ($(this).prop("id") === "inputScadenzaM") {
+              if (meseReg.test($(this).val())) {
+                $(this).removeClass("is-invalid");
+                // Verifico se la data di scadenza non è inferiore all'anno
+                // corrente
+                if ($("#inputScadenzaA").val() !== "") {
+                  if (
+                    Number($(this).val()) < mese &&
+                    Number($("#inputScadenzaA").val()) <= anno
+                  ) {
+                    $(this).addClass("is-invalid");
+                    $("#inputScadenzaA").addClass("is-invalid");
+                  } else {
+                    $(this).removeClass("is-invalid");
+                    $("#inputScadenzaA").removeClass("is-invalid");
+                  }
+                }
+              } else {
+                $(this).addClass("is-invalid");
+              }
+            }
+
+            if ($(this).prop("id") === "inputScadenzaA") {
+              if (annoReg.test($(this).val())) {
+                $(this).removeClass("is-invalid");
+                // Verifico se la data di scadenza non è inferiore all'anno
+                // corrente
+                if (
+                  Number($(this).val()) < anno ||
+                  (Number($(this).val()) === anno &&
+                    Number($("#inputScadenzaM").val()) < mese)
+                ) {
+                  $(this).addClass("is-invalid");
+                  $("#inputScadenzaM").addClass("is-invalid");
+                } else {
+                  $(this).removeClass("is-invalid");
+                  $("#inputScadenzaM").removeClass("is-invalid");
+                }
+              } else {
+                $(this).addClass("is-invalid");
+              }
+            }
+
+            if ($(this).prop("id") === "inputCvv") {
+              if (cvvReg.test($(this).val())) {
+                $(this).removeClass("is-invalid");
+              } else {
+                $(this).addClass("is-invalid");
+              }
+            }
+          }
+        );
+
+        if (!flag) {
+          return;
+        }
+
+        let metodo = {
+          intestatario: $("#inputIntestatario").val(),
+          codice_carta: $("#inputCarta").val(),
+          nome_circuito: $("#inputCircuito").val(),
+          cvv: $("#inputCvv").val(),
+          scadenza_mese: $("#inputScadenzaM").val(),
+          scadenza_anno: $("#inputScadenzaA").val(),
+        };
+
+        fetch(`/profilo/metodo-pagamento`, {
+          method: "POST",
+          body: JSON.stringify({ metodo }),
+          headers: { "Content-Type": "application/json" },
+        })
+          .then(async (res) => {
+            const response = await res.json();
+            if (response.success) {
+              window.location.href = `/profilo`;
+            }
+          })
+          .catch((err) => console.log(err));
       });
 
       $(".aggiungi-closed").on("click", function () {

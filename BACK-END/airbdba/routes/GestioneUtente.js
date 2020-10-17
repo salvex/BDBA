@@ -6,11 +6,12 @@ const userController = require("../controller/UtenteControl");
 router.get("/", userController.user_get, (req, res) => {
   res.render("user");
 });
+
 /* router.get("/profilo", userController.profilo_get); */
 router.get("/modifica-password", userController.modificaPassword_get);
 router.post("/modifica-password", userController.modificaPassword_post);
-router.get("/metodo-pagamento", userController.metodoPagamento_get);
 router.post("/metodo-pagamento", userController.metodoPagamento_post);
+router.delete("/metodo-pagamento", userController.metodoPagamento_delete);
 router.put(
   "/modifica-foto/:type/:id",
   [FileUpload.upFiles],

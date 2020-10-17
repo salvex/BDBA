@@ -47,25 +47,6 @@ const verifyHost = (req, res, next) => {
   });
 };
 
-const decodedId = (req) => {
-  var userId;
-  const token = req.cookies.jwt;
-
-  if (!token) {
-    console.log("errore");
-    userId = null;
-  }
-
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
-    if (err) {
-      console.log(err);
-    } else {
-      userId = decoded.id;
-    }
-  });
-  return userId;
-};
-
 const checkUser = (req, res, next) => {
   const token = req.cookies.jwt;
   if (token) {
@@ -76,7 +57,7 @@ const checkUser = (req, res, next) => {
         next();
       } else {
         try {
-          const user = await Utente.findOne({ where: { id: decodedToken.id } });
+          const user = req.session.utente;
           res.locals.user = user;
           next();
         } catch (err) {
@@ -108,5 +89,4 @@ module.exports = {
   createToken,
   createTokenHost,
   checkUser,
-  decodedId,
 };
