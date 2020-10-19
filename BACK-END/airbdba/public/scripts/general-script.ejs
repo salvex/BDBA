@@ -64,7 +64,7 @@
         <% if (user.imagePath) { %>
           url("<%= user.imagePath.slice(user.imagePath.indexOf("/uploads")) %>")
         <% } else { %>
-          url("assets/images/profile_pics/profile-placeholder.png")
+          url("/assets/images/profile_pics/profile-placeholder.png")
         <% } %>
       `,
         "background-size": "cover",
@@ -82,7 +82,7 @@
       <% if (user.imagePath) { %>
         url("<%= user.imagePath.slice(user.imagePath.indexOf("/uploads")) %>")
       <% } else { %>
-        url("assets/images/profile_pics/profile-placeholder.png")
+        url("/assets/images/profile_pics/profile-placeholder.png")
       <% } %>
     `,
       "background-size": "cover",

@@ -13,15 +13,15 @@ const errorsHandler = (err) => {
   return error;
 };
 
-const mostra_get = async (req, res) => {
+const mostra_get = async (req, res, next) => {
   try {
     // inserzione sarebbe show
 
     let date = []; //array contenente le date di check-in e check-out associate alle inserzioni
 
-    let show = await Inserzione.mostra(req.query.id);
+    let show = await Inserzione.mostra(req.params.id);
 
-    let dates = await Prenotazione.getPrenotazioni(req.query.id);
+    let dates = await Prenotazione.getPrenotazioni(req.params.id);
 
     dates.forEach((d) => {
       let range = moment().range(d.check_in, d.check_out);
@@ -39,8 +39,9 @@ const mostra_get = async (req, res) => {
     });
 
     req.session.inserzione = show;
-    //console.log(req.session.inserzione);
-    res.status(200).json({ show, date });
+    res.locals.inserzione = JSON.stringify(show);
+    res.locals.date = JSON.stringify(date);
+    next();
   } catch (err) {
     const error = errorsHandler(err);
     res.status(500).json({ error });

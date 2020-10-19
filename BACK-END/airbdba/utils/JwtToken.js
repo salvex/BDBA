@@ -59,6 +59,7 @@ const checkUser = (req, res, next) => {
         try {
           const user = req.session.utente;
           res.locals.user = user;
+          console.log(res.locals.user);
           next();
         } catch (err) {
           console.log(err.message);

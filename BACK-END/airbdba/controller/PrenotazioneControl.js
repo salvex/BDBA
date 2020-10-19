@@ -14,9 +14,10 @@ const Utente = require("../model/Utente");
 const effettua_pren_get = async (req, res) => {
   console.log("Prenotazione in corso..");
   try {
+    console.log(req.params.id);
     const result = await Prenotazione.getCheckInCheckOut(
       req.session.utente.id,
-      req.query.id
+      req.params.id
     );
     var giorniTotali = 0;
     var annoCorrente = moment().format("YYYY");
@@ -228,7 +229,7 @@ const pagamento_post = async (req, res, next) => {
       n_ospiti_pren: req.query.nospiti,
       prezzo_finale: req.session.prezzo,
     };
-    console.log(req.query.nospiti);
+    console.log(prenotazione);
     req.session.metodo_pagamento = metodo_pagamento;
     req.session.prenotazione = prenotazione;
     res.status(200).json({ success: true });

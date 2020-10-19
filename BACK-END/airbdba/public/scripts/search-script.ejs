@@ -172,7 +172,7 @@
             // Ogni funzione è indipendente dalle altre in quanto legata
             // ad un bottone con id unico.
             $(`#${element.id_inserzione}`).on("click", () => {
-              window.location.href = `/inserzione${window.location.search}&id=${element.id_inserzione}`;
+              window.location.href = `/inserzione/${element.id_inserzione}${window.location.search}`;
             });
           });
           if ($(window).width() < 450) {

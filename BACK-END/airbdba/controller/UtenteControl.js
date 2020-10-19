@@ -109,6 +109,7 @@ const modificaFotoProfilo_put = async (req, res) => {
     let user = await Utente.findByPk(req.session.utente.id);
     user.imagePath = path.replace(/\\/g, "/");
     await user.save();
+    res.locals.user.imagePath = path.replace(/\\/g, "/");
     res.status(200).json({ success: true });
   } catch (err) {
     res.status(400).json({ err });

@@ -317,10 +317,17 @@ Inserzione.mostra = async (idInserzione) => {
     where: {
       id_inserzione: idInserzione,
     },
-    include: {
-      model: Servizi,
-      required: true,
-    },
+    include: [
+      {
+        model: Servizi,
+        required: true,
+      },
+      {
+        model: Utente,
+        required: true,
+        attributes: ["nome", "cognome", "imagePath"],
+      },
+    ],
   });
   if (risultato) {
     return risultato;

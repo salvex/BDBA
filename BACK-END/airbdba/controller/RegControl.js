@@ -56,6 +56,7 @@ const registrazione_post = (req, res) => {
           password: bcrypt.hashSync(req.body.password, 8),
           nome: req.body.nome,
           cognome: req.body.cognome,
+          imagePath: null,
           /*    indirizzo: req.body.indirizzo, //
                 data_nascita: req.body.datanascita,
                 numero_telefonico: req.body.numerotel */
@@ -67,6 +68,8 @@ const registrazione_post = (req, res) => {
               expiresIn: maxAge * 1000,
             });
             req.session.utente = utente;
+            /* res.locals.user = utente; */
+            console.log(req.session.utente);
             res.status(200).json({ utente });
           })
           .catch((err) => {

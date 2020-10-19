@@ -4,18 +4,19 @@ const JwtToken = require("../utils/JwtToken");
 const ShowInsControl = require("../controller/ShowInsControl");
 const PrenotazioneControl = require("../controller/PrenotazioneControl");
 
-router.get("/", (req, res) => {
+router.get("/:id", ShowInsControl.mostra_get, (req, res) => {
   res.render("insertion");
 });
 
-router.get("/res", ShowInsControl.mostra_get);
-
+/* router.get("/res", ShowInsControl.mostra_get); */
 router.get(
-  "/prenota",
+  "/prenota/riepilogo",
   [JwtToken.verifyToken],
-  PrenotazioneControl.effettua_pren_get
+  PrenotazioneControl.riepilogo_get,
+  (req, res) => {
+    res.render("riepilogo");
+  }
 );
-
 router.get(
   "/prenota/pagamento",
   [JwtToken.verifyToken],
@@ -25,19 +26,16 @@ router.get(
   }
 );
 
+router.get(
+  "/prenota/:id",
+  [JwtToken.verifyToken],
+  PrenotazioneControl.effettua_pren_get
+);
+
 router.post(
   "/prenota/pagamento",
   [JwtToken.verifyToken],
   PrenotazioneControl.pagamento_post
-);
-
-router.get(
-  "/prenota/riepilogo",
-  [JwtToken.verifyToken],
-  PrenotazioneControl.riepilogo_get,
-  (req, res) => {
-    res.render("riepilogo");
-  }
 );
 
 router.post(

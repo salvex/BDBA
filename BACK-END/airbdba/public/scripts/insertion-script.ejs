@@ -3,6 +3,8 @@
     /* LETs & CONSTs */
     // Creo un URL che contenga i miei parametri
     const params = new URLSearchParams(window.location.search);
+    const inserzione = JSON.parse("<%= inserzione %>".replace(/&#34;/g, '"'));
+    const reservedDates = JSON.parse("<%= date %>".replace(/&#34;/g, '"'));
     const search = window.location.search;
     let prezzoBase,
       nospiti,
@@ -13,18 +15,73 @@
       nights,
       prezzoPerNotte,
       prezzoNotteServizio,
-      prezzoTotale,
-      date;
+      prezzoTotale;
+    const servicesIcons = {
+      wifi: `&nbsp;&nbsp;<i class="fas fa-wifi"></i>`,
+      ascensore: `&nbsp;&nbsp;<i class="fas fa-arrow-up"></i>`,
+      cucina: `&nbsp;&nbsp;<i class="fas fa-utensils"></i>`,
+      essenziali: `&nbsp;&nbsp;<i class="fas fa-plus"></i>`,
+      frigorifero: `&nbsp;&nbsp;<i class="fas fa-snowflake"></i>`,
+      parcheggio: `&nbsp;&nbsp;<i class="fas fa-car-side"></i>`,
+      piscina: `&nbsp;&nbsp;<i class="fas fa-swimmer"></i>`,
+      riscaldamento: `&nbsp;&nbsp;<i class="fas fa-thermometer-half"></i>`,
+    };
     /* --------------------------------------------------------- */
+    console.log(inserzione, reservedDates);
 
     /* ON REFRESH */
     // Inserisco nel form di dx i dati relativi alla ricerca attuale
     if (params.get("checkin") !== "" && params.get("checkout") !== "") {
       $("#check-in").val(params.get("checkin"));
       $("#check-out").val(params.get("checkout"));
+      if (params.get("nospiti") !== "") {
+        $("#guestNum").val(params.get("nospiti"));
+      } else {
+        $("#guestNum").val("");
+      }
+
+      checkin = params.get("checkin");
+      checkout = params.get("checkout");
+
+      checkinDate = new Date(checkin);
+      checkoutDate = new Date(checkout);
+
+      // Se prenoto per un giorno pagherò l'intera giornata
+      // come se pernottassi
+      if (checkin === checkout) {
+        nights = 1;
+      } else {
+        nights = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
+      }
+      $("#nights").html(nights);
+
+      prezzoPerNotte = nights * inserzione.prezzo_base;
+      prezzoNotteServizio = prezzoPerNotte + prezzoPerNotte * 0.07;
+      prezzoTotale = prezzoNotteServizio + prezzoNotteServizio * 0.1;
+      $("#total").html(prezzoTotale.toFixed(2) + " &euro;");
+    } else {
+      $("#total").html("0 &euro;");
+      if (params.get("nospiti") !== "") {
+        $("#guestNum").val(params.get("nospiti"));
+      } else {
+        $("input").val("");
+      }
     }
 
-    $("#guestNum").val(params.get("nospiti"));
+    if (params.get("checkin") === "" || params.get("checkout") === "") {
+      params.set("checkin", "");
+      params.set("checkout", "");
+      window.history.pushState(
+        "",
+        "",
+        window.location.protocol +
+          "//" +
+          window.location.host +
+          window.location.pathname +
+          "?" +
+          params.toString()
+      );
+    }
 
     checkin = params.get("checkin");
     checkout = params.get("checkout");
@@ -44,163 +101,102 @@
       nights = 0;
     }
 
+    $("#nights").html(nights);
+    $("#aNight").html(inserzione.prezzo_base + "&euro;");
+    $("#servizio").html("7%");
+    $("#iva").html("10%");
     /* --------------------------------------------------------- */
 
-    /* MODAL */
-    $("#exampleModal").on("hide.bs.modal", () => {
-      $("#left").css("overflow", "scroll");
-    });
-
-    $("#mapModal").on("hide.bs.modal", () => {
-      $("#left").css("overflow", "scroll");
-      $("#map").prepend("<div id='overlay'></div>");
-      $("#modal-map").attr("src", $("#map > iframe").attr("src"));
-      $("#overlay").on("click", () => {
-        $("#mapModal").modal("show");
-        $("#overlay").remove();
+    /* CONTROLLI */
+    $("input").each((index, element) => {
+      $(element).on("focusout change input", () => {
+        if ($(element).val() === "") {
+          $(element).addClass("invalid-field is-invalid");
+          $("#book-help > small").text(
+            "Completa i campi per effettuare la prenotazione"
+          );
+        } else {
+          $(element).removeClass("invalid-field is-invalid");
+          if (
+            $("input").hasClass("invalid-field is-invalid") ||
+            $("input").val() === ""
+          ) {
+          } else {
+            $("#book-help > small").text("");
+          }
+        }
       });
     });
     /* --------------------------------------------------------- */
 
-    /* BACK BTN */
-    $("#back-btn").on("click", () => {
-      window.location.href =
-        window.location.protocol +
-        "//" +
-        window.location.host +
-        "/search" +
-        search;
-    });
-    /* --------------------------------------------------------- */
-
-    /* BOOK BTN */
-    $(window).resize(() => {
-      if ($("#book-menu").hasClass("toggled")) {
-        $("#book-menu").removeClass("toggled");
-        if ($(window).width() > "1090") {
-          $("#right").toggle("slide");
-
-          // Aggiorno il contenuto del riquadro di sx
-          $("#showcase").css({
-            "flex-direction": "row",
-          });
-          $("#carousel-container").css({
-            width: "60%",
-          });
-          $("#description").css({
-            width: "40%",
-            "padding-left": "30px",
-            margin: "0",
-          });
-
-          // Aggiungo un overlay alla mappa
-          if ($("#overlay").length === 0) {
-            $("#map").prepend("<div id='overlay'></div>");
-            $("#modal-map").attr("src", $("#map > iframe").attr("src"));
-            $("#overlay").on("click", () => {
-              $("#mapModal").modal("show");
-              $("#overlay").remove();
-            });
-          }
-        }
-      } else {
-        if ($(window).width() > "1090") {
-          $("#right").css({
-            display: "block",
-            width: "25%",
-          });
-          $("#left").css({
-            display: "flex",
-            width: "75%",
-          });
-
-          // Aggiorno il contenuto del riquadro di sx
-          $("#showcase").css({
-            "flex-direction": "row",
-          });
-          $("#carousel-container").css({
-            width: "60%",
-          });
-          $("#description").css({
-            width: "40%",
-            "padding-left": "30px",
-            margin: "0",
-          });
-
-          // Aggiungo un overlay alla mappa
-          if ($("#overlay").length === 0) {
-            $("#map").prepend("<div id='overlay'></div>");
-            $("#modal-map").attr("src", $("#map > iframe").attr("src"));
-            $("#overlay").on("click", () => {
-              $("#mapModal").modal("show");
-              $("#overlay").remove();
-            });
-          }
-        } else if ($(window).width() > "576") {
-          $("#right").css({
-            display: "none",
-            width: "50%",
-          });
-          $("#left").css({
-            display: "flex",
-            width: "100%",
-          });
-
-          // Aggiorno il contenuto del riquadro di sx
-          $("#showcase").css({
-            "flex-direction": "column",
-          });
-          $("#carousel-container").css({
-            width: "100%",
-          });
-          $("#description").css({
-            width: "100%",
-            padding: "0",
-            "margin-top": "30px",
-          });
-
-          // Rimuovo l'overlay
-          if ($("#overlay").length > 0) {
-            $("#overlay").remove();
-          }
+    /* RIEPILOGO/RECAP */
+    $("input").each((index, element) => {
+      $(element).on("focusout change input", () => {
+        if ($(element).attr("id") === "check-in") {
+          checkin = $("#check-in").val();
+        } else if ($(element).attr("id") === "check-out") {
+          checkout = $("#check-out").val();
         } else {
-          $("#right").css({
-            display: "none",
-            width: "100%",
-          });
+          nospiti = $("#guestNum").val();
         }
-      }
-    });
 
-    $("#book-menu").on("click", () => {
-      if ($("#book-menu").hasClass("toggled")) {
-        $("#book-menu").removeClass("toggled");
-        if ($(window).width() <= "576") {
-          $("#right").toggle("slide");
-          $("#left").css("display", "flex");
-        } else if ($(window).width() <= "1090") {
-          $("#right").toggle("slide");
-          $("#left").css("width", "100%");
+        $("#total").html(
+          `
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        `
+        );
+
+        if (checkin && checkout) {
+          checkinDate = new Date(checkin);
+          checkoutDate = new Date(checkout);
+
+          // Se prenoto per un giorno pagherò l'intera giornata
+          // come se pernottassi
+          if (checkin === checkout) {
+            nights = 1;
+          } else {
+            nights = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
+          }
+          $("#nights").html(nights);
+
+          prezzoPerNotte = nights * inserzione.prezzo_base;
+          prezzoNotteServizio = prezzoPerNotte + prezzoPerNotte * 0.07;
+          prezzoTotale = prezzoNotteServizio + prezzoNotteServizio * 0.1;
+          setTimeout(() => {
+            $("#total").html(prezzoTotale.toFixed(2) + " &euro;");
+          }, 1000);
+        } else {
+          setTimeout(() => {
+            $("#total").html("0 &euro;");
+          }, 1000);
         }
-      } else {
-        $("#book-menu").addClass("toggled");
-        if ($(window).width() <= "576") {
-          $("#right").toggle("slide");
-          $("#left").css("display", "none");
-        } else if ($(window).width() <= "1090") {
-          $("#right").toggle("slide");
-          $("#left").css("width", "50%");
-        }
-      }
+      });
     });
     /* --------------------------------------------------------- */
 
-    /* INSERTION DETAIL SCREEN (LEFT) */
-    $(window).resize(() => {
-      if ($("#shocase").width() <= "768") {
-        alert("ciao");
-      }
+    /* DATEPICKER */
+    $("#check-in").datepicker({
+      format: "yyyy-mm-dd",
+      autoclose: true,
+      todayHighlight: true,
+      startDate: new Date(),
+      endDate: inserzione.fineDisponibilita,
+      datesDisabled: reservedDates,
     });
+
+    $("#check-out").datepicker({
+      format: "yyyy-mm-dd",
+      autoclose: true,
+      todayHighlight: true,
+      startDate: new Date(),
+      endDate: inserzione.fineDisponibilita,
+      datesDisabled: reservedDates,
+    });
+
+    $("#guestNum").attr("max", inserzione.n_ospiti);
+    $("#guestNum").attr("min", 1);
     /* --------------------------------------------------------- */
 
     /* MODIFICO CHECKIN/OUT E NOSPITI */
@@ -242,13 +238,12 @@
           );
         } else {
           let flag = 1;
-          console.log(date);
-          for (let i = 0; i < date.length; i += 1) {
-            let currentCheckIn = new Date(date[i]);
+          for (let i = 0; i < reservedDates.length; i += 1) {
+            let currentCheckIn = new Date(reservedDates[i]);
             if (currentCheckIn > checkinDate) {
               let j = i;
-              for (j; j < date.length; j += 1) {
-                let currentCheckOut = new Date(date[j]);
+              for (j; j < reservedDates.length; j += 1) {
+                let currentCheckOut = new Date(reservedDates[j]);
                 if (currentCheckOut < checkoutDate) {
                   // trovo una data inferiore già
                   // prenotata in mezzo alle date di
@@ -312,14 +307,13 @@
           );
         } else {
           let flag = 1;
-          console.log(date);
-          for (let i = 0; i < date.length; i += 1) {
-            let currentCheckIn = new Date(date[i]);
+          for (let i = 0; i < reservedDates.length; i += 1) {
+            let currentCheckIn = new Date(reservedDates[i]);
             if (currentCheckIn > checkinDate) {
               let j = i;
 
-              for (j; j < date.length; j += 1) {
-                let currentCheckOut = new Date(date[j]);
+              for (j; j < reservedDates.length; j += 1) {
+                let currentCheckOut = new Date(reservedDates[j]);
                 if (currentCheckOut < checkoutDate) {
                   // trovo una data inferiore già
                   // prenotata in mezzo alle date di
@@ -380,244 +374,137 @@
     });
     /* --------------------------------------------------------- */
 
-    /* CONTROLLI */
-    $("input").each((index, element) => {
-      $(element).on("focusout change input", () => {
-        if ($(element).val() === "") {
-          $(element).addClass("invalid-field is-invalid");
-          $("#book-help > small").text(
-            "Completa i campi per effettuare la prenotazione"
-          );
-        } else {
-          $(element).removeClass("invalid-field is-invalid");
-          if (
-            $("input").hasClass("invalid-field is-invalid") ||
-            $("input").val() === ""
-          ) {
-          } else {
-            $("#book-help > small").text("");
-          }
-          console.log(date);
-          //code
-        }
-      });
-    });
-    /* --------------------------------------------------------- */
-
-    /* RIEPILOGO/RECAP */
-    $("input").each((index, element) => {
-      $(element).on("focusout change input", () => {
-        if ($(element).attr("id") === "check-in") {
-          checkin = $("#check-in").val();
-        } else if ($(element).attr("id") === "check-out") {
-          checkout = $("#check-out").val();
-        } else {
-          nospiti = $("#guestNum").val();
-        }
-
-        $("#total").html(
+    /* RIEMPIO  */
+    // Titolo
+    $(".title-container").append(
+      `<h1><b>${inserzione.nome_inserzione}</b></h1>`
+    );
+    // Carosello
+    let imgs = inserzione.galleryPath.split(",");
+    for (let i = 0; i < imgs.length; i += 1) {
+      if (i === 0) {
+        $(".carousel-inner").append(
           `
-        <div class="spinner-border" role="status">
-          <span class="sr-only">Loading...</span>
-        </div>
+          <div class="carousel-item active">
+            <div style="background-image: url('/uploads/fotoInserzione/${inserzione.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width:100%; height:350px; ">
+            </div>
+          </div>
+          `
+        );
+      } else {
+        $(".carousel-inner").append(
+          `
+          <div class="carousel-item">
+            <div style="background-image: url('/uploads/fotoInserzione/${inserzione.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width:100%; height:350px; ">
+            </div>
+          </div>
+          `
+        );
+      }
+
+      // GRIGLIA
+      if (i <= 2) {
+        $(".first").append(
+          `
+        <div class="img-gallery" style="background-image: url('/uploads/fotoInserzione/${inserzione.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width: 100%; height: 100%; ">
         `
         );
+      } else if (i <= 5) {
+        $(".second").append(
+          `
+        <div class="img-gallery" style="background-image: url('/uploads/fotoInserzione/${inserzione.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width: 100%; height: 100%; ">
+        `
+        );
+      } else {
+        $(".third").append(
+          `
+        <div class="img-gallery" style="background-image: url('/uploads/fotoInserzione/${inserzione.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width: 100%; height: 100%; ">
+        `
+        );
+      }
+    }
 
-        if (checkin && checkout) {
-          checkinDate = new Date(checkin);
-          checkoutDate = new Date(checkout);
-
-          // Se prenoto per un giorno pagherò l'intera giornata
-          // come se pernottassi
-          if (checkin === checkout) {
-            nights = 1;
-          } else {
-            nights = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
-          }
-          $("#nights").html(nights);
-          $("#check-in-value").html(checkin);
-          $("#check-out-value").html(checkout);
-
-          prezzoPerNotte = nights * prezzoBase;
-          prezzoNotteServizio = prezzoPerNotte + prezzoPerNotte * 0.07;
-          prezzoTotale = prezzoNotteServizio + prezzoNotteServizio * 0.1;
-          setTimeout(() => {
-            $("#total").html(prezzoTotale.toPrecision(4) + " &euro;");
-          }, 1000);
-        } else {
-          setTimeout(() => {
-            $("#total").html("0 &euro;");
-          }, 1000);
+    // CITTÀ
+    $(".city-container").append(
+      `
+      <h2><b>${inserzione.citta}</b></h2>
+      `
+    );
+    // INDIRIZZO
+    $(".address-container").append(
+      `
+      <p class="text-muted"><i>${inserzione.indirizzo}</i></p>
+      `
+    );
+    // HOST
+    $(".host-container").append(
+      `
+      <div id="host-pic" style="background-image: url('${inserzione.utente.imagePath.slice(
+        6
+      )}')"></div>
+      <div id="host-name">
+        <b>${inserzione.utente.nome}&nbsp;${inserzione.utente.cognome}</b>
+      </div>
+      `
+    );
+    $(".description-container").append(
+      `
+      <p class="text-justify">${inserzione.descrizione}</p>
+      `
+    );
+    // SERVIZI
+    Object.keys(inserzione.servizi).forEach((servizio, index) => {
+      if (servizio !== "casaFlag" && servizio !== "bnbFlag") {
+        if (inserzione.servizi[servizio] === 1) {
+          $(".services-container > ul").append(
+            `
+            <li>${
+              servizio[0].toUpperCase() +
+              servizio.slice(1, servizio.length - 4) +
+              servicesIcons[servizio.slice(0, servizio.length - 4)]
+            }</li>
+            `
+          );
         }
-      });
+      }
     });
-
-    $("input").on("focusout change input", () => {
-      //code
-    });
-
-    /* ON REFRESH */
-    $("#check-in-value").html(checkin);
-    $("#check-out-value").html(checkout);
-    $("#nights").html(nights);
-    $("#servizio").html("7%");
-    $("#iva").html("10%");
+    // POSIZIONE
+    $(".city-address").append(
+      `<h4>${inserzione.citta},</h4><p class="text-muted"><i>${inserzione.indirizzo}</i></p>`
+    );
+    $(".position-container").append(
+      `
+      <iframe
+        width="100%"
+        height="100%"
+        frameborder="0"
+        style="border: 0"
+        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDS70zwyWHYnuia677DVOj8CRqfAzI00Qo&q=${inserzione.citta},${inserzione.indirizzo}"
+        allowfullscreen
+      >
+      `
+    );
     /* --------------------------------------------------------- */
 
-    /* OPERAZIONE DI FETCH */
-    // Fetch informazioni generali dell'inserzione
-    fetch(`/inserzione/res${window.location.search}`)
-      .then(async (res) => {
-        const response = await res.json();
-        console.log(response.show);
-        /* checkin = $("#check-in").val();
-      checkout = $("#check-out").val();
-      nospiti = $("#guestNum").val(); */
-        checkin = params.get("checkin");
-        checkout = params.get("checkout");
-        nospiti = params.get("nospiti");
-        prezzoBase = response.show.prezzo_base;
+    /* BACK BTN */
+    $("#back-btn").on("click", () => {
+      window.location.href =
+        window.location.protocol +
+        "//" +
+        window.location.host +
+        "/search" +
+        search;
+    });
+    /* --------------------------------------------------------- */
 
-        // Inserisco tutte le informazioni nei vari campi
-        // Heading
-        $("#insertion-heading > h1").append(response.show.nome_inserzione);
-        // Showcase
-        // -- Description
-        $("#citta > h3").append(response.show.citta);
-        $("#desc > p").append(response.show.descrizione);
-        $("#desc-rooms > p")
-          .append(`${response.show.n_ospiti} ospiti &#8226; 3 stanze da letto`)
-          .addClass("text-muted");
-        // -- Map
-        $("#map > iframe").attr(
-          "src",
-          `https://www.google.com/maps/embed/v1/place?key=AIzaSyDS70zwyWHYnuia677DVOj8CRqfAzI00Qo
-        &q=${response.show.citta},${response.show.indirizzo}`
-        );
+    /* BOOK BTN */
+    $("#book-menu").on("click", () => {
+      $(".sidebar").toggle("slide");
+    });
 
-        /* <img
-                    src="/uploads/fotoInserzione/${response.show.ref_host_ins}${imgs[i]}"
-                    class="d-block w-100"
-                    alt="..."
-                  /> */
-
-        // Carousel
-        imgs = response.show.galleryPath.split(",");
-        for (let i = 0; i < imgs.length; i += 1) {
-          console.log(response.show.ref_host_ins, imgs[i], imgs);
-          if (i === 0) {
-            $(".carousel-inner").append(
-              `
-                <div class="carousel-item active">
-                  <div style="background-image: url('/uploads/fotoInserzione/${response.show.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width:100%; height:350px; ">
-                  </div>
-                </div>
-              `
-            );
-          } else {
-            $(".carousel-inner").append(
-              `
-                <div class="carousel-item">
-                  <div style="background-image: url('/uploads/fotoInserzione/${response.show.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width:100%; height:350px; ">
-                  </div>
-                </div>
-              `
-            );
-          }
-        }
-
-        // Riepilogo
-        // Imposto il valore massimo dell'ìnput ospiti
-        $("#guestNum").attr("max", response.show.n_ospiti);
-
-        // Inserisco le date disabilitate, ossia quelle relative
-        // a giorni già prenotati da altri
-
-        date = response.date;
-
-        $("#check-in").datepicker({
-          format: "yyyy-mm-dd",
-          autoclose: true,
-          todayHighlight: true,
-          startDate: new Date(),
-          endDate: response.show.fineDisponibilita,
-          datesDisabled: date,
-          clearBtn: true,
-        });
-
-        $("#check-out").datepicker({
-          format: "yyyy-mm-dd",
-          autoclose: true,
-          todayHighlight: true,
-          startDate: new Date(),
-          endDate: response.show.fineDisponibilita,
-          datesDisabled: date,
-          clearBtn: true,
-        });
-
-        // Per rendere le cose graficamente mugliori
-        // inserisco uno spinner al posto del prezzo
-        // per simulare un caricamento
-        $("#total").html(`
-        <div class="spinner-border" role="status">
-          <span class="sr-only">Loading...</span>
-        </div>
-      `);
-
-        // Aggiungo un overlay alla mappa
-        if ($("#overlay").length === 0) {
-          $("#map").prepend("<div id='overlay'></div>");
-          $("#modal-map").attr("src", $("#map > iframe").attr("src"));
-          $("#overlay").on("click", () => {
-            $("#mapModal").modal("show");
-            $("#overlay").remove();
-          });
-        }
-
-        // Calcolo il prezzo totale in base ai giorni (-1)
-        // cioè calcolo il numero di notti. Tutto moltiplicato
-        // per il numero di ospiti. Lospinner viene rimosso
-        // da uno dei due metodi html
-        if (checkin && checkout) {
-          checkinDate = new Date(checkin);
-          checkoutDate = new Date(checkout);
-
-          // Se prenoto per un giorno pagherò l'intera giornata
-          // come se pernottassi
-          if (checkin === checkout) {
-            nights = 1;
-          } else {
-            nights = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
-          }
-
-          prezzoPerNotte = nights * prezzoBase;
-          prezzoNotteServizio = prezzoPerNotte + prezzoPerNotte * 0.07;
-          prezzoTotale = prezzoNotteServizio + prezzoNotteServizio * 0.1;
-          setTimeout(() => {
-            $("#total").html(prezzoTotale.toPrecision(4) + " &euro;");
-          }, 1000);
-        } else {
-          setTimeout(() => {
-            $("#total").html("0 &euro;");
-          }, 1000);
-        }
-
-        // SERVIZI
-        servizi = Object.keys(response.show.servizi);
-        servizi.forEach((servizio, index) => {
-          if (response.show.servizi[servizio] && index !== 0) {
-            $("#servicesList").append(
-              `<li>${servizio.slice(0, servizio.length - 4)}</li>`
-            );
-          }
-        });
-      })
-      .catch((err) => console.log(err));
-
-    /* -------- */
-    /* -------- */
-
-    $(".book-btn").on("click", () => {
+    /* INVIO DATI */
+    $(".book-btn").on("click", (e) => {
+      e.preventDefault();
       // controllo sui campi vuoti o errati
       // in queste circostanze l'evento submit
       // viene fermato
@@ -646,7 +533,7 @@
       $("input").removeClass("invalid-field is-invalid");
       $("#book-help > small").text("");
 
-      fetch(`/inserzione/prenota?id=${params.get("id")}`, {
+      fetch(`/inserzione/prenota/${inserzione.id_inserzione}`, {
         method: "GET",
         redirect: "follow",
       })
@@ -663,6 +550,149 @@
           window.location.href = "/login";
         });
     });
+    /* --------------------------------------------------------- */
+
+    /* OPERAZIONE DI FETCH */
+    // Fetch informazioni generali dell'inserzione
+    // fetch(`/inserzione/res${window.location.search}`)
+    //   .then(async (res) => {
+    //     const response = await res.json();
+    //     console.log(response.show);
+    //     checkin = params.get("checkin");
+    //     checkout = params.get("checkout");
+    //     nospiti = params.get("nospiti");
+    //     prezzoBase = response.show.prezzo_base;
+
+    //     // Inserisco tutte le informazioni nei vari campi
+    //     // Heading
+    //     $(".title-container").append(
+    //       `<h1><b>${response.show.nome_inserzione}</b></h1>`
+    //     );
+    //     // Showcase
+    //     // -- Description
+    //     $("#citta > h3").append(response.show.citta);
+    //     $(".description-content-col > p").append(response.show.descrizione);
+    //     $("#desc-rooms > p")
+    //       .append(`${response.show.n_ospiti} ospiti &#8226; 3 stanze da letto`)
+    //       .addClass("text-muted");
+    //     // -- Map
+    //     $("#map > iframe").attr(
+    //       "src",
+    //       `https://www.google.com/maps/embed/v1/place?key=AIzaSyDS70zwyWHYnuia677DVOj8CRqfAzI00Qo
+    //     &q=${response.show.citta},${response.show.indirizzo}`
+    //     );
+
+    //     // Carousel
+    //     imgs = response.show.galleryPath.split(",");
+    //     for (let i = 0; i < imgs.length; i += 1) {
+    //       if (i === 0) {
+    //         $(".carousel-inner").append(
+    //           `
+    //             <div class="carousel-item active">
+    //               <div class="carousel-item-img" style="background-image: url('/uploads/fotoInserzione/${response.show.ref_host_ins}${imgs[i]}');">
+    //               </div>
+    //             </div>
+    //           `
+    //         );
+    //       } else {
+    //         $(".carousel-inner").append(
+    //           `
+    //             <div class="carousel-item">
+    //               <div class="carousel-item-img" style="background-image: url('/uploads/fotoInserzione/${response.show.ref_host_ins}${imgs[i]}');">
+    //               </div>
+    //             </div>
+    //           `
+    //         );
+    //       }
+    //     }
+
+    //     // Riepilogo
+    //     // Imposto il valore massimo dell'ìnput ospiti
+    //     $("#guestNum").attr("max", response.show.n_ospiti);
+
+    //     // Inserisco le date disabilitate, ossia quelle relative
+    //     // a giorni già prenotati da altri
+
+    //     date = response.date;
+
+    //     $("#check-in").datepicker({
+    //       format: "yyyy-mm-dd",
+    //       autoclose: true,
+    //       todayHighlight: true,
+    //       startDate: new Date(),
+    //       endDate: response.show.fineDisponibilita,
+    //       datesDisabled: date,
+    //       clearBtn: true,
+    //     });
+
+    //     $("#check-out").datepicker({
+    //       format: "yyyy-mm-dd",
+    //       autoclose: true,
+    //       todayHighlight: true,
+    //       startDate: new Date(),
+    //       endDate: response.show.fineDisponibilita,
+    //       datesDisabled: date,
+    //       clearBtn: true,
+    //     });
+
+    //     // Per rendere le cose graficamente mugliori
+    //     // inserisco uno spinner al posto del prezzo
+    //     // per simulare un caricamento
+    //     $("#total").html(`
+    //       <div class="spinner-border" role="status">
+    //         <span class="sr-only">Loading...</span>
+    //       </div>
+    //     `);
+
+    //     // Aggiungo un overlay alla mappa
+    //     if ($("#overlay").length === 0) {
+    //       $("#map").prepend("<div id='overlay'></div>");
+    //       $("#modal-map").attr("src", $("#map > iframe").attr("src"));
+    //       $("#overlay").on("click", () => {
+    //         $("#mapModal").modal("show");
+    //         $("#overlay").remove();
+    //       });
+    //     }
+
+    //     // Calcolo il prezzo totale in base ai giorni (-1)
+    //     // cioè calcolo il numero di notti. Tutto moltiplicato
+    //     // per il numero di ospiti. Lospinner viene rimosso
+    //     // da uno dei due metodi html
+    //     if (checkin && checkout) {
+    //       checkinDate = new Date(checkin);
+    //       checkoutDate = new Date(checkout);
+
+    //       // Se prenoto per un giorno pagherò l'intera giornata
+    //       // come se pernottassi
+    //       if (checkin === checkout) {
+    //         nights = 1;
+    //       } else {
+    //         nights = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
+    //       }
+
+    //       prezzoPerNotte = nights * prezzoBase;
+    //       prezzoNotteServizio = prezzoPerNotte + prezzoPerNotte * 0.07;
+    //       prezzoTotale = prezzoNotteServizio + prezzoNotteServizio * 0.1;
+    //       setTimeout(() => {
+    //         $("#total").html(prezzoTotale.toPrecision(4) + " &euro;");
+    //       }, 1000);
+    //     } else {
+    //       setTimeout(() => {
+    //         $("#total").html("0 &euro;");
+    //       }, 1000);
+    //     }
+
+    //     // SERVIZI
+    //     servizi = Object.keys(response.show.servizi);
+    //     servizi.forEach((servizio, index) => {
+    //       if (response.show.servizi[servizio] && index !== 0) {
+    //         $(".services-content-ul").append(
+    //           `<li>${servizio.slice(0, servizio.length - 4)}</li>`
+    //         );
+    //       }
+    //     });
+    //   })
+    //   .catch((err) => console.log(err));
     /* --------------------------------------------------------- */
   });
 </script>

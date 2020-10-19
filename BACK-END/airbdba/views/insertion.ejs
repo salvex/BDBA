@@ -1,109 +1,181 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <%- include("./partials/head.ejs", {title: "Insertion"}) %>
   <body>
-    <div id="insertion-wrapper">
-      <%- include("./partials/nav.ejs") %>
-      <!-- popup modal -->
-      <%- include("./partials/28-err-modal.ejs") %> <%-
-      include("./partials/map-modal.ejs") %>
-
+    <!-- popup modal -->
+    <%- include("./partials/28-err-modal.ejs") %>
+    <div class="container-fluid insertion-container h-100">
       <div id="back-btn" class="btn btn-primary">&#8617; Indietro</div>
       <div id="book-menu" class="btn btn-primary">&#9776;</div>
-      <div id="insertion-content">
-        <div id="left">
-          <div id="insertion-heading">
-            <h1></h1>
-          </div>
-          <div id="showcase">
-            <div id="carousel-container">
-              <div
-                id="carouselExampleControls"
-                class="carousel slide"
-                data-ride="carousel"
-              >
-                <div class="carousel-inner"></div>
-                <a
-                  class="carousel-control-prev"
-                  href="#carouselExampleControls"
-                  role="button"
-                  data-slide="prev"
-                >
-                  <span
-                    class="carousel-control-prev-icon"
-                    aria-hidden="true"
-                  ></span>
-                  <span class="sr-only">Previous</span>
-                </a>
-                <a
-                  class="carousel-control-next"
-                  href="#carouselExampleControls"
-                  role="button"
-                  data-slide="next"
-                >
-                  <span
-                    class="carousel-control-next-icon"
-                    aria-hidden="true"
-                  ></span>
-                  <span class="sr-only">Next</span>
-                </a>
+      <div class="row nav-content-footer h-100">
+        <div class="col-12 nav-col align-self-start">
+          <%- include("./partials/nav.ejs") %>
+        </div>
+        <div class="col-12 body-col">
+          <div class="sidebar">
+            <div class="sidebar-date-row">
+              <div class="card date-changer">
+                <a href="#prenota" class="btn btn-secondary goDown"
+                  ><i class="fas fa-arrow-down"></i
+                ></a>
+                <div class="card-body">
+                  <div class="col-12 sidebar-heading-container">
+                    <h5><b>Dettaglio prenotazione</b></h5>
+                  </div>
+                  <div class="col-12 sidebar-date-container">
+                    <input
+                      type="text"
+                      autocomplete="off"
+                      id="check-in"
+                      class="form-control form-date isEmpty"
+                      placeholder="Check-in"
+                      readonly
+                    />
+                  </div>
+                  <div class="col-12 sidebar-date-container">
+                    <input
+                      type="text"
+                      autocomplete="off"
+                      id="check-out"
+                      class="form-control form-date isEmpty"
+                      placeholder="Check-in"
+                      readonly
+                    />
+                  </div>
+                  <div class="col-12 sidebar-date-container">
+                    <input
+                      id="guestNum"
+                      type="number"
+                      class="form-control form-guest"
+                      placeholder="Ospiti"
+                    />
+                  </div>
+                  <div class="col-12 sumup">
+                    <table class="table table-striped">
+                      <tbody>
+                        <tr>
+                          <td>Notti</td>
+                          <td id="nights"></td>
+                        </tr>
+                        <tr>
+                          <td>A notte</td>
+                          <td id="aNight"></td>
+                        </tr>
+                        <tr>
+                          <td>Servizio</td>
+                          <td>10%</td>
+                        </tr>
+                        <tr>
+                          <td>IVA</td>
+                          <td>7%</td>
+                        </tr>
+                        <tr>
+                          <td>Totale:</td>
+                          <td id="total"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="col-12 book-container">
+                    <button id="prenota" class="btn btn-primary book-btn">
+                      Prenota
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-            <div id="description">
-              <div id="typografy">
-                <div id="citta">
-                  <h3></h3>
-                </div>
-                <div id="desc">
-                  <p></p>
-                </div>
-                <div id="desc-rooms">
-                  <p></p>
+          </div>
+          <div class="content">
+            <div class="row title-row">
+              <div class="col title-container"></div>
+            </div>
+            <div class="row carousel-row">
+              <div class="col-md-12 col-lg-6 carousel-container">
+                <div id="carousel-container">
+                  <div
+                    id="carouselExampleControls"
+                    class="carousel slide"
+                    data-ride="carousel"
+                  >
+                    <div class="carousel-inner"></div>
+                    <a
+                      class="carousel-control-prev"
+                      href="#carouselExampleControls"
+                      role="button"
+                      data-slide="prev"
+                    >
+                      <span
+                        class="carousel-control-prev-icon"
+                        aria-hidden="true"
+                      ></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a
+                      class="carousel-control-next"
+                      href="#carouselExampleControls"
+                      role="button"
+                      data-slide="next"
+                    >
+                      <span
+                        class="carousel-control-next-icon"
+                        aria-hidden="true"
+                      ></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
                 </div>
               </div>
-              <div id="map">
-                <!-- <div id="overlay"></div> -->
-                <iframe
-                  width="100%"
-                  height="100%"
-                  frameborder="0"
-                  style="border: 0"
-                  src=""
-                  allowfullscreen
-                >
-                </iframe>
+              <div class="col-md-12 col-lg-6 grid-container">
+                <div class="grid-row first"></div>
+                <div class="grid-row second"></div>
+                <div class="grid-row third"></div>
               </div>
             </div>
-          </div>
-          <div>
-            <h3>
-              Servizi
-              <hr />
-            </h3>
-          </div>
-          <div>
-            <ul id="servicesList"></ul>
+            <!-- <div class="row city-row">
+              <div class="col-12 city-container"></div>
+            </div>
+            <div class="row address-row">
+              <div class="col-12 address-container"></div>
+            </div> -->
+            <div class="row host-row">
+              <div class="col-12 host-label">
+                <h3><b>Host</b></h3>
+              </div>
+              <div class="col-12 host-container"></div>
+            </div>
+            <div class="row description-row">
+              <div class="col-12 description-label">
+                <h3><b>Descrizione</b></h3>
+              </div>
+              <div class="col-12 description-container"></div>
+            </div>
+            <div class="row services-row">
+              <div class="col-12 services-label">
+                <h3><b>Servizi</b></h3>
+              </div>
+              <div class="col-12 services-container">
+                <ul></ul>
+              </div>
+            </div>
+            <div class="row position-row">
+              <div class="col-12 position-label">
+                <h3><b>Posizione</b></h3>
+              </div>
+              <div class="col-12 city-address"></div>
+              <div class="col-12 position-container">
+                <ul></ul>
+              </div>
+            </div>
           </div>
         </div>
-        <div id="right">
-          <h4 id="book-heading">Dettaglio prenotazione</h4>
-          <div id="form-container">
-            <div class="card change-data">
-              <%- include("./partials/change-dates-guests.ejs") %>
-            </div>
-            <div id="book-help"><small class="text-danger"></small></div>
-          </div>
-          <%- include("./partials/recap.ejs") %>
-          <div id="change-data">
-            <button class="book-btn btn btn-primary">Prenota</button>
-          </div>
+        <div class="col-12 foot-col align-self-end">
+          <%- include("./partials/footer.ejs") %>
         </div>
       </div>
-      <div id="footer"><%- include("./partials/footer.ejs") %></div>
     </div>
+    <!-- PROFILE SCRIPT -->
+    <%- include("../public/scripts/insertion-script.ejs") %>
     <!-- GENERAL SCRIPT -->
     <%- include("../public/scripts/general-script.ejs") %>
-    <!-- INSERION SCRIPT -->
-    <%- include("../public/scripts/insertion-script.ejs") %>
   </body>
 </html>
