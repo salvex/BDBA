@@ -533,22 +533,31 @@
       $("input").removeClass("invalid-field is-invalid");
       $("#book-help > small").text("");
 
-      fetch(`/inserzione/prenota/${inserzione.id_inserzione}/${nights}`, {
-        method: "GET",
-        redirect: "follow",
-      })
-        .then(async (res) => {
-          const response = await res.json();
-          if (response.success) {
-            window.location.href = `/inserzione/prenota/pagamento${window.location.search}&prezzo=${prezzoTotale}`;
-          } else {
-            $("#exampleModal").modal("show");
-            $("#left").css("overflow", "hidden");
-          }
+      if (nights <= 28) {
+        fetch(`/inserzione/prenota/${inserzione.id_inserzione}/${nights}`, {
+          method: "GET",
+          redirect: "follow",
         })
-        .catch((err) => {
-          window.location.href = "/login";
-        });
+          .then(async (res) => {
+            const response = await res.json();
+            if (response.success) {
+              window.location.href = `/inserzione/prenota/pagamento${window.location.search}&prezzo=${prezzoTotale}`;
+            } else {
+              $("#exampleModal").modal("show");
+              $("#left").css("overflow", "hidden");
+              $(".text-msg").text(
+                `Hai superato il numero massimo di giorni relativi all'anno  ${new Date().getFullYear()}  trascorribili in questo B&B/casa vacanze!`
+              );
+            }
+          })
+          .catch((err) => {
+            window.location.href = "/login";
+          });
+      } else {
+        $("#exampleModal").modal("show");
+        $("#left").css("overflow", "hidden");
+        $(".text-msg").text("Non puoi pernottare per più di 28 giorni!");
+      }
     });
     /* --------------------------------------------------------- */
 

@@ -32,9 +32,9 @@
 }
 
 /* BACK BTN */
-#back-btn {
+/* #back-btn {
   display: none;
-}
+} */
 
 /* BODY */
 .content {
@@ -194,7 +194,9 @@ tbody {
 .position-container {
   height: 100%;
 }
-
+.title-row {
+  margin-top: 50px;
+}
 /* --------------- */
 
 #book-menu {
