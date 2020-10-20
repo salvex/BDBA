@@ -84,6 +84,7 @@
   background-color: rgba(0, 0, 0, 0.025);
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.125);
 }
+
 @media (max-width: 576px) {
   .title > h2 {
     font-size: 20px;
@@ -100,5 +101,11 @@
 @media (max-width: 1110px) {
   .card-body-container {
     flex-flow: column wrap;
+  }
+}
+
+@media (max-width: 360px) {
+  #center {
+    flex: 20;
   }
 }

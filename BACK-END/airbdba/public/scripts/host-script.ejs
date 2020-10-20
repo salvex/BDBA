@@ -208,6 +208,7 @@
             .attr("inserzione", inserzione.id_inserzione)
             .on("show.bs.modal", function () {
               // Salvo il path della cartella
+              $("input[id$='Modal']").removeClass("is-invalid");
               folderPath =
                 immagini[index][0].split("/")[2] +
                 "/" +
@@ -328,6 +329,16 @@
       $(element)
     }); */
 
+    /* ------------------------------------------------- */
+
+    /* CONTROLLI */
+    $("input, textarea").on("focusout input", function () {
+      if ($(this).val() === "") {
+        $(this).addClass("is-invalid");
+      } else {
+        $(this).removeClass("is-invalid");
+      }
+    });
     /* ------------------------------------------------- */
 
     /* AGGIUNGI INSERZIONE */
