@@ -152,6 +152,7 @@
         `);
     } else {
       inserzioni.forEach((inserzione, index) => {
+        console.log(immagini[index][0]);
         $("#visualizza").append(`
           <div class="row">
             <div class="col-12">
@@ -159,7 +160,7 @@
                 <div class="card-body no-padding">
                   <div class="row">
                     <div class="col-md-12 col-lg-4">
-                      <div class="card-i" style="background-image: url(/uploads/fotoInserzione/<%= user.id %>${
+                      <div class="card-i" style="background-image: url(/uploads/fotoInserzione${
                         immagini[index][0]
                       }); background-size:cover; background-position:bottom; width:100%; height: 200px"></div>
                     </div>
@@ -207,7 +208,10 @@
             .attr("inserzione", inserzione.id_inserzione)
             .on("show.bs.modal", function () {
               // Salvo il path della cartella
-              folderPath = immagini[index][0].slice(0, 14);
+              folderPath =
+                immagini[index][0].split("/")[2] +
+                "/" +
+                immagini[index][0].split("/")[3];
               console.log(folderPath);
 
               // Compilo i campi dell'inserzione con i valori attuali
@@ -267,7 +271,7 @@
                   $(`.img${i}`)
                     .css({
                       display: "flex",
-                      "background-image": `url("/uploads/fotoInserzione/<%= user.id %>${immagini[index][i]}")`,
+                      "background-image": `url("/uploads/fotoInserzione${immagini[index][i]}")`,
                       "background-size": "cover",
                       "background-position": "bottom",
                       height: "200px",
@@ -424,11 +428,17 @@
       console.log(insModal);
 
       formData.append("inserzione", insModal);
+      console.log(folderPath);
 
-      fetch(`/host/modifica/fotoInserzione/<%= user.id %>${folderPath}`, {
-        method: "PUT",
-        body: formData,
-      })
+      fetch(
+        `/host/modifica/fotoInserzione/<%= user.id %>/${
+          folderPath.split("/")[0]
+        }`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      )
         .then(async (res) => {
           const response = await res.json();
           if (response.success) {

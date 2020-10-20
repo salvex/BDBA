@@ -31,6 +31,32 @@
     $("#notti").append(String(nights));
 
     $("#confirm-btn").on("click", () => {
+      /* var element = document.getElementById("to-print");
+      var opt = {
+        margin: 2,
+        filename: `Prenotazione-${new Date().getFullYear()}-${
+          new Date().getMonth() + 1 < 10
+            ? "0" + (new Date().getMonth() + 1)
+            : new Date().getMonth() + 1
+        }-${new Date().getDate()}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: {
+          y: 0,
+          x: 230,
+        },
+        jsPDF: {
+          orientation: "p",
+          unit: "mm",
+          format: "a4",
+          putOnlyUsedFonts: true,
+          floatPrecision: 16, // or "smart", default is 16
+        },
+      };
+
+      // New Promise-based usage:
+      let worker = html2pdf().set(opt).from(element).toImg();
+      console.log(worker); */
+
       fetch(
         `/inserzione/prenota/riepilogo${window.location.search}&prezzo=<%= prenotazione.prezzo_finale %>`,
         {

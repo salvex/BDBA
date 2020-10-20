@@ -386,7 +386,7 @@
         $(".carousel-inner").append(
           `
           <div class="carousel-item active">
-            <div style="background-image: url('/uploads/fotoInserzione/${inserzione.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width:100%; height:350px; ">
+            <div style="background-image: url('/uploads/fotoInserzione${imgs[i]}'); background-size:cover; background-position: center; width:100%; height:350px; ">
             </div>
           </div>
           `
@@ -395,7 +395,7 @@
         $(".carousel-inner").append(
           `
           <div class="carousel-item">
-            <div style="background-image: url('/uploads/fotoInserzione/${inserzione.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width:100%; height:350px; ">
+            <div style="background-image: url('/uploads/fotoInserzione${imgs[i]}'); background-size:cover; background-position: center; width:100%; height:350px; ">
             </div>
           </div>
           `
@@ -406,19 +406,19 @@
       if (i <= 2) {
         $(".first").append(
           `
-        <div class="img-gallery" style="background-image: url('/uploads/fotoInserzione/${inserzione.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width: 100%; height: 100%; ">
+        <div class="img-gallery" style="background-image: url('/uploads/fotoInserzione${imgs[i]}'); background-size:cover; background-position: center; width: 100%; height: 100%; ">
         `
         );
       } else if (i <= 5) {
         $(".second").append(
           `
-        <div class="img-gallery" style="background-image: url('/uploads/fotoInserzione/${inserzione.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width: 100%; height: 100%; ">
+        <div class="img-gallery" style="background-image: url('/uploads/fotoInserzione${imgs[i]}'); background-size:cover; background-position: center; width: 100%; height: 100%; ">
         `
         );
       } else {
         $(".third").append(
           `
-        <div class="img-gallery" style="background-image: url('/uploads/fotoInserzione/${inserzione.ref_host_ins}${imgs[i]}'); background-size:cover; background-position: center; width: 100%; height: 100%; ">
+        <div class="img-gallery" style="background-image: url('/uploads/fotoInserzione${imgs[i]}'); background-size:cover; background-position: center; width: 100%; height: 100%; ">
         `
         );
       }
@@ -437,16 +437,28 @@
       `
     );
     // HOST
-    $(".host-container").append(
-      `
-      <div id="host-pic" style="background-image: url('${inserzione.utente.imagePath.slice(
-        6
-      )}')"></div>
-      <div id="host-name">
-        <b>${inserzione.utente.nome}&nbsp;${inserzione.utente.cognome}</b>
-      </div>
-      `
-    );
+    if (inserzione.utente.imagePath) {
+      $(".host-container").append(
+        `
+        <div id="host-pic" style="background-image: url('${inserzione.utente.imagePath.slice(
+          6
+        )}')"></div>
+        <div id="host-name">
+          <b>${inserzione.utente.nome}&nbsp;${inserzione.utente.cognome}</b>
+        </div>
+        `
+      );
+    } else {
+      $(".host-container").append(
+        `
+        <div id="host-pic" style="background-image: url('/assets/images/profile_pics/profile-placeholder.png')" ></div>
+        <div id="host-name">
+          <b>${inserzione.utente.nome}&nbsp;${inserzione.utente.cognome}</b>
+        </div>
+        `
+      );
+    }
+
     $(".description-container").append(
       `
       <p class="text-justify">${inserzione.descrizione}</p>
@@ -454,7 +466,11 @@
     );
     // SERVIZI
     Object.keys(inserzione.servizi).forEach((servizio, index) => {
-      if (servizio !== "casaFlag" && servizio !== "bnbFlag") {
+      if (
+        servizio !== "casaFlag" &&
+        servizio !== "bnbFlag" &&
+        servizio !== "ref_inserzione_s"
+      ) {
         if (inserzione.servizi[servizio] === 1) {
           $(".services-container > ul").append(
             `

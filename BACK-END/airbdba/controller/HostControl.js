@@ -30,7 +30,7 @@ var errorsHandler = (err) => {
   }
 
   return errors;
-}; 
+};
 
 async function parseField(
   NomeFilter,
@@ -112,12 +112,13 @@ async function parseField(
 
 const become_host_get = async (req, res) => {
   try {
-    var jwt = await Utente.diventaHost(req.session.utente.id); //test
+    var host = await Utente.diventaHost(req.session.utente.id); //test
     var token_host = JwtToken.createTokenHost(req.session.utente.id);
     res.cookie("host", token_host, {
       httpOnly: true,
       expiresIn: maxAge * 1000,
     });
+    req.session.utente = host;
     //--------------------/
     res.status(200).json({ success: true });
   } catch (err) {
@@ -209,12 +210,13 @@ const aggiungi_inserzione_post = async (req, res) => {
 
     let path = "";
     for (let i = 0; i < req.files["gallery"].length - 1; i++) {
-      path += req.files["gallery"][i].path.slice(31) + ",";
+      path += req.files["gallery"][i].path.split("fotoInserzione")[1] + ",";
     }
-    path += req.files["gallery"][req.files["gallery"].length - 1].path.slice(
-      31
-    );
+    path += req.files["gallery"][req.files["gallery"].length - 1].path.split(
+      "fotoInserzione"
+    )[1];
     path = path.replace(/\\/g, "/");
+    console.log(path);
 
     // /upload/AvatarUtente/12312748142/21907121.png
 
@@ -314,11 +316,11 @@ const modifica_inserzione_put = async (req, res) => {
         path = "";
       }
       for (let i = 0; i < req.files["gallery"].length - 1; i++) {
-        path += req.files["gallery"][i].path.slice(31) + ",";
+        path += req.files["gallery"][i].path.split("fotoInserzione")[1] + ",";
       }
-      path += req.files["gallery"][req.files["gallery"].length - 1].path.slice(
-        31
-      );
+      path += req.files["gallery"][req.files["gallery"].length - 1].path.split(
+        "fotoInserzione"
+      )[1];
     } else {
       if (imgToSave.length > 0) {
         path = imgToSave.reduce((x, y) => x + "," + y);
@@ -330,7 +332,8 @@ const modifica_inserzione_put = async (req, res) => {
     console.log(path);
 
     imgToDel.forEach((img, index) => {
-      fs.unlink(`public/uploads/fotoInserzione/${id_host}${img}`, (err) => {
+      console.log(img);
+      fs.unlink(`public/uploads/fotoInserzione${img}`, (err) => {
         if (err) throw err;
         console.log(img + " eliminata!");
       });
@@ -543,37 +546,33 @@ const cancella_inserzione_delete = async (req, res) => {
 const accetta_prenotazione_get = async (req, res) => {
   try {
     var acceptPren = await Prenotazione.findByPk(req.params.id_pren);
-    if (acceptPren) {
-      acceptPren.stato_prenotazione = 2;
-      await acceptPren.save();
-    } else {
-      throw new Error("prenotazione inesistente");
-    }
-
-    let user = await Utente.findbyPk(acceptPren.ref_utente);
+    acceptPren.stato_prenotazione = 2;
+    let user = await Utente.findByPk(acceptPren.ref_utente);
+    await acceptPren.save();
 
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
       bcc: user.email,
       subject:
-        "Comunicazione relativa a Prenotazione ID: " + acceptPren.id_prenotazione,
-      text:
-        "Comunicazione relativa alla Prenotazione richiesta",
+        "Comunicazione relativa a Prenotazione ID: " +
+        acceptPren.id_prenotazione,
+      text: "Comunicazione relativa alla Prenotazione richiesta",
       html:
         "<b>Le comunichiamo che la sua prenotazione è stata accettata</b><br><br><b>Cordiali Saluti, Team AIRBDBA</b>",
     };
 
-    await transporter.sendMail(bodyMail, (error, info) => {
+    /* await transporter.sendMail(bodyMail, (error, info) => {
       if (error) {
         return console.log(error);
       }
       console.log("Messaggio inviato: %s", info.messageId);
-    });
+    }); */
 
     res.status(200).json({
       success: true,
     });
   } catch (err) {
+    console.log(err);
     const errors = errorsHandler(err);
     res.status(400).json({ errors });
   }
@@ -581,37 +580,28 @@ const accetta_prenotazione_get = async (req, res) => {
 
 const rifiuta_prenotazione_get = async (req, res) => {
   try {
-    var refusePren = await Prenotazione.update(
-      { stato_prenotazione: 0 },
-      {
-        where: {
-          id_prenotazione: req.params.id_pren,
-        },
-      }
-    );
-
-    let user = await Utente.findbyPk(refusePren.ref_utente);
+    var refusePren = await Prenotazione.findByPk(req.params.id_pren);
+    refusePren.stato_prenotazione = 0;
+    let user = await Utente.findByPk(refusePren.ref_utente);
 
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
       bcc: user.email,
       subject:
-        "Comunicazione relativa a Prenotazione ID: " + refusePren.id_prenotazione,
-      text:
-        "Comunicazione relativa alla Prenotazione richiesta",
+        "Comunicazione relativa a Prenotazione ID: " +
+        refusePren.id_prenotazione,
+      text: "Comunicazione relativa alla Prenotazione richiesta",
       html:
         "<b>Le comunichiamo che la sua prenotazione è stata cancellata/rifiutata</b><br><br><b>Cordiali Saluti, Team AIRBDBA</b>",
     };
 
-    await transporter.sendMail(bodyMail, (error, info) => {
+    /* await transporter.sendMail(bodyMail, (error, info) => {
       if (error) {
         return console.log(error);
       }
       console.log("Messaggio inviato: %s", info.messageId);
-    });
-
-
-
+    }); */
+    await refusePren.save();
     res.status(200).json({
       success: true,
     });
@@ -662,7 +652,7 @@ const contatta_utente_post = async (req, res) => {
         message,
       /* html: "<b>RIEPILOGO PLACEHOLDER</b>", */
     };
-    console.log(bodyMail)
+    console.log(bodyMail);
     await transporter.sendMail(bodyMail, (error, info) => {
       if (error) {
         return console.log(error);

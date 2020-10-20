@@ -8,7 +8,7 @@
     /* GENERATE FORMS */
     let card;
     for (let i = 0; i < params.get("ospiti"); i++) {
-      if (i === params.get("ospiti") - 1) {
+      if (i === params.get("ospiti") - 1 && params.get("ospiti") > 1) {
         card = `
             <div class="card guest ${i}" index="${i}">
               <div class="card-header">
