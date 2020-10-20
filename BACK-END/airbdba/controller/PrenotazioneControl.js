@@ -11,16 +11,70 @@ const Utente = require("../model/Utente");
 //              IDENTIFICAZIONE OSPITI
 //              PAGAMENTO (VABE SIMULATO)
 
+// const effettua_pren_get = async (req, res) => {
+//   console.log("Prenotazione in corso..");
+//   try {
+//     console.log(req.params.id);
+//     const result = await Prenotazione.getCheckInCheckOut(
+//       req.session.utente.id,
+//       req.params.id
+//     );
+//     var giorniTotali = 0;
+//     var annoCorrente = moment().format("YYYY");
+//     var annoSuccessivo = moment().add(1, "y").format("YYYY");
+//     result.forEach((date) => {
+//       if (
+//         moment(date.check_in).format("YYYY") == annoCorrente - 1 &&
+//         moment(date.check_out).format("YYYY") == annoCorrente
+//       ) {
+//         giorniTotali += moment(date.check_out).diff(
+//           moment().startOf("year"),
+//           "days"
+//         );
+//       } else if (
+//         moment(date.check_in).format("YYYY") == annoCorrente &&
+//         moment(date.check_out).format("YYYY") == annoSuccessivo
+//       ) {
+//         giorniTotali += moment("2020-12-31").diff(
+//           moment(date.check_in),
+//           "days"
+//         );
+//       } else if (
+//         moment(date.check_in).format("YYYY") == annoCorrente &&
+//         moment(date.check_out).format("YYYY") == annoCorrente
+//       ) {
+//         giorniTotali += moment(date.check_out).diff(
+//           moment(date.check_in),
+//           "days"
+//         );
+//       }
+//     });
+//     console.log(giorniTotali);
+//     if (giorniTotali < 28) {
+//       /*riepilogo*/
+//       console.log("procedi con la prenotazione");
+//       res.status(200).json({ success: true });
+//     } else {
+//       console.log("impossibile procedere con la prenotazione");
+//       res.status(400).json({ success: false });
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     res.status(400).json({ err });
+//   }
+// };
+
 const effettua_pren_get = async (req, res) => {
   console.log("Prenotazione in corso..");
   try {
-    console.log(req.params.id);
+    const giorni_da_pren = req.params.giorni_da_pren;
     const result = await Prenotazione.getCheckInCheckOut(
-      req.session.utente.id,
-      req.params.id
+      req.params.id,
+      req.session.utente.id
     );
     var giorniTotali = 0;
     var annoCorrente = moment().format("YYYY");
+    //console.log(moment().endOf("year").format("YYYY-MM-DD"));
     var annoSuccessivo = moment().add(1, "y").format("YYYY");
     result.forEach((date) => {
       if (
@@ -31,6 +85,7 @@ const effettua_pren_get = async (req, res) => {
           moment().startOf("year"),
           "days"
         );
+        console.log("a");
       } else if (
         moment(date.check_in).format("YYYY") == annoCorrente &&
         moment(date.check_out).format("YYYY") == annoSuccessivo
@@ -39,6 +94,7 @@ const effettua_pren_get = async (req, res) => {
           moment(date.check_in),
           "days"
         );
+        console.log("b");
       } else if (
         moment(date.check_in).format("YYYY") == annoCorrente &&
         moment(date.check_out).format("YYYY") == annoCorrente
@@ -47,9 +103,11 @@ const effettua_pren_get = async (req, res) => {
           moment(date.check_in),
           "days"
         );
+        console.log("c");
       }
     });
     console.log(giorniTotali);
+    giorniTotali += giorni_da_pren;
     if (giorniTotali < 28) {
       /*riepilogo*/
       console.log("procedi con la prenotazione");

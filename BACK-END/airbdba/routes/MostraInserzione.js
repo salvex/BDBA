@@ -27,7 +27,7 @@ router.get(
 );
 
 router.get(
-  "/prenota/:id",
+  "/prenota/:id/:giorni_da_pren",
   [JwtToken.verifyToken],
   PrenotazioneControl.effettua_pren_get
 );

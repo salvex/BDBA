@@ -22,14 +22,14 @@ const ricerca_get = async (req, res, next) => {
   try {
     const nomeCittà = req.query.citta.toLowerCase();
     console.log("Ricerca in corso..");
-  /*  let checkin = Date.parse(req.query.checkin);
+    /*  let checkin = Date.parse(req.query.checkin);
     let checout = Date.parse(req.query.checkout); */
     const format_fields = await parseField(
       nomeCittà,
       req.query.checkin,
       req.query.checkout,
-      req.query.nospiti,
-    /*  req.query.wifi,
+      req.query.nospiti
+      /*  req.query.wifi,
       req.query.riscaldamento,
       req.query.frigorifero,
       req.query.casa,
@@ -40,8 +40,12 @@ const ricerca_get = async (req, res, next) => {
       req.query.essenziali,
       req.query.piscina*/
     );
-    const search_list = await Inserzione.verRicerca(format_fields,req.query.checkin,req.query.checkout);
-    //console.log(search_list);
+    const search_list = await Inserzione.verRicerca(
+      format_fields,
+      req.query.checkin,
+      req.query.checkout
+    );
+    // console.log(search_list);
     //res.status(200).render("search", {search_list});
     res.status(200).json({ search_list });
   } catch (err) {

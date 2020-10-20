@@ -76,7 +76,10 @@
   justify-content: flex-end;
   padding-right: 10px;
 }
-
+.filters {
+  background-color: rgba(0, 0, 0, 0.025);
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.125);
+}
 @media (max-width: 576px) {
   .title > h2 {
     font-size: 20px;

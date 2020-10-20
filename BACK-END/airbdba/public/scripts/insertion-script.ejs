@@ -533,7 +533,7 @@
       $("input").removeClass("invalid-field is-invalid");
       $("#book-help > small").text("");
 
-      fetch(`/inserzione/prenota/${inserzione.id_inserzione}`, {
+      fetch(`/inserzione/prenota/${inserzione.id_inserzione}/${nights}`, {
         method: "GET",
         redirect: "follow",
       })

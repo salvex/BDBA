@@ -88,6 +88,26 @@ Utente.hasMany(Prenotazione, {
   foreignKey: "ref_host",
 }); */
 
+/* Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
+  let yearBefore = moment().format("YYYY") - 1;
+  let yearFuture = moment().format("YYYY") + 1;
+  const result = await Prenotazione.findAll({
+    attributes: ["check_in", "check_out"],
+    where: {
+      ref_utente: id_ut,
+      ref_inserzione: id_ins,
+      check_in: {
+        [Op.gte]: Date.parse(yearBefore),
+        [Op.lte]: Date.parse(moment().endOf("year")),
+      },
+      check_out: {
+        [Op.lte]: Date.parse(moment().add(1, "y").endOf("year")),
+        [Op.gte]: Date.parse(moment().format("YYYY")),
+      },
+    },
+  });
+  return result;
+}; */
 Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
   let yearBefore = moment().format("YYYY") - 1;
   let yearFuture = moment().format("YYYY") + 1;
@@ -103,6 +123,9 @@ Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
       check_out: {
         [Op.lte]: Date.parse(moment().add(1, "y").endOf("year")),
         [Op.gte]: Date.parse(moment().format("YYYY")),
+      },
+      stato_prenotazione: {
+        [Op.gte]: 1,
       },
     },
   });

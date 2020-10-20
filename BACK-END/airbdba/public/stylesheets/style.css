@@ -48,6 +48,19 @@ body {
 .profile-circle {
   position: relative;
 }
+.profile-circle-overlay {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0);
+  z-index: 100;
+}
+.profile-circle-overlay:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+.profile-circle-overlay:active {
+  background-color: rgba(0, 0, 0, 0.125);
+}
 .hidden-list {
   position: absolute;
   top: 60px;
@@ -95,14 +108,14 @@ body {
   flex-flow: column wrap;
   margin-top: 40px;
 }
-
+/* #007bff #dc3545 */
 .search-form {
   display: flex;
   flex-direction: row;
   width: 100%;
-  background-color: #ffffff;
+  background-image: linear-gradient(to right, #dc3545, #007bff);
   border-radius: 35px;
-  border: 5px solid #286cff;
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.25);
 }
 
 #form-fields {
@@ -117,26 +130,32 @@ body {
 .form-input {
   border: 0;
   border-radius: 30px;
-  color: #000000;
+  color: #ffffff;
 }
 
+.form-input,
 .form-input:read-only {
-  background-color: #ffffff;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .form-input:hover {
-  background-color: #d4d4d4;
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 .form-input:focus {
   outline: 0px !important;
   -webkit-appearance: none;
   box-shadow: none !important;
-  background-color: #d4d4d4;
+  background-color: rgba(0, 0, 0, 0.25);
+  color: #ffffff;
 }
-
+.form-input.form-control.is-invalid {
+  border: 1px solid #ffc107;
+  background-color: rgba(255, 193, 7, 0.9);
+  box-shadow: 10px 0 5px rgba(0, 0, 0, 0.125);
+}
 .form-input::placeholder {
-  color: #000000;
+  color: #ffffff;
 }
 
 .form-select {
@@ -164,12 +183,12 @@ body {
 #form-button > button {
   border: 0;
   border-radius: 50%;
-  background-color: #286cff;
+  background-color: #007bff;
   color: #ffffff;
 }
 
 #form-button > button:hover {
-  background-color: #000000;
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 #form-button > button > img {
@@ -261,11 +280,21 @@ body {
   .search-form {
     display: flex;
     flex-direction: column;
+    background-image: linear-gradient(to bottom, #dc3545, #007bff);
   }
 
   #form-fields {
     display: flex;
     flex-direction: column;
+  }
+  #location {
+    border-radius: 34px 34px 0 0;
+  }
+
+  #check-in,
+  #check-out,
+  #guestNum {
+    border-radius: 0;
   }
 
   #form-button {
@@ -274,7 +303,7 @@ body {
   }
 
   #form-button > button {
-    border-radius: 0 0 30px 30px;
+    border-radius: 0 0 34px 34px;
     width: 100%;
   }
 

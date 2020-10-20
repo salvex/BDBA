@@ -22,7 +22,9 @@ const errorsHandler = (err) => {
 const user_get = async (req, res, next) => {
   try {
     const prenotazioni = await Prenotazione.findAll({
-      where: { ref_utente: req.session.utente.id },
+      where: {
+        ref_utente: req.session.utente.id,
+      },
       include: [
         {
           model: Inserzione,
@@ -40,7 +42,6 @@ const user_get = async (req, res, next) => {
     res.status(400).json({ success: false });
   }
 };
-
 
 const modificaPassword_get = (req, res) => {
   res.render("modificaPassword");
@@ -114,13 +115,13 @@ const modificaFotoProfilo_put = async (req, res) => {
   }
 };
 
-const contatta_host_post = async (req,res) => {
+const contatta_host_post = async (req, res) => {
   try {
-    const {id_host,id_pren,message} = req.body;
+    const { id_host, titolo, message } = req.body;
     let host = await Utente.findByPk(id_host);
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
-      to: host.email,
+      to: "",
       replyTo: req.session.utente.email,
       subject:
         "Comunicazione dall'Utente " +
@@ -128,8 +129,8 @@ const contatta_host_post = async (req,res) => {
         " " +
         req.session.utente.cognome,
       text:
-        'Comunicazione relativa alla prenotazione ID: "' +
-        id_pren +
+        'Comunicazione relativa alla prenotazione "' +
+        titolo +
         '"\n\n' +
         message,
     };
@@ -141,13 +142,14 @@ const contatta_host_post = async (req,res) => {
     });
     res.status(200).json({ success: true });
   } catch (err) {
-    res.status(400).json({err});
+    console.log(err);
+    res.status(400).json({ err });
   }
-}
+};
 
-const cancella_pren_user_delete = async (req,res) => {
+const cancella_pren_user_delete = async (req, res) => {
   try {
-    const {id_pren} = req.body;
+    const { id_pren } = req.body;
     await Prenotazione.update(
       { stato_prenotazione: 0 },
       {
@@ -158,10 +160,9 @@ const cancella_pren_user_delete = async (req,res) => {
     );
     res.status(200).json({ success: true });
   } catch (err) {
-    res.status(400).json({err});
+    res.status(400).json({ err });
   }
-}
-
+};
 
 module.exports = {
   user_get,

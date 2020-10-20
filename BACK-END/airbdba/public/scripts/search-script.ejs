@@ -2,6 +2,9 @@
   $("document").ready(() => {
     /* LETs & CONSTs */
     const params = new URLSearchParams(window.location.search);
+    let response_list,
+      imgs,
+      filters = {};
     /* --------------------------------------------------------- */
 
     /* ON RELOAD */
@@ -23,6 +26,99 @@
       }
     });
     /* --------------------------------------------------------- */
+
+    /* CHECKBOXES */
+    // initial value
+    $("input[type=checkbox]").prop("checked", false);
+
+    // filtri
+    $("input[type=checkbox]").on("click", () => {
+      $(".insertion-card").remove();
+      filters = {};
+      $("input[type=checkbox]").each((index, check) => {
+        if ($(check).prop("checked")) {
+          filters[$(check).prop("id") + "Flag"] = 1;
+        }
+      });
+      for (let i = 0; i < response_list.length; i += 1) {
+        let flag = 1;
+        Object.keys(filters).forEach((filter, index) => {
+          if (
+            !response_list[i].servizi[filter] &&
+            filter !== "casaFlag" &&
+            filter !== "bnbFlag"
+          ) {
+            console.log("filtri");
+            flag = 0;
+            return;
+          } else if (
+            filters["casaFlag"] &&
+            !filters["bnbFlag"] &&
+            !response_list[i].servizi["casaFlag"]
+          ) {
+            console.log("casa");
+            flag = 0;
+            return;
+          } else if (
+            !filters["casaFlag"] &&
+            filters["bnbFlag"] &&
+            !response_list[i].servizi["bnbFlag"]
+          ) {
+            console.log("bnb");
+            flag = 0;
+            return;
+          }
+        });
+
+        if (!flag) {
+          continue;
+        }
+        imgs = response_list[i].galleryPath.split(",");
+        const card = `
+            <div class="card insertion-card">
+                <div class="card-body-container">
+                    <div class="img-container">
+                      <div class="card-img-top">
+                        <div class="card-img" style="background-image: url('/uploads/fotoInserzione/${response_list[i].ref_host_ins}${imgs[0]}'); background-size:cover; background-position: center; width:100%; height:270px; border-radius: .25rem 0 0 0 ">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="title">
+                          <h2>
+                          <strong> ${response_list[i].nome_inserzione} </strong>
+                          </h2>
+                      </div>
+                      <div class="citta">
+                          <h4>
+                          <i> ${response_list[i].citta} </i>
+                          </h4>
+                      </div>
+                      <div class="descrizione">
+                          <p>${response_list[i].descrizione}</p>
+                      </div>
+                    </div>
+                </div>
+                  <div class="card-footer text-success">
+                      <div class="btn-container">
+                      <button id="${response_list[i].id_inserzione}" class="btn btn-primary">
+                          Visita inserzione
+                      </button>
+                      </div>
+                      <div class="price">
+                      <strong><i>${response_list[i].prezzo_base} &euro;</i></strong>
+                      </div>
+                  </div>
+                </div>`;
+
+        // Inserisco la card nel contenitore
+        $("#content").append(card);
+        $(`#${response_list[i].id_inserzione}`).on("click", () => {
+          window.location.href = `/inserzione/${response_list[i].id_inserzione}${window.location.search}`;
+        });
+      }
+    });
+    /* ------------------------------------------------- */
 
     /* TOOLTIP */
     $("#location").tooltip("disable");
@@ -105,7 +201,7 @@
     fetch(`/search/res${window.location.search}`)
       .then(async (res) => {
         const response = await res.json();
-
+        console.log(response.search_list);
         if (response.search_list.length === 0) {
           // Se non ci sono stati risultati con la ricerca
           // Stampo un messaggio di errore.
@@ -130,11 +226,11 @@
             // database.
             imgs = element.galleryPath.split(",");
             const card = `
-            <div class="card">
+            <div class="card insertion-card">
                 <div class="card-body-container">
                     <div class="img-container">
                       <div class="card-img-top">
-                        <div class="card-img" style="background-image: url('/uploads/fotoInserzione/${element.ref_host_ins}${imgs[0]}'); background-size:cover; background-position: center; width:100%; height:350px; ">
+                        <div class="card-img" style="background-image: url('/uploads/fotoInserzione/${element.ref_host_ins}${imgs[0]}'); background-size:cover; background-position: center; width:100%; height:270px; border-radius: .25rem 0 0 0 ">
                         </div>
                       </div>
                     </div>

@@ -39,17 +39,21 @@
         <% }%>
         `,
     });
+    $("#msg").val("");
     /* --------------------------------------------------------- */
 
     /* PRENOTAZIONI */
+    let ind = 0;
     prenotazioni.forEach((prenotazione, index) => {
-      $(".prenotazioni-container").append(
-        `
+      if (prenotazione.stato_prenotazione > 0) {
+        ind += 1;
+        $(".prenotazioni-container").append(
+          `
             <div class="card pren-card">
-              <div class="card-body">                
+              <div class="card-body">
                 <div class="row">
                     <div class="col-sm-12 col-md-2">
-                    <b>#${index + 1}</b>
+                    <b>#${ind}</b>
                   </div>
                   <div class="col-sm-12 col-md-4">
                     <b>${prenotazione.inserzione.nome_inserzione}</b>
@@ -62,9 +66,79 @@
                   </div>
                 </div>
               </div>
+              <div class="card-footer profile-pren-btns">
+                <div class="row">
+                  <div class="col-12">
+                    <button id="contact${index}" class="btn btn-primary">Contatta</button>
+                    <button id="cancel${index}" class="btn btn-danger">Annulla</button>
+                  </div>
+                </div>
+              </div>
             </div>
         `
-      );
+        );
+      }
+      $(`#cancel${index}`).on("click", () => {
+        $("#confirmCanc")
+          .on("show.bs.modal", () => {
+            $(".cancel-content").text(
+              "Sei sicuro di voler annullare questa prenotazione? I soldi non ti verranno rimborsati!"
+            );
+            $(".confirmC").on("click", () => {
+              fetch("/profilo/cancella-pren", {
+                method: "delete",
+                body: JSON.stringify({ id_pren: prenotazione.id_prenotazione }),
+                headers: { "Content-Type": "application/json" },
+              })
+                .then(async (res) => {
+                  const response = await res.json();
+                  if (response.success) {
+                    window.location.reload();
+                  }
+                })
+                .catch((err) => console.log(err));
+            });
+          })
+          .on("hidden.bs.modal", () => {
+            $(".confirmC").off("click");
+          })
+          .modal("show");
+      });
+      $(`#contact${index}`).on("click", () => {
+        $("#contactModal")
+          .on("show.bs.modal", () => {
+            $(".confirmM").on("click", () => {
+              if ($("#msg").val() === "") {
+                return;
+              }
+              console.log(
+                prenotazione.inserzione.nome_inserzione,
+                $("#msg").val()
+              );
+              const contact = JSON.stringify({
+                id_host: prenotazione.ref_host,
+                titolo: prenotazione.inserzione.nome_inserzione,
+                message: $("#msg").val(),
+              });
+              fetch("/profilo/contatta-host", {
+                method: "post",
+                body: contact,
+                headers: { "Content-Type": "application/json" },
+              })
+                .then(async (res) => {
+                  const response = await res.json();
+                  if (response.success) {
+                    window.location.reload();
+                  }
+                })
+                .catch((err) => console.log(err));
+            });
+          })
+          .on("hidden.bs.modal", () => {
+            $(".confirmM").off("click");
+          })
+          .modal("show");
+      });
     });
     /* --------------------------------------------------------- */
 

@@ -55,6 +55,12 @@
 .pren-card:not(:first-child) {
   margin-top: 20px;
 }
+.profile-pren-btns {
+  background-color: rgba(0, 0, 0, 0.025);
+}
+button[id^="contact"] {
+  margin-right: 10px;
+}
 .settings-item-nav:first-child {
   margin-top: 15px;
 }
@@ -97,6 +103,10 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 25px;
+}
+
+textarea {
+  resize: none;
 }
 
 @media (max-width: 576px) {
