@@ -2,6 +2,7 @@ const Utente = require("../model/Utente");
 const MetodoPagamento = require("../model/MetodoPagamento");
 const Prenotazione = require("../model/Prenotazione");
 const Inserzione = require("../model/Inserzione");
+const transporter = require("../utils/mailSender");
 
 const errorsHandler = (err) => {
   let error = { message: "" };
@@ -40,9 +41,6 @@ const user_get = async (req, res, next) => {
   }
 };
 
-/* const profilo_get = (req, res) => {
-  res.render("profilo");
-}; */
 
 const modificaPassword_get = (req, res) => {
   res.render("modificaPassword");
@@ -116,6 +114,55 @@ const modificaFotoProfilo_put = async (req, res) => {
   }
 };
 
+const contatta_host_post = async (req,res) => {
+  try {
+    const {id_host,id_pren,message} = req.body;
+    let host = await Utente.findByPk(id_host);
+    let bodyMail = {
+      from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
+      to: host.email,
+      replyTo: req.session.utente.email,
+      subject:
+        "Comunicazione dall'Utente " +
+        req.session.utente.nome +
+        " " +
+        req.session.utente.cognome,
+      text:
+        'Comunicazione relativa alla prenotazione ID: "' +
+        id_pren +
+        '"\n\n' +
+        message,
+    };
+    await transporter.sendMail(bodyMail, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log("Messaggio inviato: %s", info.messageId);
+    });
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(400).json({err});
+  }
+}
+
+const cancella_pren_user_delete = async (req,res) => {
+  try {
+    const {id_pren} = req.body;
+    await Prenotazione.update(
+      { stato_prenotazione: 0 },
+      {
+        where: {
+          id_prenotazione: id_pren,
+        },
+      }
+    );
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(400).json({err});
+  }
+}
+
+
 module.exports = {
   user_get,
   // profilo_get,
@@ -125,5 +172,6 @@ module.exports = {
   metodoPagamento_delete,
   metodoPagamento_get,
   modificaFotoProfilo_put,
-  //diventaHost_post,
+  contatta_host_post,
+  cancella_pren_user_delete,
 };

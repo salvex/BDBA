@@ -17,6 +17,8 @@ router.put(
   [FileUpload.upFiles],
   userController.modificaFotoProfilo_put
 );
+router.post("/contatta-host", userController.contatta_host_post);
+router.delete("/cancella-pren", userController.cancella_pren_user_delete);
 /*router.post("/diventa-host", userController.diventaHost_post);
 router.get("/profilo/foto-profilo", userController.fotoProfilo_get);
 router.post("/profilo/foto-profilo", userController.fotoProfilo_post);*/

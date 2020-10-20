@@ -30,7 +30,7 @@ var errorsHandler = (err) => {
   }
 
   return errors;
-};
+}; 
 
 async function parseField(
   NomeFilter,
@@ -549,6 +549,27 @@ const accetta_prenotazione_get = async (req, res) => {
     } else {
       throw new Error("prenotazione inesistente");
     }
+
+    let user = await Utente.findbyPk(acceptPren.ref_utente);
+
+    let bodyMail = {
+      from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
+      bcc: user.email,
+      subject:
+        "Comunicazione relativa a Prenotazione ID: " + acceptPren.id_prenotazione,
+      text:
+        "Comunicazione relativa alla Prenotazione richiesta",
+      html:
+        "<b>Le comunichiamo che la sua prenotazione è stata accettata</b><br><br><b>Cordiali Saluti, Team AIRBDBA</b>",
+    };
+
+    await transporter.sendMail(bodyMail, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log("Messaggio inviato: %s", info.messageId);
+    });
+
     res.status(200).json({
       success: true,
     });
@@ -568,6 +589,29 @@ const rifiuta_prenotazione_get = async (req, res) => {
         },
       }
     );
+
+    let user = await Utente.findbyPk(refusePren.ref_utente);
+
+    let bodyMail = {
+      from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
+      bcc: user.email,
+      subject:
+        "Comunicazione relativa a Prenotazione ID: " + refusePren.id_prenotazione,
+      text:
+        "Comunicazione relativa alla Prenotazione richiesta",
+      html:
+        "<b>Le comunichiamo che la sua prenotazione è stata cancellata/rifiutata</b><br><br><b>Cordiali Saluti, Team AIRBDBA</b>",
+    };
+
+    await transporter.sendMail(bodyMail, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log("Messaggio inviato: %s", info.messageId);
+    });
+
+
+
     res.status(200).json({
       success: true,
     });
@@ -604,7 +648,7 @@ const contatta_utente_post = async (req, res) => {
 
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
-      to: "",
+      to: user_email,
       replyTo: req.session.utente.email,
       subject:
         "Comunicazione dall'Host " +
@@ -618,7 +662,7 @@ const contatta_utente_post = async (req, res) => {
         message,
       /* html: "<b>RIEPILOGO PLACEHOLDER</b>", */
     };
-
+    console.log(bodyMail)
     await transporter.sendMail(bodyMail, (error, info) => {
       if (error) {
         return console.log(error);
