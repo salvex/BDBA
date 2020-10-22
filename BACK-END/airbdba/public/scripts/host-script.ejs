@@ -1120,7 +1120,10 @@
                 questuraPrens.push(prenotazioni[$(this).attr("index")]);
               });
 
-              if (questuraPrens.length === 0) {
+              if (
+                questuraPrens.length === 0 ||
+                $("#documenti").prop("files").length === 0
+              ) {
                 $(".inputDocHelp").text(
                   "Devi caricare almeno un file! (pdf,jpg,jpeg,png)"
                 );
