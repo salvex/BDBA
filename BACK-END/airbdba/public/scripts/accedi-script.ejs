@@ -78,12 +78,12 @@
       // Metto a schermo uno spinner per tutta la durata del
       // caricamento della fetch
       $(".container-fluid").append(`
-      <div class="spinner-container">
-        <div class="spinner-border" role="status">
-          <span class="sr-only">Loading...</span>
+        <div class="spinner-container">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
         </div>
-      </div>
-    `);
+      `);
 
       fetch("/login", {
         method: "POST",
