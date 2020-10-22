@@ -16,8 +16,6 @@ const PDFDocument = require("pdfkit");
 
 const maxAge = 60 * 60 * 24;
 
-/* TO-DO: CONTATTA UTENTE */
-
 var errorsHandler = (err) => {
   let errors = { email: "", query: "", ins: "" };
 
@@ -32,84 +30,6 @@ var errorsHandler = (err) => {
   return errors;
 };
 
-async function parseField(
-  NomeFilter,
-  CittàFilter,
-  CheckInFilter,
-  CheckOutFilter,
-  nOspitiFilter,
-  DescFilter,
-  IndirizzoFilter,
-  PrezzoFilter,
-  PathFilter,
-  IdFilter,
-  ServiziFilter
-) {
-  const query = [];
-
-  if (
-    NomeFilter ||
-    CittàFilter ||
-    CheckInFilter ||
-    CheckOutFilter ||
-    nOspitiFilter ||
-    PrezzoFilter ||
-    DescFilter ||
-    IndirizzoFilter ||
-    PathFilter ||
-    IdFilter ||
-    ServiziFilter
-  ) {
-    if (NomeFilter) {
-      query[0] = NomeFilter;
-    }
-    if (CittàFilter) {
-      query[1] = CittàFilter;
-    }
-    if (CheckInFilter) {
-      query[2] = CheckInFilter;
-    }
-    if (CheckOutFilter) {
-      query[3] = CheckOutFilter;
-    }
-    if (nOspitiFilter) {
-      query[4] = nOspitiFilter;
-    }
-    if (DescFilter) {
-      query[5] = DescFilter;
-    }
-    if (IndirizzoFilter) {
-      query[6] = IndirizzoFilter;
-    }
-    if (PrezzoFilter) {
-      query[7] = PrezzoFilter;
-    }
-    if (PathFilter) {
-      query[8] = PathFilter;
-    }
-    if (IdFilter) {
-      query[9] = IdFilter;
-    }
-    if (ServiziFilter) {
-      var filtri = {
-        wifi: ServiziFilter.wifi,
-        riscaldamento: ServiziFilter.riscaldamento,
-        frigorifero: ServiziFilter.frigorifero,
-        casa: ServiziFilter.casa,
-        bnb: ServiziFilter.bnb,
-        parcheggio: ServiziFilter.parcheggio,
-        ascensore: ServiziFilter.ascensore,
-        cucina: ServiziFilter.cucina,
-        essenziali: ServiziFilter.essenziali,
-        piscina: ServiziFilter.piscina,
-      };
-      query[10] = filtri;
-    }
-  }
-
-  return query;
-}
-
 const become_host_get = async (req, res) => {
   try {
     var host = await Utente.diventaHost(req.session.utente.id); //test
@@ -119,74 +39,12 @@ const become_host_get = async (req, res) => {
       expiresIn: maxAge * 1000,
     });
     req.session.utente = host;
-    //--------------------/
     res.status(200).json({ success: true });
   } catch (err) {
     const errors = errorsHandler(err);
     res.status(400).json({ errors });
   }
 };
-
-/* const aggiungi_inserzione_post = async (req, res) => {
-  try {
-    const {
-      nome,
-      citta,
-      inizioDisp,
-      fineDisp,
-      nospiti,
-      desc,
-      indirizzo,
-      prezzo,
-      servizi,
-    } = req.body;
-    console.log(req.body);
-    const id_host = req.session.utente.id;
-    /* var path = req.files["gallery"][0].path;
-    path = path.replace(/\\/g, "/"); 
-    let path = null;
-    console.log(path);
-    /* var fields = await parseField(
-      nome,
-      citta,
-      inizioDisp,
-      fineDisp,
-      nospiti,
-      desc,
-      indirizzo,
-      prezzo,
-      servizi,
-      id_host
-    ); 
-    console.log(
-      nome,
-      citta,
-      inizioDisp,
-      fineDisp,
-      nospiti,
-      desc,
-      indirizzo,
-      prezzo,
-      servizi
-    );
-
-    var inserzione = await Inserzione.aggiungiInserzione(
-      nome,
-      citta,
-      inizioDisp,
-      fineDisp,
-      nospiti,
-      desc,
-      indirizzo,
-      prezzo,
-      servizi
-    );
-    res.status(200).json({ success: true });
-  } catch (err) {
-    const errors = errorsHandler(err);
-    res.status(400).json({ errors });
-  }
-}; */
 
 const aggiungi_inserzione_post = async (req, res) => {
   try {
@@ -204,9 +62,6 @@ const aggiungi_inserzione_post = async (req, res) => {
     } = JSON.parse(req.body.inserzione);
 
     const id_host = req.session.utente.id;
-    /* var path = req.files["gallery"][0].path;
-    path = path.replace(/\\/g, "/");
-    console.log(path); */
 
     let path = "";
     for (let i = 0; i < req.files["gallery"].length - 1; i++) {
@@ -216,9 +71,6 @@ const aggiungi_inserzione_post = async (req, res) => {
       "fotoInserzione"
     )[1];
     path = path.replace(/\\/g, "/");
-    console.log(path);
-
-    // /upload/AvatarUtente/12312748142/21907121.png
 
     var inserzione = await Inserzione.aggiungiInserzione(
       nome,
@@ -240,20 +92,6 @@ const aggiungi_inserzione_post = async (req, res) => {
     res.status(400).json({ errors });
   }
 };
-
-/* const aggiungi_inserzione_post = async (req, res) => {
-  try {
-    /* const id_host = req.session.utente.id;
-    var path = req.files["gallery"][0].path;
-    path = path.replace(/\\/g, "/");
-    console.log(path); 
-
-    res.status(200).json({ success: true });
-  } catch (err) {
-    const errors = errorsHandler(err);
-    res.status(400).json({ errors });
-  }
-}; */
 
 const gestione_host_get = async (req, res, next) => {
   try {
@@ -282,14 +120,13 @@ const gestione_host_get = async (req, res, next) => {
     res.locals.prenotazioni = JSON.stringify(prenotazioni);
     next();
   } catch (err) {
-    const errors = errorsHandler(err); //
+    const errors = errorsHandler(err);
     res.status(400).json({ errors });
   }
 };
 
 const modifica_inserzione_put = async (req, res) => {
   try {
-    console.log("ciao");
     const {
       nome,
       citta,
@@ -329,10 +166,8 @@ const modifica_inserzione_put = async (req, res) => {
       }
     }
     path = path.replace(/\\/g, "/");
-    console.log(path);
 
     imgToDel.forEach((img, index) => {
-      console.log(img);
       fs.unlink(`public/uploads/fotoInserzione${img}`, (err) => {
         if (err) throw err;
         console.log(img + " eliminata!");
@@ -353,7 +188,6 @@ const modifica_inserzione_put = async (req, res) => {
     await inserzioneM.save();
 
     let serviziM = await Servizi.findByPk(id_ins);
-    console.log();
     serviziM.wifiFlag = servizi["wifiModal"];
     serviziM.riscaldamentoFlag = servizi["riscaldamentoModal"];
     serviziM.frigoriferoFlag = servizi["frigoriferoModal"];
@@ -365,29 +199,6 @@ const modifica_inserzione_put = async (req, res) => {
     serviziM.essenzialiFlag = servizi["essenzialiModal"];
     serviziM.piscinaFlag = servizi["piscinaModal"];
     await serviziM.save();
-    /* var fields = await parseField(
-      nome,
-      citta,
-      inizioDisp,
-      fineDisp,
-      nospiti,
-      desc,
-      indirizzo,
-      prezzo,
-      path,
-      id_host,
-      servizi
-    ); */
-
-    /* var inserzione_m = await Inserzione.modificaInserzione(
-      id_inserzione,
-      fields
-    ); */
-    /* var path = req.files["gallery"][0].path;
-    var inserzione_m = await Inserzione.modificaInserzione_img(
-      id_inserzione,
-      path
-    ); */
     res.status(200).json({ success: true });
   } catch (err) {
     const errors = errorsHandler(err);
@@ -395,58 +206,10 @@ const modifica_inserzione_put = async (req, res) => {
   }
 };
 
-/* const modifica_inserzione_put_img = async (req, res) => {
-  try {
-    const { id_inserzione } = req.body;
-    var path = req.files["gallery"][0].path;
-    var inserzione_m = await Inserzione.modificaInserzione_img(
-      id_inserzione,
-      path
-    );
-    res.status(200).json({
-      message: "hai modificato questa inserzione con successo!",
-      inserzione_m,
-    });
-  } catch (err) {
-    const errors = errorsHandler(err);
-    res.status(400).json({ errors });
-  }
-}; */
-
-/* const cancella_inserzione_delete = async (req, res) => {
-  try {
-    const { id_inserzione } = req.body;
-    console.log(id_inserzione);
-    var deleteIns = await Inserzione.findByPk(id_inserzione);
-    let path =
-      `public/uploads/fotoInserzione/` +
-      req.session.utente.id +
-      deleteIns.galleryPath.slice(0, 14);
-
-    console.log(path, deleteIns);
-    await deleteIns.destroy();
-    // elimino ricorsivamente le la cartella e i file all'interno
-    fs.rmdir(path, { recursive: true }, (err) => {
-      if (err) {
-        throw err;
-      }
-      console.log(`File eliminati`);
-    });
-    res.status(200).json({ success: true });
-  } catch (err) {
-    const errors = errorsHandler(err);
-    res.status(400).json({ errors });
-  }
-}; */
 const cancella_inserzione_delete = async (req, res) => {
-  //MODIFICATO, DA INSERIRE CON DANIEL
   try {
     const { id_inserzione } = req.body;
-
-    console.log(id_inserzione); // DA INSERIRE
-
-    // Cerco l'inserzione da cancellare
-    var deleteIns = await Inserzione.findByPk(id_inserzione); // DA INSERIRE
+    var deleteIns = await Inserzione.findByPk(id_inserzione);
 
     let path =
       `public/uploads/fotoInserzione/` +
@@ -458,11 +221,9 @@ const cancella_inserzione_delete = async (req, res) => {
       from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
       bcc: mailList,
       subject:
-        "Cancellazione Prenotazione a Struttura: " + deleteIns.nome_inserzione,
-      text:
-        "Comunicazione relativa alla presenza di ospiti presso una struttura",
-      html:
-        "<b>Le comunichiamo che la sua prenotazione è stata cancellata</b><br><br><b>Cordiali Saluti, Team AIRBDBA</b>",
+        "Cancellazione Prenotazione presso struttura: " +
+        deleteIns.nome_inserzione,
+      text: `Le comunichiamo che l'host ha cancellato la sua prenotazione presso la struttura. \n\n Cordiali Saluti, Team AIRBDBA`,
     };
 
     await transporter.sendMail(bodyMail, (error, info) => {
@@ -473,7 +234,7 @@ const cancella_inserzione_delete = async (req, res) => {
     });
 
     //elimino l'inserzione
-    await deleteIns.destroy(); //DA INSERIRE
+    await deleteIns.destroy();
 
     // elimino ricorsivamente le la cartella e i file all'interno
     fs.rmdir(path, { recursive: true }, (err) => {
@@ -484,64 +245,10 @@ const cancella_inserzione_delete = async (req, res) => {
     });
     res.status(200).json({ success: true });
   } catch (err) {
-    const errors = errorsHandler(err);
-    res.status(400).json({ errors });
+    console.log(err);
+    res.status(400).json({ err });
   }
 };
-
-/* const cancella_inserzione_delete = async (req, res) => { //MODIFICATO, DA INSERIRE CON DANIEL
-  try {
-    const { id_inserzione } = req.body;
-
-    console.log(id_inserzione); // DA INSERIRE 
-
-    // Cerco l'inserzione da cancellare 
-    var deleteIns = await Inserzione.findByPk(id_inserzione); // DA INSERIRE 
-
-    let path =
-      `public/uploads/fotoInserzione/` +
-      req.session.utente.id +
-      deleteIns.galleryPath.slice(0, 14);
-
-    //Prendo le email degli utenti associati alle prenotazioni della relativa insserzione // DA INSERIRE
-    const mailList = await Inserzione.getEmailUtentiPren(id_inserzione);
-
-    if(mailList) { 
-      
-      let bodyMail = { 
-        from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
-        to: mailList,
-        subject: "Cancellazione Prenotazione a Struttura: " + deleteIns.nome_inserzione ,
-        text: "Comunicazione relativa alla presenza di ospiti presso una struttura",
-        html: "<b>Le comunichiamo che la sua prenotazione è stata annullata/cancellata</b><br><br><b>Cordiali Saluti, Team AIRBDBA</b>",
-      };
-
-      await transporter.sendMail(bodyMail, (error, info) => {
-        if (error) {
-          return console.log(error);
-        }
-        console.log("Messaggio inviato: %s", info.messageId);
-      });
-
-    }
-
-    console.log(path, deleteIns);
-
-    //elimino l'inserzione 
-    await deleteIns.destroy(); //DA INSERIRE
-
-    // elimino ricorsivamente le la cartella e i file all'interno
-    fs.rmdir(path, { recursive: true }, (err) => {
-      if (err) {
-        throw err;
-      }
-      console.log(`File eliminati`);
-    });
-    res.status(200).json({ success: true });
-  } catch (err) {
-    const errors = errorsHandler(err);
-    res.status(400).json({ errors });
-  } */
 
 const accetta_prenotazione_get = async (req, res) => {
   try {
@@ -554,11 +261,10 @@ const accetta_prenotazione_get = async (req, res) => {
       from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
       bcc: user.email,
       subject:
-        "Comunicazione relativa a Prenotazione ID: " +
+        "Comunicazione relativa alla renotazione ID: " +
         acceptPren.id_prenotazione,
-      text: "Comunicazione relativa alla Prenotazione richiesta",
-      html:
-        "<b>Le comunichiamo che la sua prenotazione è stata accettata</b><br><br><b>Cordiali Saluti, Team AIRBDBA</b>",
+      text:
+        "Congratulazione! Le comunichiamo che l'host ha accettato la sua richiesta di prenotazione. \n\n Cordiali Saluti, Team AIRBDBA",
     };
 
     /* await transporter.sendMail(bodyMail, (error, info) => {
@@ -573,8 +279,7 @@ const accetta_prenotazione_get = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    const errors = errorsHandler(err);
-    res.status(400).json({ errors });
+    res.status(400).json({ err });
   }
 };
 
@@ -590,9 +295,8 @@ const rifiuta_prenotazione_get = async (req, res) => {
       subject:
         "Comunicazione relativa a Prenotazione ID: " +
         refusePren.id_prenotazione,
-      text: "Comunicazione relativa alla Prenotazione richiesta",
-      html:
-        "<b>Le comunichiamo che la sua prenotazione è stata cancellata/rifiutata</b><br><br><b>Cordiali Saluti, Team AIRBDBA</b>",
+      text:
+        "Siamo spiacenti. Le comunchiamo che l'host ha rifiutato la sua richiesta di prenotazione. \n\n Cordiali Saluti, Team AIRBDBA",
     };
 
     /* await transporter.sendMail(bodyMail, (error, info) => {
@@ -606,35 +310,26 @@ const rifiuta_prenotazione_get = async (req, res) => {
       success: true,
     });
   } catch (err) {
-    const errors = errorsHandler(err);
-    res.status(400).json({ errors });
+    console.log(err);
+    res.status(400).json({ err });
   }
 };
 
 const cancella_prenotazione_delete = async (req, res) => {
   try {
-    var deletePren = await Prenotazione.update(
-      { stato_prenotazione: 0 },
-      {
-        where: {
-          id_prenotazione: req.params.id_pren,
-        },
-      }
-    );
-    res.status(200).json({
-      success: true,
+    await Prenotazione.destroy({
+      where: { id_prenotazione: req.params.id_pren },
     });
+    res.status(200).json({ success: true });
   } catch (err) {
-    const errors = errorsHandler(err);
-    res.status(400).json({ errors });
+    console.log(err);
+    res.status(400).json({ err });
   }
 };
 
 const contatta_utente_post = async (req, res) => {
-  //DA MODIFICARE CON GET
   try {
     const { user_email, message, titolo } = req.body;
-    console.log(user_email, message, titolo);
 
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
@@ -650,9 +345,7 @@ const contatta_utente_post = async (req, res) => {
         titolo +
         '"\n\n' +
         message,
-      /* html: "<b>RIEPILOGO PLACEHOLDER</b>", */
     };
-    console.log(bodyMail);
     await transporter.sendMail(bodyMail, (error, info) => {
       if (error) {
         return console.log(error);
@@ -661,8 +354,8 @@ const contatta_utente_post = async (req, res) => {
     });
     res.status(200).json({ success: true });
   } catch (err) {
-    const errors = errorsHandler(err);
-    res.status(400).json({ errors });
+    console.log(err);
+    res.status(400).json({ err });
   }
 };
 
@@ -673,7 +366,7 @@ const contatta_turismo_get = async (req, res) => {
     const prenotazioni = req.body;
     prenotazioni.forEach((prenotazione) => {
       prenotazione.ospiti.forEach((ospite) => {
-        if (ospite.isEsente === 0) {
+        if (prenotazione.turismoFlag === 0 && ospite.isEsente === 0) {
           totaleRendiconto +=
             prenotazione.inserzione.tassa_soggiorno *
             moment(prenotazione.check_out).diff(
@@ -694,44 +387,9 @@ const contatta_turismo_get = async (req, res) => {
     res.json({ rendiconto, totaleRendiconto });
   } catch (err) {
     console.log(err);
+    res.status(400).json({ err });
   }
 };
-
-// const contatta_turismo_post = /* async */ (req, res) => {
-//   /* const rendiconto = req.body.rendiconto;
-//   const ricevuta = req.body.ricevuta;
-//   const doc = new PDFDocument();
-//   doc.text("Rendiconto tasse di soggiorno", {
-//     width: 400,
-//     align: "center",
-//   });
-//   doc.text(`Totale rendiconto: ${rendiconto.totaleRendiconto}`);
-//   rendiconto.forEach((element) => {
-//     doc.text(
-//       `Arrivo: ${rendiconto.check_in}  Partenza: ${rendiconto.check_out}`
-//     );
-//     element.ospiti.forEach((ospite) => {
-//       doc.text(`Nome: ${ospite.nome} `);
-//     });
-//   });
-
-//   let bodyMail = {
-//     from: req.session.utente.email,
-//     to: indirizzo_questura,
-//     subject: "Rendiconto tasse di soggiorno",
-//     text: "ricevuta pagamento e generalita ospiti",
-//     //html: "<b>RIEPILOGO PLACEHOLDER</b>",
-//   };
-
-//   await transporter.sendMail(bodyMail, (error, info) => {
-//     if (error) {
-//       return console.log(error);
-//     }
-//     console.log("Messaggio inviato: %s", info.messageId);
-//   }); */
-//   console.log(req.fields);
-//   res.status(200).json({ success: true });
-// };
 
 const contatta_turismo_post = async (req, res) => {
   let { rendiconto, totaleRendiconto } = JSON.parse(req.fields.rendiconto);
@@ -743,8 +401,6 @@ const contatta_turismo_post = async (req, res) => {
     console.log("File rinominato");
   });
 
-  //console.log(ricevuta);
-  //console.log(rendiconto);
   const doc = new PDFDocument();
   doc
     .text("Rendiconto tasse di soggiorno", {
@@ -774,27 +430,27 @@ const contatta_turismo_post = async (req, res) => {
 
   let bodyMail = {
     from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
-    to: "",
+    bcc: "marcodaleo114@gmail.com", //PER TESTARE IL CONTENUTO DELLA MAIL RICEVUTA, INSERIRE IL PRIMO INDIRIZZO EMAIL
     subject: "Rendiconto tasse di soggiorno",
-    text: "ricevuta pagamento e generalita ospiti",
+    text: `In allegato alla presente email: \n-generalita degli ospiti e periodo in cui hanno soggiornato presso la struttura turistica del sottoscritto; \n- ricevuta dell'effetivo pagamento della tasse di soggiorno presso il comune\n\n Cordiali Saluti, ${req.session.utente.nome} ${req.session.utente.cognome}`,
     attachments: [
       {
-        filename: "rendiconto.pdf",
+        filename: "generalita.pdf",
         content: doc,
       },
       {
-        filename: "generalita" + path.extname(req.files.ricevuta.name),
+        filename: "ricevuta" + path.extname(req.files.ricevuta.name),
         content: fs.createReadStream(newpathfile),
       },
     ],
   };
 
-  /* await transporter.sendMail(bodyMail, (error, info) => {
+  await transporter.sendMail(bodyMail, (error, info) => {
     if (error) {
       return console.log(error);
     }
     console.log("Messaggio inviato: %s", info.messageId);
-  }); */
+  });
 
   let prenList = [];
   rendiconto.forEach((rend) => {
@@ -810,7 +466,7 @@ const contatta_turismo_post = async (req, res) => {
     );
   });
 
-  let update = await Utente.update(
+  await Utente.update(
     { ultimo_rendiconto: new Date() },
     { where: { id: req.session.utente.id } }
   );
@@ -836,8 +492,6 @@ const contatta_questura_post = async (req, res) => {
   try {
     let prenotazioni = JSON.parse(req.fields.prenQuestura);
     let documenti;
-    console.log(req.files);
-    console.log(req.files.documenti);
     if (!req.files.documenti.length) {
       documenti = [];
       documenti.push(req.files.documenti);
@@ -854,7 +508,6 @@ const contatta_questura_post = async (req, res) => {
         console.log("File rinominato");
       });
     }
-    console.log(newpathfile);
 
     const doc = new PDFDocument();
     doc
@@ -889,17 +542,8 @@ const contatta_questura_post = async (req, res) => {
     });
     doc.end();
 
-    /* const allegati = [];
-    allegati.push({ filename: "documento.pdf", content: doc });
-    documenti.forEach((documento, index) => {
-      console.log(documento.path);
-      let allegato = {};
-      allegato.filename = `documento${index}` + path.extname(documento.name);
-      allegato.content = documento.path;
-      allegati.push(allegato);
-    }); */
     const allegati = [];
-    allegati.push({ filename: "documento.pdf", content: doc });
+    allegati.push({ filename: "generalita.pdf", content: doc });
     documenti.forEach((documento, index) => {
       console.log(newpathfile[index]);
       let allegato = {};
@@ -911,9 +555,9 @@ const contatta_questura_post = async (req, res) => {
 
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
-      to: "",
+      bcc: "marcodaleo114@gmail.com", //PER TESTARE IL CONTENUTO DELLA MAIL RICEVUTA, INSERIRE IL PRIMO INDIRIZZO EMAIL
       subject: "Comunicazione presenza ospiti",
-      text: "lista ospiti e documenti",
+      text: `In allegato alla presente email, generalita e documenti degli ospiti che hanno soggiornato presso una struttura turistica del sottoscritto\n\n Cordiali Saluti, ${req.session.utente.nome} ${req.session.utente.cognome}`,
       attachments: allegati,
     };
 
@@ -943,7 +587,6 @@ module.exports = {
   aggiungi_inserzione_post,
   gestione_host_get,
   modifica_inserzione_put,
-  /* modifica_inserzione_put_img, */
   cancella_inserzione_delete,
   accetta_prenotazione_get,
   rifiuta_prenotazione_get,
@@ -953,4 +596,4 @@ module.exports = {
   contatta_turismo_post,
   identifica_post,
   contatta_questura_post,
-}; //
+};
