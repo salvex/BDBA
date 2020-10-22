@@ -71,6 +71,7 @@
     $(".quest-val").text(rendQuest);
     $(".tur-val").text(rendTur);
 
+    $("input, textarea, input[type=file]").val("");
     /* ------------------------------------------------- */
 
     /* TOOLTIP */
@@ -86,7 +87,7 @@
     });
 
     /* DATEPICKER */
-    $("#inputInit, #inputFin").datepicker({
+    $("#inputInit, #inputFin, #inputInitModal, #inputFinModal").datepicker({
       format: "yyyy-mm-dd",
       autoclose: true,
       todayHighlight: true,
@@ -332,8 +333,100 @@
     /* ------------------------------------------------- */
 
     /* CONTROLLI */
-    $("input, textarea").on("focusout input", function () {
+    $(".inputadd").on("focusout input", function () {
       if ($(this).val() === "") {
+        $(this).addClass("is-invalid");
+      } else {
+        $(this).removeClass("is-invalid");
+      }
+    });
+    // Inizio disponibilità
+    $("#inputInit").on("change", function () {
+      if ($(this).val() !== "") {
+        const checkin = $(this).val();
+        const checkout = $("#inputFin").val();
+        console.log(checkin, checkout);
+        const checkinDate = new Date(checkin);
+        const checkoutDate = new Date(checkout);
+        if (checkoutDate < checkinDate) {
+          $("#inputFin").datepicker("update", checkin);
+        }
+      }
+      $("#inputFin").focus();
+    });
+    // Fine disponibilità
+    $("#inputFin").on("change", () => {
+      const checkin = $("#inputInit").val();
+      const checkout = $("#inputFin").val();
+
+      // Controllo se il campo check in è vuoto
+      if (checkin === "") {
+        $("#inputFin").val("");
+        $("#inputInit").focus();
+      } else {
+        const checkinDate = new Date(checkin);
+        const checkoutDate = new Date(checkout);
+
+        if (checkoutDate < checkinDate) {
+          $("#inputFin").datepicker("update", checkin);
+        }
+      }
+    });
+    // Input file
+    $("input[type=file]").on("change", function () {
+      if ($(this).prop("files").length === 0) {
+        $(this).addClass("is-invalid");
+      } else {
+        $(this).removeClass("is-invalid");
+      }
+    });
+
+    // MODAL
+    $("input[id$='Modal'], textarea[id$='Modal']").on(
+      "focusout input",
+      function () {
+        if ($(this).val() === "" && $(this).prop("type") !== "file") {
+          $(this).addClass("is-invalid");
+        } else {
+          $(this).removeClass("is-invalid");
+        }
+      }
+    );
+    // Inizio disponibilità
+    $("#inputInitModal").on("change", function () {
+      if ($("#inputFinModal").val() !== "") {
+        const checkin = $(this).val();
+        const checkout = $("#inputFinModal").val();
+        console.log(checkin, checkout);
+        const checkinDate = new Date(checkin);
+        const checkoutDate = new Date(checkout);
+        if (checkoutDate < checkinDate) {
+          $("#inputFinModal").datepicker("update", checkin);
+        }
+      }
+      $("#inputFinModal").focus();
+    });
+    // Fine disponibilità
+    $("#inputFinModal").on("change", () => {
+      const checkin = $("#inputInitModal").val();
+      const checkout = $("#inputFinModal").val();
+
+      // Controllo se il campo check in è vuoto
+      if (checkin === "") {
+        $("#inputFinModal").val("");
+        $("#inputInitModal").focus();
+      } else {
+        const checkinDate = new Date(checkin);
+        const checkoutDate = new Date(checkout);
+
+        if (checkoutDate < checkinDate) {
+          $("#inputFinModal").datepicker("update", checkin);
+        }
+      }
+    });
+    // Input file
+    $("input[type=file]").on("change", function () {
+      if ($(this).prop("files").length === 0) {
         $(this).addClass("is-invalid");
       } else {
         $(this).removeClass("is-invalid");
@@ -344,6 +437,20 @@
     /* AGGIUNGI INSERZIONE */
     $("form").on("submit", (e) => {
       e.preventDefault();
+      let flag = 1;
+
+      $(".inputadd").each((index, elem) => {
+        if ($(elem).val() === "" || $(elem).hasClass("is-invalid")) {
+          $(elem).addClass("is-invalid");
+          flag = 0;
+        } else {
+          $(elem).removeClass("is-invalid");
+        }
+      });
+      console.log(flag);
+      if (!flag) {
+        return;
+      }
 
       let servizi = {};
       $("input[type=checkbox]").each((index, element) => {
@@ -397,6 +504,19 @@
     // Array che contiene i nomi delle immagini che vanno eliminate
 
     $("#saveChanges").on("click", () => {
+      let flag = 1;
+      $("input[id$='Modal'], textarea[id$='Modal']").each((index, elem) => {
+        if ($(elem).val() === "" && $(elem).prop("type") !== "checkbox") {
+          $(elem).addClass("is-invalid");
+          flag = 0;
+        } else {
+          $(elem).removeClass("is-invalid");
+        }
+      });
+
+      if (!flag) {
+        return;
+      }
       // Sottraggo dalla lista di tutte le immagini, quelle rimosse
       // dall'utente
       const imgToSave = immagini[$("#insMod").attr("index")].filter((x) => {

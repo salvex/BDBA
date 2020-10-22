@@ -178,6 +178,7 @@ body {
   flex: 1;
   display: flex;
   justify-content: flex-end;
+  cursor: pointer;
 }
 
 #form-button > button {
@@ -185,6 +186,7 @@ body {
   border-radius: 50%;
   background-color: #007bff;
   color: #ffffff;
+  cursor: pointer;
 }
 
 #form-button > button:hover {
