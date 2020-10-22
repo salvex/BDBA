@@ -79,21 +79,14 @@
   border: 1px solid rgba(0, 0, 0, 0.125);
 }
 .form-guest {
-  background-color: #e9ecef;
   border: 1px solid rgba(0, 0, 0, 0.125);
 }
-.form-date:hover,
-.form-guest:hover,
-.form-date:focus,
-.form-guest:focus {
-  background-color: #b8babd;
-}
 .date-changer {
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.125);
+  box-shadow: 0 7px 7px rgba(0, 0, 0, 0.125);
   position: relative;
 }
 .date-changer > .card-body > div > input {
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: 0 7px 7px rgba(0, 0, 0, 0.25);
 }
 #check-in,
 #check-out {
@@ -232,12 +225,14 @@ tbody {
     width: 50%;
   }
 }
-@media (max-width: 360px) {
-  .content {
-    padding: 15px;
-  }
+@media (max-width: 576px) {
   .sidebar {
     z-index: 9;
     width: 100%;
+  }
+}
+@media (max-width: 360px) {
+  .content {
+    padding: 15px;
   }
 }

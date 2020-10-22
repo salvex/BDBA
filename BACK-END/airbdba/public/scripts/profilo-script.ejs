@@ -158,6 +158,7 @@
             aspectRatio: 1 / 1,
             minContainerWidth: 300,
             minContainerHeight: 300,
+            dragMode: "none",
             crop: function (event) {
               console.log(event.detail.x);
               console.log(event.detail.y);
@@ -175,7 +176,7 @@
     }
     $("#image-crop").on("hidden.bs.modal", function (e) {
       $image.cropper("destroy");
-      $image.attr("src", "");
+      $image.attr("src", "/assets/images/upload.png");
       $("#imgupload").val("");
       console.log($("#imgupload").val());
     });

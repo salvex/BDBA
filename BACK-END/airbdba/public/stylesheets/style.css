@@ -8,6 +8,10 @@ body {
   color: #000000;
 }
 
+input[type="text"]:read-only {
+  background-color: rgba(0, 0, 0, 0);
+}
+
 /* SPAZIATORI */
 .inside-spacer,
 .side-spacer {

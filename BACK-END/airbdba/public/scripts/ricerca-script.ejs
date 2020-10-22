@@ -230,7 +230,9 @@
                 <div class="card-body-container">
                     <div class="img-container">
                       <div class="card-img-top">
-                        <div class="card-img" style="background-image: url('/uploads/fotoInserzione${imgs[0]}'); background-size:cover; background-position: center; width:100%; height:270px; border-radius: .25rem 0 0 0 ">
+                        <div class="card-img" style="background-image: url('/uploads/fotoInserzione${
+                          imgs[0]
+                        }'); background-size:cover; background-position: center; width:100%; height:270px; border-radius: .25rem 0 0 0 ">
                         </div>
                       </div>
                     </div>
@@ -245,6 +247,13 @@
                           <i> ${element.citta} </i>
                           </h4>
                       </div>
+                      <div class="tipo">
+                        ${
+                          element.servizi.casaFlag
+                            ? "casa vacanze <i class='fas fa-home'></i>"
+                            : "B&B <i class='fas fa-bed'></i>"
+                        }
+                      </div>
                       <div class="descrizione">
                           <p>${element.descrizione}</p>
                       </div>
@@ -255,7 +264,9 @@
                       <div class="price">
                         <strong><i>${element.prezzo_base} &euro;</i></strong>
                       </div>
-                        <button id="${element.id_inserzione}" class="btn btn-primary">
+                        <button id="${
+                          element.id_inserzione
+                        }" class="btn btn-primary">
                           Visita inserzione
                         </button>
                       </div>

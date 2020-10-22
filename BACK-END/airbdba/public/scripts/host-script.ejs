@@ -207,7 +207,7 @@
           $("#insMod")
             .attr("index", index)
             .attr("inserzione", inserzione.id_inserzione)
-            .on("show.bs.modal", function () {
+            .on("shown.bs.modal", function () {
               // Salvo il path della cartella
               $("input[id$='Modal']").removeClass("is-invalid");
               folderPath =
@@ -333,7 +333,7 @@
     /* ------------------------------------------------- */
 
     /* CONTROLLI */
-    $(".inputadd").on("focusout input", function () {
+    $(".inputadd").on("change focusout input", function () {
       if ($(this).val() === "") {
         $(this).addClass("is-invalid");
       } else {
@@ -342,7 +342,7 @@
     });
     // Inizio disponibilità
     $("#inputInit").on("change", function () {
-      if ($(this).val() !== "") {
+      if ($("#inputFin").val() !== "") {
         const checkin = $(this).val();
         const checkout = $("#inputFin").val();
         console.log(checkin, checkout);
@@ -383,9 +383,13 @@
 
     // MODAL
     $("input[id$='Modal'], textarea[id$='Modal']").on(
-      "focusout input",
+      "change focusout input",
       function () {
-        if ($(this).val() === "" && $(this).prop("type") !== "file") {
+        if (
+          $(this).val() === "" &&
+          $(this).prop("type") !== "file" &&
+          $(elem).prop("type") !== "checkbox"
+        ) {
           $(this).addClass("is-invalid");
         } else {
           $(this).removeClass("is-invalid");
@@ -413,8 +417,8 @@
 
       // Controllo se il campo check in è vuoto
       if (checkin === "") {
-        $("#inputFinModal").val("");
-        $("#inputInitModal").focus();
+        $("#inputInitModal").val("");
+        $("#inputFinModal").focus();
       } else {
         const checkinDate = new Date(checkin);
         const checkoutDate = new Date(checkout);
@@ -439,7 +443,7 @@
       e.preventDefault();
       let flag = 1;
 
-      $(".inputadd").each((index, elem) => {
+      $(".inputadd, #inputInit, #inputFin").each((index, elem) => {
         if ($(elem).val() === "" || $(elem).hasClass("is-invalid")) {
           $(elem).addClass("is-invalid");
           flag = 0;
@@ -506,7 +510,11 @@
     $("#saveChanges").on("click", () => {
       let flag = 1;
       $("input[id$='Modal'], textarea[id$='Modal']").each((index, elem) => {
-        if ($(elem).val() === "" && $(elem).prop("type") !== "checkbox") {
+        if (
+          $(elem).val() === "" &&
+          $(elem).prop("type") !== "file" &&
+          $(elem).prop("type") !== "checkbox"
+        ) {
           $(elem).addClass("is-invalid");
           flag = 0;
         } else {

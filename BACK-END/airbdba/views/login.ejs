@@ -1,78 +1,76 @@
 <!DOCTYPE html>
 <html>
-  <%- include('./partials/head.ejs', {title: "Login"}) %>
+  <%- include('./partials/head.ejs', {title: "Accedi"}) %>
   <body>
-    <!-- CONTENT -->
-
-    <div id="login">
-      <div id="login-container">
-        <div class="side-spacer"></div>
-
-        <div id="middle-space">
-          <div class="center-spacer"></div>
-
-          <div class="center-login">
-            <div class="center-spacer image-container">
-              <a href="/"><img src="/assets/images/logo-sm.jpg" alt="" /></a>
-            </div>
-
-            <div class="login-container">
-              <div class="inside-spacer"></div>
-              <div id="middle-space">
-                <form action="/login" id="form-container">
-                  <div class="form-item">
-                    <div class="form-item">
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="email"
-                        placeholder="Email"
-                        autocomplete="false"
-                      />
-                    </div>
-                    <div class="form-item">
-                      <small id="emailHelp" class="text-danger"></small>
-                    </div>
-                  </div>
-                  <div class="form-item">
-                    <div class="form-item">
-                      <input
-                        type="password"
-                        class="form-control"
-                        id="password"
-                        placeholder="Password"
-                      />
-                    </div>
-                    <div class="form-item">
-                      <small id="passwordHelp" class="text-danger"></small>
-                    </div>
-                  </div>
-                  <div class="form-item">
-                    <button class="login-button">Accedi</button>
-                  </div>
-                  <div class="form-item">
-                    <p>
-                      Non hai un account?
-                      <a href="/signup">Registrati</a>
-                    </p>
-                  </div>
-                </form>
+    <div class="container-fluid h-100">
+      <div class="row content-row h-100">
+        <div class="col-12 content-container">
+          <div class="row center h-100">
+            <div class="col-10 col-sm-8 center-content">
+              <div class="row logo">
+                <div class="col-12 logo-container">
+                  <a href="/"
+                    ><img
+                      id="logo-img"
+                      src="/assets/images/logo-sm.jpg"
+                      alt="AIR-BDBA"
+                  /></a>
+                </div>
               </div>
-              <div class="inside-spacer"></div>
+              <div class="row login-row">
+                <div class="col-12 login-container">
+                  <form action="/login" id="form-container">
+                    <div class="form-item">
+                      <div class="form-item">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="email"
+                          placeholder="Email"
+                          autocomplete="false"
+                        />
+                      </div>
+                      <div class="form-item">
+                        <small id="emailHelp" class="text-danger"></small>
+                      </div>
+                    </div>
+                    <div class="form-item">
+                      <div class="form-item">
+                        <input
+                          type="password"
+                          class="form-control"
+                          id="password"
+                          placeholder="Password"
+                        />
+                      </div>
+                      <div class="form-item">
+                        <small id="passwordHelp" class="text-danger"></small>
+                      </div>
+                    </div>
+                    <div class="form-item">
+                      <button class="login-button btn btn-primary">
+                        Accedi
+                      </button>
+                    </div>
+                    <div class="form-item">
+                      <p>
+                        Non hai un account?
+                        <a href="/signup">Registrati</a>
+                      </p>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div class="center-spacer"></div>
         </div>
-
-        <div class="side-spacer"></div>
-      </div>
-
-      <div class="footer">
-        <!-- FOOTER -->
-        <%- include('./partials/footer.ejs') %>
+        <div class="col-12 footer-container align-self-end">
+          <!-- FOOTER -->
+          <%- include('./partials/footer.ejs') %>
+        </div>
       </div>
     </div>
-    <%- include("../public/scripts/login-script.ejs") %>
+    <!-- ACCEDI SCRIPT -->
+    <%- include("../public/scripts/accedi-script.ejs") %>
   </body>
 </html>

@@ -109,6 +109,29 @@ textarea {
   resize: none;
 }
 
+.goDown {
+  width: 100%;
+  border-radius: 0.25rem 0.25rem 0 0;
+}
+
+#image-crop {
+  scroll-behavior: smooth;
+}
+
+.imgage-crop-header {
+  padding: 0;
+  margin: 0;
+}
+
+/* .cropper-container img {
+  width: 50% !important;
+} */
+
+/* .cropper-container > div {
+  display: flex;
+  justify-content: center;
+} */
+
 @media (max-width: 576px) {
   .date {
     margin-top: 10px;
