@@ -67,7 +67,33 @@
         .then(async (res) => {
           const response = await res.json();
           if (response.success) {
-            window.location.href = `/`;
+            $("#successFailure")
+              .on("show.bs.modal", () => {
+                $("#successFailureLabel").html(
+                  `Operazione comletata!&nbsp;<i class="fas fa-check-circle"></i>`
+                );
+                $("#successFailureContent").html(
+                  `La prenotazione è avvenuta con successo!`
+                );
+              })
+              .on("hide.bs.modal", () => {
+                window.location.href = "/profilo#v-pills-book-tab";
+              })
+              .modal("show");
+          } else {
+            $("#successFailure")
+              .on("show.bs.modal", () => {
+                $("#successFailureLabel").html(
+                  `Operazione non riuscita.&nbsp;<i class="far fa-frown"></i>`
+                );
+                $("#successFailureContent").html(
+                  `Qualcosa è andato storto! Forse hai già prenotato oppure i nostri sistemi non funzionano correttamente.`
+                );
+              })
+              .on("hide.bs.modal", () => {
+                window.location.href = "/profilo";
+              })
+              .modal("show");
           }
         })
         .catch((err) => console.log(err));

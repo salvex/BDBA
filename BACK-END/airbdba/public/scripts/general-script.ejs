@@ -45,7 +45,7 @@
           const response = await res.json();
           if (response.success) {
             console.log("Sei diventato un host!");
-            window.location.reload();
+            window.location.href = "/host";
           }
         })
         .catch((err) => console.log(err));

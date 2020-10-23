@@ -72,6 +72,7 @@
     $(".tur-val").text(rendTur);
 
     $("input, textarea, input[type=file]").val("");
+    $("input[type=checkbox]").prop("checked", false);
     /* ------------------------------------------------- */
 
     /* TOOLTIP */
@@ -496,11 +497,24 @@
         .then(async (res) => {
           const response = await res.json();
           if (response.success) {
-            console.log("Caricamento completato!");
-            window.location.reload();
+            $("#successFailure")
+              .on("show.bs.modal", () => {
+                $("#successFailureLabel").html(
+                  `Operazione completata!&nbsp;<i class="far fa-check-circle"></i>`
+                );
+                $("#successFailureContent").html(
+                  `L'inserzione è stata inserita con successo!`
+                );
+              })
+              .on("hide.bs.modal", () => {
+                window.location.reload();
+              })
+              .modal("show");
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+        });
     });
     /* ------------------------------------------------- */
 
@@ -519,6 +533,15 @@
           flag = 0;
         } else {
           $(elem).removeClass("is-invalid");
+        }
+      });
+
+      $("input[type=number][id$='Modal']").each((index, element) => {
+        if ($(element).val() <= 0) {
+          $(element).addClass("is-invalid");
+          flag = 0;
+        } else {
+          $(element).removeClass("is-invalid");
         }
       });
 
@@ -581,8 +604,20 @@
         .then(async (res) => {
           const response = await res.json();
           if (response.success) {
-            console.log("Caricamento completato!");
-            window.location.reload();
+            $("#insMod").modal("hide");
+            $("#successFailure")
+              .on("show.bs.modal", () => {
+                $("#successFailureLabel").html(
+                  `Operazione completata!&nbsp;<i class="far fa-check-circle"></i>`
+                );
+                $("#successFailureContent").html(
+                  `L'inserzione è stata modificata con successo!`
+                );
+              })
+              .on("hide.bs.modal", () => {
+                window.location.reload();
+              })
+              .modal("show");
           }
         })
         .catch((err) => console.log(err));
@@ -605,7 +640,20 @@
         .then(async (res) => {
           const response = await res.json();
           if (response.success) {
-            window.location.reload();
+            $("#confirmDel").modal("hide");
+            $("#successFailure")
+              .on("show.bs.modal", () => {
+                $("#successFailureLabel").html(
+                  `Operazione completata!&nbsp;<i class="far fa-check-circle"></i>`
+                );
+                $("#successFailureContent").html(
+                  `L'inserzione è stata eliminata con successo!`
+                );
+              })
+              .on("hide.bs.modal", () => {
+                window.location.reload();
+              })
+              .modal("show");
           }
         })
         .catch((err) => console.log(err));
@@ -682,7 +730,19 @@
             .then(async (res) => {
               const response = await res.json();
               if (response.success) {
-                window.location.reload();
+                $("#successFailure")
+                  .on("show.bs.modal", () => {
+                    $("#successFailureLabel").html(
+                      `Operazione completata!&nbsp;<i class="far fa-check-circle"></i>`
+                    );
+                    $("#successFailureContent").html(
+                      `Hai accettato la richiesta!`
+                    );
+                  })
+                  .on("hide.bs.modal", () => {
+                    window.location.reload();
+                  })
+                  .modal("show");
               }
             })
             .catch((err) => console.log(err));
@@ -695,7 +755,19 @@
             .then(async (res) => {
               const response = await res.json();
               if (response.success) {
-                window.location.reload();
+                $("#successFailure")
+                  .on("show.bs.modal", () => {
+                    $("#successFailureLabel").html(
+                      `Operazione completata!&nbsp;<i class="far fa-check-circle"></i>`
+                    );
+                    $("#successFailureContent").html(
+                      `Hai rifiutato la richiesta!`
+                    );
+                  })
+                  .on("hide.bs.modal", () => {
+                    window.location.reload();
+                  })
+                  .modal("show");
               }
             })
             .catch((err) => console.log(err));
@@ -809,7 +881,20 @@
                     .then(async (res) => {
                       const response = await res.json();
                       if (response.success) {
-                        window.location.reload();
+                        $("#contactModal").modal("hide");
+                        $("#successFailure")
+                          .on("show.bs.modal", () => {
+                            $("#successFailureLabel").html(
+                              `Operazione completata!&nbsp;<i class="far fa-check-circle"></i>`
+                            );
+                            $("#successFailureContent").html(
+                              `Messaggio inviato con successo!`
+                            );
+                          })
+                          .on("hide.bs.modal", () => {
+                            window.location.reload();
+                          })
+                          .modal("show");
                       }
                     })
                     .catch((err) => console.log(err));
@@ -838,7 +923,20 @@
                     .then(async (res) => {
                       const response = await res.json();
                       if (response.success) {
-                        window.location.reload();
+                        $("#confirmCanc").modal("hide");
+                        $("#successFailure")
+                          .on("show.bs.modal", () => {
+                            $("#successFailureLabel").html(
+                              `Operazione completata!&nbsp;<i class="far fa-check-circle"></i>`
+                            );
+                            $("#successFailureContent").html(
+                              `La prenotazione è stata annullata!`
+                            );
+                          })
+                          .on("hide.bs.modal", () => {
+                            window.location.reload();
+                          })
+                          .modal("show");
                       }
                     })
                     .catch((err) => console.log(err));
@@ -1165,7 +1263,19 @@
                 .then(async (res) => {
                   const response = await res.json();
                   if (response.success) {
-                    window.location.reload();
+                    $("#successFailure")
+                      .on("show.bs.modal", () => {
+                        $("#successFailureLabel").html(
+                          `Operazione completata!&nbsp;<i class="far fa-check-circle"></i>`
+                        );
+                        $("#successFailureContent").html(
+                          `Prenotazione/i rendicontata alla questura!`
+                        );
+                      })
+                      .on("hide.bs.modal", () => {
+                        window.location.reload();
+                      })
+                      .modal("show");
                   }
                 })
                 .catch((err) => console.log(err));
@@ -1307,7 +1417,19 @@
                         .then(async (res) => {
                           const response = await res.json();
                           if (response.success) {
-                            window.location.reload();
+                            $("#successFailure")
+                              .on("show.bs.modal", () => {
+                                $("#successFailureLabel").html(
+                                  `Operazione completata!&nbsp;<i class="far fa-check-circle"></i>`
+                                );
+                                $("#successFailureContent").html(
+                                  `Rendiconto inviato all'ufficio del turismo!`
+                                );
+                              })
+                              .on("hide.bs.modal", () => {
+                                window.location.reload();
+                              })
+                              .modal("show");
                           }
                         })
                         .catch((err) => console.log(err));

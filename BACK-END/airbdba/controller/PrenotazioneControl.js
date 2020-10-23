@@ -307,12 +307,29 @@ const riepilogo_get = (req, res, next) => {
 
 const riepilogo_post = async (req, res) => {
   try {
-    const prenotazione = await Prenotazione.create(req.session.prenotazione);
-    console.log(prenotazione);
-    res.status(200).json({ success: true });
+    // Verifico che la prentazione esista
+    const checkPren = await Prenotazione.findAll({
+      where: {
+        check_in: req.session.prenotazione.check_in,
+        ref_inserzione: req.session.prenotazione.ref_inserzione,
+      },
+    });
+    // Se già esiste una prenotazione di questo tipo allora vuol dire
+    // che l'utente l'ha già eseguita
+    if (checkPren.length === 0) {
+      const prenotazione = await Prenotazione.create(req.session.prenotazione);
+      console.log(req.session.prenotazione.check_in);
+      res.status(200).json({ success: true });
+    } else {
+      res.status(400).json({ success: flase });
+    }
+
+    // const prenotazione = await Prenotazione.create(req.session.prenotazione);
+    // console.log(req.session.prenotazione.check_in);
+    // res.status(200).json({ success: true });
   } catch (err) {
     console.log(err);
-    res.status(400).json({ err });
+    res.status(400).json({ success: false });
   }
 };
 

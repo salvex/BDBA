@@ -226,12 +226,12 @@ const cancella_inserzione_delete = async (req, res) => {
       text: `Le comunichiamo che l'host ha cancellato la sua prenotazione presso la struttura. \n\n Cordiali Saluti, Team AIRBDBA`,
     };
 
-    await transporter.sendMail(bodyMail, (error, info) => {
+    /* await transporter.sendMail(bodyMail, (error, info) => {
       if (error) {
         return console.log(error);
       }
       console.log("Messaggio inviato: %s", info.messageId);
-    });
+    }); */
 
     //elimino l'inserzione
     await deleteIns.destroy();
@@ -286,7 +286,7 @@ const accetta_prenotazione_get = async (req, res) => {
 const rifiuta_prenotazione_get = async (req, res) => {
   try {
     var refusePren = await Prenotazione.findByPk(req.params.id_pren);
-    refusePren.stato_prenotazione = 0;
+
     let user = await Utente.findByPk(refusePren.ref_utente);
 
     let bodyMail = {
@@ -305,7 +305,8 @@ const rifiuta_prenotazione_get = async (req, res) => {
       }
       console.log("Messaggio inviato: %s", info.messageId);
     }); */
-    await refusePren.save();
+
+    await refusePren.destroy();
     res.status(200).json({
       success: true,
     });
@@ -346,12 +347,12 @@ const contatta_utente_post = async (req, res) => {
         '"\n\n' +
         message,
     };
-    await transporter.sendMail(bodyMail, (error, info) => {
+    /* await transporter.sendMail(bodyMail, (error, info) => {
       if (error) {
         return console.log(error);
       }
       console.log("Messaggio inviato: %s", info.messageId);
-    });
+    }); */
     res.status(200).json({ success: true });
   } catch (err) {
     console.log(err);
@@ -445,12 +446,12 @@ const contatta_turismo_post = async (req, res) => {
     ],
   };
 
-  await transporter.sendMail(bodyMail, (error, info) => {
+  /* await transporter.sendMail(bodyMail, (error, info) => {
     if (error) {
       return console.log(error);
     }
     console.log("Messaggio inviato: %s", info.messageId);
-  });
+  }); */
 
   let prenList = [];
   rendiconto.forEach((rend) => {
@@ -561,12 +562,12 @@ const contatta_questura_post = async (req, res) => {
       attachments: allegati,
     };
 
-    await transporter.sendMail(bodyMail, (error, info) => {
+    /* await transporter.sendMail(bodyMail, (error, info) => {
       if (error) {
         return console.log(error);
       }
       console.log("Messaggio inviato: %s", info.messageId);
-    });
+    }); */
 
     prenotazioni.forEach(async (prenotazione) => {
       await Prenotazione.update(

@@ -3,7 +3,7 @@
   $(document).ready(() => {
     let intestatarioReg = /^[A-z]+\s[A-z]+/;
     let cartaReg = /^[0-9]{16}$/;
-    let meseReg = /^0[1-9]|1[0-2]$/;
+    let meseReg = /^0[1-9]$|^1[0-2]$/;
     let annoReg = /^[0-9]{2}$/;
     let cvvReg = /^[0-9]{3}$/;
 
@@ -298,7 +298,10 @@
                         ) {
                           $(this).addClass("is-invalid");
                           $("#inputScadenzaA").addClass("is-invalid");
-                        } else {
+                        } else if (
+                          Number($(this).val()) >= mese &&
+                          annoReg.test($("#inputScadenzaA").val())
+                        ) {
                           $(this).removeClass("is-invalid");
                           $("#inputScadenzaA").removeClass("is-invalid");
                         }
@@ -320,9 +323,14 @@
                       ) {
                         $(this).addClass("is-invalid");
                         $("#inputScadenzaM").addClass("is-invalid");
-                      } else {
+                      } else if (
+                        Number($(this).val()) >= anno &&
+                        meseReg.test($("#inputScadenzaM").val())
+                      ) {
                         $(this).removeClass("is-invalid");
                         $("#inputScadenzaM").removeClass("is-invalid");
+                      } else {
+                        $(this).removeClass("is-invalid");
                       }
                     } else {
                       $(this).addClass("is-invalid");

@@ -150,14 +150,11 @@ const contatta_host_post = async (req, res) => {
 const cancella_pren_user_delete = async (req, res) => {
   try {
     const { id_pren } = req.body;
-    await Prenotazione.update(
-      { stato_prenotazione: 0 },
-      {
-        where: {
-          id_prenotazione: id_pren,
-        },
-      }
-    );
+    await Prenotazione.destroy({
+      where: {
+        id_prenotazione: id_pren,
+      },
+    });
     res.status(200).json({ success: true });
   } catch (err) {
     res.status(400).json({ err });

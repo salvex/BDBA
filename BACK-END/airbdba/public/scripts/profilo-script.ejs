@@ -40,10 +40,27 @@
         `,
     });
     $("#msg").val("");
+
+    // if (window.location.href.includes("#")) {
+    //   if (
+    //     /v-pills-profile-tab|v-pills-book-tab|v-pills-settings-tab/.test(
+    //       window.location.href.split("#")[1]
+    //     )
+    //   ) {
+    //     $(`#${window.location.href.split("#")[1]}`).click();
+    //   }
+    // }
     /* --------------------------------------------------------- */
 
     /* PRENOTAZIONI */
     let ind = 0;
+    if (prenotazioni.length === 0) {
+      $(".prenotazioni-container").html(
+        `
+        <h4 class="text-muted"><b>Non hai nessuna prenotazione...</b>&nbsp;<i class="far fa-sad-tear"></i></h4>
+        `
+      );
+    }
     prenotazioni.forEach((prenotazione, index) => {
       if (prenotazione.stato_prenotazione > 0) {
         ind += 1;
@@ -82,7 +99,7 @@
         $("#confirmCanc")
           .on("show.bs.modal", () => {
             $(".cancel-content").text(
-              "Sei sicuro di voler annullare questa prenotazione? I soldi non ti verranno rimborsati!"
+              "Sei sicuro di voler annullare questa prenotazione?"
             );
             $(".confirmC").on("click", () => {
               fetch("/profilo/cancella-pren", {
@@ -93,7 +110,20 @@
                 .then(async (res) => {
                   const response = await res.json();
                   if (response.success) {
-                    window.location.reload();
+                    $("#confirmCanc").modal("hide");
+                    $("#successFailure")
+                      .on("show.bs.modal", () => {
+                        $("#successFailureLabel").html(
+                          `Operazione completata!&nbsp;<i class="far fa-check-circle"></i>`
+                        );
+                        $("#successFailureContent").html(
+                          `La prenotazione è stata annullata!`
+                        );
+                      })
+                      .on("hide.bs.modal", () => {
+                        window.location.reload();
+                      })
+                      .modal("show");
                   }
                 })
                 .catch((err) => console.log(err));
@@ -128,7 +158,20 @@
                 .then(async (res) => {
                   const response = await res.json();
                   if (response.success) {
-                    window.location.reload();
+                    $("#contactModal").modal("hide");
+                    $("#successFailure")
+                      .on("show.bs.modal", () => {
+                        $("#successFailureLabel").html(
+                          `Operazione completata!&nbsp;<i class="far fa-check-circle"></i>`
+                        );
+                        $("#successFailureContent").html(
+                          `Il messaggio è stato inviato!`
+                        );
+                      })
+                      .on("hide.bs.modal", () => {
+                        window.location.reload();
+                      })
+                      .modal("show");
                   }
                 })
                 .catch((err) => console.log(err));
@@ -232,7 +275,20 @@
                   <% }%>
                   `,
               });
-              window.location.href = "/profilo";
+              $("#image-crop").modal("hide");
+              $("#successFailure")
+                .on("show.bs.modal", () => {
+                  $("#successFailureLabel").html(
+                    `Operazione completata!&nbsp;<i class="far fa-check-circle"></i>`
+                  );
+                  $("#successFailureContent").html(
+                    `La foto è stata modificata correttamente!!`
+                  );
+                })
+                .on("hide.bs.modal", () => {
+                  window.location.reload();
+                })
+                .modal("show");
             }
           })
           .catch((err) => {
@@ -322,7 +378,20 @@
               .then(async (res) => {
                 const response = await res.json();
                 if (response.success) {
-                  window.location.href = "/profilo";
+                  $("#payment").modal("hide");
+                  $("#successFailure")
+                    .on("show.bs.modal", () => {
+                      $("#successFailureLabel").html(
+                        `Operazione comletata!&nbsp;<i class="fas fa-check-circle"></i>`
+                      );
+                      $("#successFailureContent").html(
+                        `Il metodo di pagamento è stato rimostto con successo!`
+                      );
+                    })
+                    .on("hide.bs.modal", () => {
+                      window.location.reload();
+                    })
+                    .modal("show");
                 }
               })
               .catch((err) => console.log(err));
@@ -514,7 +583,20 @@
           .then(async (res) => {
             const response = await res.json();
             if (response.success) {
-              window.location.href = `/profilo`;
+              $("#payment").modal("hide");
+              $("#successFailure")
+                .on("show.bs.modal", () => {
+                  $("#successFailureLabel").html(
+                    `Operazione comletata!&nbsp;<i class="fas fa-check-circle"></i>`
+                  );
+                  $("#successFailureContent").html(
+                    `Nuovo metodo di pagamento inserito con successo!`
+                  );
+                })
+                .on("hide.bs.modal", () => {
+                  window.location.reload();
+                })
+                .modal("show");
             }
           })
           .catch((err) => console.log(err));
@@ -561,7 +643,10 @@
                 ) {
                   $(this).addClass("is-invalid");
                   $("#inputScadenzaA").addClass("is-invalid");
-                } else {
+                } else if (
+                  Number($(this).val()) >= mese &&
+                  annoReg.test($("#inputScadenzaA").val())
+                ) {
                   $(this).removeClass("is-invalid");
                   $("#inputScadenzaA").removeClass("is-invalid");
                 }
@@ -583,9 +668,14 @@
               ) {
                 $(this).addClass("is-invalid");
                 $("#inputScadenzaM").addClass("is-invalid");
-              } else {
+              } else if (
+                Number($(this).val()) >= anno &&
+                meseReg.test($("#inputScadenzaM").val())
+              ) {
                 $(this).removeClass("is-invalid");
                 $("#inputScadenzaM").removeClass("is-invalid");
+              } else {
+                $(this).removeClass("is-invalid");
               }
             } else {
               $(this).addClass("is-invalid");
