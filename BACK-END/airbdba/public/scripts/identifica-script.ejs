@@ -364,7 +364,19 @@
         .then(async (res) => {
           const response = await res.json();
           if (response.success) {
-            window.location.href = `/host`;
+            $("#successFailure")
+              .on("show.bs.modal", () => {
+                $("#successFailureLabel").html(
+                  `Operazione completata!&nbsp;<i class="far fa-check-circle"></i>`
+                );
+                $("#successFailureContent").html(
+                  `Gli ospiti sono stati correttamente identificati. Potrai trovare le loro informazioni nelle sezioni relative alla questura e all'ufficio del turismo, per i relativi rendiconti.`
+                );
+              })
+              .on("hide.bs.modal", () => {
+                window.location.href = `/host`;
+              })
+              .modal("show");
           }
         })
         .catch((err) => console.log(err));

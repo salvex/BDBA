@@ -662,7 +662,18 @@
     /* ------------------------------------------------- */
 
     /* GESTIONE PRENOTAZIONI */
-    console.log(prenotazioni, inserzioni);
+    prenotazioni.some((pren) => {
+      if (
+        new Date(pren.check_in) < new Date() &&
+        pren.stato_prenotazione === 2
+      ) {
+        $("#prenotazioni").prepend(
+          `
+          <div class="alert alert-danger">Non hai ancora identificato gli ospiti di alcune prenotazioni passate!</div>
+          `
+        );
+      }
+    });
     prenotazioni.forEach((prenotazione, index) => {
       // Variabili per il calcolo dei guadagni
       /* checkin = prenotazione.check_in;
@@ -802,6 +813,7 @@
                   </div>
                   <div class="col-12 pren-btns">
                     <button indice="${index}" class="btn btn-primary contact"><i class="fas fa-comment-alt"></i> Contatta</button>
+                    <button indice="${index}" class="btn btn-warning identify" style="margin-left: 5px"><i class="fas fa-user"></i> identifica</button>
                   </div>
                 </div>
               </div>
@@ -847,13 +859,12 @@
             </div>
           `
           );
-
-          if (prenotazione.stato_prenotazione === 3) {
-            $(`.identify[indice=${index}]`).remove();
-            citta.push(prenotazione.inserzione.citta);
-          }
-
           accettate += 1;
+        }
+
+        if (prenotazione.stato_prenotazione === 3) {
+          $(`.identify[indice=${index}]`).remove();
+          citta.push(prenotazione.inserzione.citta);
         }
 
         // PULSANTI
@@ -951,7 +962,7 @@
         });
 
         // Identifica ospiti
-        $(`.identify`).on("click", () => {
+        $(`.identify[indice=${index}]`).on("click", () => {
           window.location.href = `/host/identifica-ospiti?id=${prenotazione.id_prenotazione}&ospiti=${prenotazione.n_ospiti_pren}`;
         });
         /* $(`.cancel[indice=${index}]`).on("click", function () {
