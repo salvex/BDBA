@@ -69,17 +69,36 @@
             <div class="card pren-card">
               <div class="card-body">
                 <div class="row">
-                    <div class="col-sm-12 col-md-2">
+                  <div class="col-sm-12 col-md-2">
                     <b>#${ind}</b>
                   </div>
                   <div class="col-sm-12 col-md-4">
-                    <b>${prenotazione.inserzione.nome_inserzione}</b>
+                    <a style="padding:0; margin: 0" href="/inserzione/${
+                      prenotazione.ref_inserzione
+                    }">${prenotazione.inserzione.nome_inserzione}</a>
                   </div>
                   <div class="col-sm-12 col-md-3">
                     <b>${prenotazione.check_in}</b>
                   </div>
                   <div class="col-sm-12 col-md-3">
                     <b>${prenotazione.check_out}</b>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12 col-md-2">
+                  </div>
+                  <div class="col-sm-12 col-md-4">
+                    <b>${prenotazione.inserzione.citta}</b>
+                  </div>
+                  <div class="col-sm-12 col-md-3">
+                    <b>${prenotazione.inserzione.indirizzo}</b>
+                  </div>
+                  <div class="col-sm-12 col-md-3">
+                    <b>${
+                      prenotazione.n_ospiti_pren === 1
+                        ? prenotazione.n_ospiti_pren + " ospite"
+                        : prenotazione.n_ospiti_pren + " ospiti"
+                    }</b>
                   </div>
                 </div>
               </div>

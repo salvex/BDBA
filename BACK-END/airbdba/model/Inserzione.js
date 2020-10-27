@@ -80,6 +80,7 @@ const Inserzione = db.sequelize.define(
 // ASSOCIAZIONE [1-1]
 Inserzione.hasOne(Servizi, {
   foreignKey: "ref_inserzione_s",
+  onDelete: "cascade",
 });
 Servizi.belongsTo(Inserzione, {
   foreignKey: "ref_inserzione_s",
