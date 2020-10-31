@@ -85,7 +85,6 @@ const effettua_pren_get = async (req, res) => {
           moment().startOf("year"),
           "days"
         );
-        console.log("a");
       } else if (
         moment(date.check_in).format("YYYY") == annoCorrente &&
         moment(date.check_out).format("YYYY") == annoSuccessivo
@@ -94,7 +93,6 @@ const effettua_pren_get = async (req, res) => {
           moment(date.check_in),
           "days"
         );
-        console.log("b");
       } else if (
         moment(date.check_in).format("YYYY") == annoCorrente &&
         moment(date.check_out).format("YYYY") == annoCorrente
@@ -103,13 +101,12 @@ const effettua_pren_get = async (req, res) => {
           moment(date.check_in),
           "days"
         );
-        console.log("c");
       }
     });
-    console.log(giorniTotali);
-    giorniTotali += giorni_da_pren;
+
+    giorniTotali += Number.parseInt(giorni_da_pren);
+
     if (giorniTotali < 28) {
-      /*riepilogo*/
       console.log("procedi con la prenotazione");
       res.status(200).json({ success: true });
     } else {
@@ -233,14 +230,10 @@ const identifica_ospiti_post = (req, res) => {
 };*/
 const pagamento_get = async (req, res, next) => {
   try {
-    //DA RIVEDERE
-    console.log(req.session.utente.id);
     var lista_metodi = await MetodoPagamento.get_metodi(req.session.utente.id);
 
     res.locals.lista_metodi = JSON.stringify(lista_metodi);
     req.session.prezzo = req.query.prezzo;
-
-    console.log(res.locals.lista_metodi);
     next();
   } catch (err) {
     console.log(err);
@@ -287,7 +280,6 @@ const pagamento_post = async (req, res, next) => {
       n_ospiti_pren: req.query.nospiti,
       prezzo_finale: req.session.prezzo,
     };
-    console.log(prenotazione);
     req.session.metodo_pagamento = metodo_pagamento;
     req.session.prenotazione = prenotazione;
     res.status(200).json({ success: true });
@@ -318,15 +310,37 @@ const riepilogo_post = async (req, res) => {
     // che l'utente l'ha già eseguita
     if (checkPren.length === 0) {
       const prenotazione = await Prenotazione.create(req.session.prenotazione);
-      console.log(req.session.prenotazione.check_in);
+      const host = await Utente.findByPk(req.session.inserzione.ref_host_ins);
+
+      let bodyMail1 = {
+        from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
+        bcc: host.email,
+        subject: "Nuova richiesta di prenotazione",
+        text: `Buone notizie!\n Un utente ha effettuato una richiesta di prenotazione. Visita la sezione 'Gestione Host' per gestire la richiesta.  \n\n Cordiali Saluti, Team AIRBDBA `,
+      };
+      let bodyMail2 = {
+        from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
+        bcc: req.session.utente.email,
+        subject: "Richiesta di prenotazione effettuata",
+        text: `La tua richiesta di prenotazione è stata inoltrata con successo all'host della struttura ${req.session.inserzione.nome_inserzione}. Riceverei un email di notifica con l'esito della tua richiesta. \n\n Cordiali Saluti, Team AIRBDBA`,
+      };
+      /*await transporter.sendMail(bodyMail1, (error, info) => {
+        if (error) {
+          return console.log(error);
+        }
+        console.log("Messaggio inviato: %s", info.messageId);
+      });
+      await transporter.sendMail(bodyMail2, (error, info) => {
+        if (error) {
+          return console.log(error);
+        }
+        console.log("Messaggio inviato: %s", info.messageId);
+      });*/
+
       res.status(200).json({ success: true });
     } else {
-      res.status(400).json({ success: flase });
+      res.status(400).json({ success: false });
     }
-
-    // const prenotazione = await Prenotazione.create(req.session.prenotazione);
-    // console.log(req.session.prenotazione.check_in);
-    // res.status(200).json({ success: true });
   } catch (err) {
     console.log(err);
     res.status(400).json({ success: false });

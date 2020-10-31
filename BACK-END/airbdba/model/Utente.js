@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 //TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 
 const Utente = db.sequelize.define(
-  'utente',
+  "utente",
   {
     id: {
       type: DataTypes.INTEGER(50),
@@ -42,10 +42,10 @@ const Utente = db.sequelize.define(
     },
     ultimo_rendiconto: {
       type: DataTypes.DATEONLY(),
-    }, 
+    },
     hostBecomeAt: {
       type: DataTypes.DATEONLY(),
-    }
+    },
     /*    indirizzo: {
         type: DataTypes.STRING(80),
         allowNull: false
@@ -77,7 +77,6 @@ const Utente = db.sequelize.define(
 Prenotazione.belongsTo(Utente, {
   foreignKey: "ref_utente",
 });*/
-
 
 Utente.Autentica = async (emailutente, password) => {
   console.log("Login in corso..");
@@ -122,6 +121,7 @@ Utente.diventaHost = async (user_id) => {
     throw Error("Utente non trovato");
   }
   host.isHost = 1;
+  host.hostBecomeAt = new Date();
   await host.save();
 
   return host;

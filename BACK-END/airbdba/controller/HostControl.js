@@ -32,7 +32,7 @@ var errorsHandler = (err) => {
 
 const become_host_get = async (req, res) => {
   try {
-    var host = await Utente.diventaHost(req.session.utente.id); //test
+    var host = await Utente.diventaHost(req.session.utente.id);
     var token_host = JwtToken.createTokenHost(req.session.utente.id);
     res.cookie("host", token_host, {
       httpOnly: true,
@@ -260,19 +260,17 @@ const accetta_prenotazione_get = async (req, res) => {
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
       bcc: user.email,
-      subject:
-        "Comunicazione relativa alla renotazione ID: " +
-        acceptPren.id_prenotazione,
-      text:
-        "Congratulazione! Le comunichiamo che l'host ha accettato la sua richiesta di prenotazione. \n\n Cordiali Saluti, Team AIRBDBA",
+      subject: "Richiesta prenotazione accettata",
+
+      text: `Congratulazione! Le comunichiamo che l'host ha accettato la sua richiesta di prenotazione dal ${acceptPren.check_in} al ${acceptPren.check_out}. \n\n Cordiali Saluti, Team AIRBDBA`,
     };
 
-    /* await transporter.sendMail(bodyMail, (error, info) => {
+    /*await transporter.sendMail(bodyMail, (error, info) => {
       if (error) {
         return console.log(error);
       }
       console.log("Messaggio inviato: %s", info.messageId);
-    }); */
+    });*/
 
     res.status(200).json({
       success: true,
@@ -292,19 +290,16 @@ const rifiuta_prenotazione_get = async (req, res) => {
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
       bcc: user.email,
-      subject:
-        "Comunicazione relativa a Prenotazione ID: " +
-        refusePren.id_prenotazione,
-      text:
-        "Siamo spiacenti. Le comunchiamo che l'host ha rifiutato la sua richiesta di prenotazione. \n\n Cordiali Saluti, Team AIRBDBA",
+      subject: "Richieta prenotazione rifiutata",
+      text: `Siamo spiacenti. Le comunchiamo che l'host ha rifiutato la sua richiesta di prenotazione dal ${refusePren.check_in} al ${refusePren.check_out}. \n\n Cordiali Saluti, Team AIRBDBA`,
     };
 
-    /* await transporter.sendMail(bodyMail, (error, info) => {
+    /*await transporter.sendMail(bodyMail, (error, info) => {
       if (error) {
         return console.log(error);
       }
       console.log("Messaggio inviato: %s", info.messageId);
-    }); */
+    });*/
 
     await refusePren.destroy();
     res.status(200).json({
@@ -318,9 +313,21 @@ const rifiuta_prenotazione_get = async (req, res) => {
 
 const cancella_prenotazione_delete = async (req, res) => {
   try {
-    await Prenotazione.destroy({
-      where: { id_prenotazione: req.params.id_pren },
+    const prenotazione = await Prenotazione.findByPk(req.params.id_pren);
+    const utente = await Utente.findByPk(prenotazione.ref_utente);
+    let bodyMail = {
+      from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
+      bcc: "marcodaleo114@gmail.com",
+      subject: "Prenotazione cancellata",
+      text: `Siamo spiacenti. Le comunchiamo che l'host ha cancellato la sua prenotazione dal ${prenotazione.check_in} al ${prenotazione.check_out}, presso la struttura. \n\n Cordiali Saluti, Team AIRBDBA`,
+    };
+    await transporter.sendMail(bodyMail, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log("Messaggio inviato: %s", info.messageId);
     });
+    await prenotazione.destroy();
     res.status(200).json({ success: true });
   } catch (err) {
     console.log(err);

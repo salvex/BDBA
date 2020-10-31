@@ -12,6 +12,7 @@ var sessionStore = require("./utils/sessionStore");
 var { checkRendiconto } = require("./utils/checkRendiconto");
 var { checkPrenotazioneData } = require("./utils/checkPrenotazioneData");
 var HostControl = require("./controller/HostControl");
+var schedule = require("node-schedule");
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -69,22 +70,13 @@ app.use("*", checkUser);
 app.use("/", indexRouter);
 app.use(authRouter);
 //CONTROLLI GLOBALI
-setInterval(checkRendiconto, 60 * 60 * 24 * 1000);
-setInterval(checkPrenotazioneData, 60 * 60 * 24 * 1000);
+/*setInterval(checkRendiconto, 60 * 60 * 24 * 1000);
+setInterval(checkPrenotazioneData, 60 * 60 * 24 * 1000);*/
 
-/*app.get("/data", (req, res) => {
-  var annoCorrente = moment().format("YYYY");
-  console.log(typeof moment().format("YYYY"));
-
-  res.status(200).end();
-});
-app.get("/prova", (req, res) => {
-  if (req.session.utente) {
-    res.send(req.session.utente);
-  } else {
-    res.send("nessuno utente loggato");
-  }
-});*/
+var rule = new schedule.RecurrenceRule();
+rule.hour = 12;
+var scheduleJob1 = schedule.scheduleJob(rule, checkRendiconto);
+var scheduleJob2 = schedule.scheduleJob(rule, checkPrenotazioneData);
 
 app.use("/profilo", verifyToken, utenteRouter);
 app.use("/signup", regRouter);
