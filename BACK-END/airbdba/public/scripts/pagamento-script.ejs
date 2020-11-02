@@ -7,6 +7,10 @@
     let annoReg = /^[0-9]{2}$/;
     let cvvReg = /^[0-9]{3}$/;
 
+    const metodiJSON = `<%= lista_metodi %>`;
+    const metodiObj = JSON.parse(metodiJSON.replace(/&#34;/g, '"'));
+    console.log(metodiObj);
+
     let params = new URLSearchParams(window.location.search);
     let prezzo = params.get("prezzo");
     console.log(prezzo);
@@ -34,8 +38,6 @@
     };
 
     const pay = () => {
-      const metodiJSON = `<%= lista_metodi %>`;
-      const metodiObj = JSON.parse(metodiJSON.replace(/&#34;/g, '"'));
       let metodo, option;
 
       // Se non ci sono input radio checked allora non funziona
@@ -372,11 +374,11 @@
       } else {
         $("#pay-info").remove();
         $(".pay-footer").remove();
-        $("#paga-adesso").animate({ height: "600px" }, "slow", () => {
+        $("#paga-adesso").animate({ height: "100%" }, "slow", () => {
           if ($("#pay-container").length === 0) {
             $(".pay-body").append(`
                   <div id="pay-container">
-                    <% metodi.forEach(metodo => { %>
+                    <% metodi.forEach((metodo, index) => { %>
                       <div class="card metodo-container">
                         <div class="card-body metodo-mobile">
                           <div class="general general-mobile">
@@ -393,23 +395,289 @@
                           </div>
                         </div>
                         <div class="card-footer select-btn">
-                          <button class="btn btn-primary">Seleziona</button>
+                          <button index="<%= index %>" class="btn btn-primary selectMobile">Seleziona</button>
                         </div>
                       </div>
                     <% }); %>
-                    <div class="card aggiungi metodo-container">
+                    <div class="card aggiungi-closed metodo-container medoto-add">
                       <div class="card-body aggiungi-metodo">
                         <div id="select-metodo">
-                          <b>Aggiungi un nuovo metodo di pagamento</b>
-                        </div>
-                        <div id="form-container-mobile">
-
+                            <label>
+                              <b>Aggiungi un nuovo metodo di pagamento</b>
+                            </label>
+                          </div>
+                          <div id="payment-form-container" style="display: none">
+                            <form>
+                              <div class="form-group">
+                                <label for="inputIntestatario">Intestatario</label>
+                                <input type="text" class="form-control metodo-pagamento-mobile" id="inputIntestatario" placeholder="Mario Rossi">
+                              </div>
+                              <div class="form-row">
+                                <div class="form-group col-md-8">
+                                  <label for="inputCarta">Numero Carta</label>
+                                  <input type="text" class="form-control metodo-pagamento-mobile" id="inputCarta" placeholder="**** **** **** ****">
+                                </div>
+                                <div class="form-group col-md-4">
+                                  <label for="inputCircuito">Circuito</label>
+                                  <select id="inputCircuito" class="form-control metodo-pagamento-mobile">
+                                    <option value="" selected disabled>Scegli...</option>
+                                    <option value="mastercard">Mastercard</option>
+                                    <option value="visa">Visa</option>
+                                    <option value="american-express">American express</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-row">
+                                <div class="form-group col-md-3">
+                                  <label for="inputScadenza">Mese</label>
+                                  <input type="text" class="form-control metodo-pagamento-mobile" id="inputScadenzaM" placeholder="mm">
+                                </div>
+                                <div class="form-group col-md-3">
+                                  <label for="inputScadenza">Anno</label>
+                                  <input type="text" class="form-control metodo-pagamento-mobile" id="inputScadenzaA" placeholder="aa">
+                                </div>
+                                <div class="form-group col-md-6">
+                                  <label for="inputCvv">CVV</label>
+                                  <input type="text" class="form-control metodo-pagamento-mobile" id="inputCvv" placeholder="cvv">
+                                </div>
+                                <div class="form-group col-12 add-container">
+                                  <button class="btn btn-primary add">Aggiungi</button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 `);
+
+            $(".selectMobile").each((index, element) => {
+              $(element).on("click", function () {
+                let metodo = metodiObj[$(element).attr("index")];
+                let option = 1;
+
+                console.log(metodo, option);
+
+                fetch(
+                  `/inserzione/prenota/pagamento${window.location.search}`,
+                  {
+                    method: "POST",
+                    body: JSON.stringify({ metodo, option, prezzo }),
+                    headers: { "Content-Type": "application/json" },
+                  }
+                )
+                  .then(async (res) => {
+                    const response = await res.json();
+                    if (response.success) {
+                      window.location.href = `/inserzione/prenota/riepilogo${window.location.search}`;
+                    }
+                  })
+                  .catch((err) => console.log(err));
+              });
+            });
+
+            $(".add").on("click", (e) => {
+              e.preventDefault();
+              let flag = 1;
+              $("input, select").each(function (index, element) {
+                if (
+                  ($(this).val() === "") |
+                  ($(this).val() === null) |
+                  $(this).hasClass("is-invalid")
+                ) {
+                  flag = 0;
+
+                  if (!$(this).hasClass("is-invalid")) {
+                    $(this).addClass("is-invalid");
+                  }
+                }
+
+                if ($(this).prop("id") === "inputIntestatario") {
+                  if (intestatarioReg.test($(this).val())) {
+                    $(this).removeClass("is-invalid");
+                  } else {
+                    $(this).addClass("is-invalid");
+                  }
+                }
+
+                if ($(this).prop("id") === "inputCarta") {
+                  if (cartaReg.test($(this).val())) {
+                    $(this).removeClass("is-invalid");
+                  } else {
+                    $(this).addClass("is-invalid");
+                  }
+                }
+
+                if ($(this).prop("id") === "inputScadenzaM") {
+                  if (meseReg.test($(this).val())) {
+                    $(this).removeClass("is-invalid");
+                    // Verifico se la data di scadenza non è inferiore all'anno
+                    // corrente
+                    if ($("#inputScadenzaA").val() !== "") {
+                      if (
+                        Number($(this).val()) < mese &&
+                        Number($("#inputScadenzaA").val()) <= anno
+                      ) {
+                        $(this).addClass("is-invalid");
+                        $("#inputScadenzaA").addClass("is-invalid");
+                      } else {
+                        $(this).removeClass("is-invalid");
+                        $("#inputScadenzaA").removeClass("is-invalid");
+                      }
+                    }
+                  } else {
+                    $(this).addClass("is-invalid");
+                  }
+                }
+
+                if ($(this).prop("id") === "inputScadenzaA") {
+                  if (annoReg.test($(this).val())) {
+                    $(this).removeClass("is-invalid");
+                    // Verifico se la data di scadenza non è inferiore all'anno
+                    // corrente
+                    if (
+                      Number($(this).val()) < anno ||
+                      (Number($(this).val()) === anno &&
+                        Number($("#inputScadenzaM").val()) < mese)
+                    ) {
+                      $(this).addClass("is-invalid");
+                      $("#inputScadenzaM").addClass("is-invalid");
+                    } else {
+                      $(this).removeClass("is-invalid");
+                      $("#inputScadenzaM").removeClass("is-invalid");
+                    }
+                  } else {
+                    $(this).addClass("is-invalid");
+                  }
+                }
+
+                if ($(this).prop("id") === "inputCvv") {
+                  if (cvvReg.test($(this).val())) {
+                    $(this).removeClass("is-invalid");
+                  } else {
+                    $(this).addClass("is-invalid");
+                  }
+                }
+              });
+
+              if (!flag) {
+                return;
+              }
+
+              metodo = {
+                intestatario: $("#inputIntestatario").val(),
+                codice_carta: $("#inputCarta").val(),
+                nome_circuito: $("#inputCircuito").val(),
+                cvv: $("#inputCvv").val(),
+                scadenza_mese: $("#inputScadenzaM").val(),
+                scadenza_anno: $("#inputScadenzaA").val(),
+              };
+              option = 2;
+
+              fetch(`/inserzione/prenota/pagamento${window.location.search}`, {
+                method: "POST",
+                body: JSON.stringify({ metodo, option, prezzo }),
+                headers: { "Content-Type": "application/json" },
+              })
+                .then(async (res) => {
+                  const response = await res.json();
+                  if (response.success) {
+                    window.location.href = `/inserzione/prenota/riepilogo${window.location.search}`;
+                  }
+                })
+                .catch((err) => console.log(err));
+            });
           }
+          $(".aggiungi-closed").on("click", function () {
+            $("#payment-form-container").slideDown("slow");
+            $(this).addClass("aggiungi-opened").removeClass("aggiungi-closed");
+          });
+
+          $("input[type=text], select").each(function (index, element) {
+            $(this).on("change focusout input", function () {
+              if ($(this).val() === "") {
+                $(this).addClass("is-invalid");
+              } else {
+                $(this).removeClass("is-invalid");
+              }
+
+              if ($(this).prop("id") === "inputIntestatario") {
+                if (intestatarioReg.test($(this).val())) {
+                  $(this).removeClass("is-invalid");
+                } else {
+                  $(this).addClass("is-invalid");
+                }
+              }
+
+              if ($(this).prop("id") === "inputCarta") {
+                if (cartaReg.test($(this).val())) {
+                  $(this).removeClass("is-invalid");
+                } else {
+                  $(this).addClass("is-invalid");
+                }
+              }
+
+              if ($(this).prop("id") === "inputScadenzaM") {
+                if (meseReg.test($(this).val())) {
+                  $(this).removeClass("is-invalid");
+                  // Verifico se la data di scadenza non è inferiore all'anno
+                  // corrente
+                  if ($("#inputScadenzaA").val() !== "") {
+                    if (
+                      Number($(this).val()) < mese &&
+                      Number($("#inputScadenzaA").val()) <= anno
+                    ) {
+                      $(this).addClass("is-invalid");
+                      $("#inputScadenzaA").addClass("is-invalid");
+                    } else if (
+                      Number($(this).val()) >= mese &&
+                      annoReg.test($("#inputScadenzaA").val())
+                    ) {
+                      $(this).removeClass("is-invalid");
+                      $("#inputScadenzaA").removeClass("is-invalid");
+                    }
+                  }
+                } else {
+                  $(this).addClass("is-invalid");
+                }
+              }
+
+              if ($(this).prop("id") === "inputScadenzaA") {
+                if (annoReg.test($(this).val())) {
+                  $(this).removeClass("is-invalid");
+                  // Verifico se la data di scadenza non è inferiore all'anno
+                  // corrente
+                  if (
+                    Number($(this).val()) < anno ||
+                    (Number($(this).val()) === anno &&
+                      Number($("#inputScadenzaM").val()) < mese)
+                  ) {
+                    $(this).addClass("is-invalid");
+                    $("#inputScadenzaM").addClass("is-invalid");
+                  } else if (
+                    Number($(this).val()) >= anno &&
+                    meseReg.test($("#inputScadenzaM").val())
+                  ) {
+                    $(this).removeClass("is-invalid");
+                    $("#inputScadenzaM").removeClass("is-invalid");
+                  } else {
+                    $(this).removeClass("is-invalid");
+                  }
+                } else {
+                  $(this).addClass("is-invalid");
+                }
+              }
+
+              if ($(this).prop("id") === "inputCvv") {
+                if (cvvReg.test($(this).val())) {
+                  $(this).removeClass("is-invalid");
+                } else {
+                  $(this).addClass("is-invalid");
+                }
+              }
+            });
+          });
         });
       }
     };

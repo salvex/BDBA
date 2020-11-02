@@ -75,11 +75,6 @@
     $("input[type=checkbox]").prop("checked", false);
     /* ------------------------------------------------- */
 
-    /* TOOLTIP */
-    // $(function () {
-    //   $('[data-toggle="tooltip"]').tooltip();
-    // });
-
     /* INPUT FILE */
     $("#inputFile").on("change", () => {
       $("#inputFileLabel").text(() => {
@@ -249,11 +244,6 @@
                 `Solo altre ${10 - immagini[index].length}`
               );
 
-              // TODO
-              /* $("#customFileModalLabel").on("click", function () {
-                console.log($(this).prop("files"));
-              }); */
-
               /* Attivo anche le checkbox dei servizi in modo corretto */
               let serviziKeys = Object.keys(inserzione.servizi);
               for (let j = 1; j < serviziKeys.length - 1; j += 1) {
@@ -324,13 +314,6 @@
         });
       });
     }
-    /* ------------------------------------------------- */
-
-    /* CONTROLLI */
-    /* $("input").each((index, element) => {
-      $(element)
-    }); */
-
     /* ------------------------------------------------- */
 
     /* CONTROLLI */
@@ -675,18 +658,6 @@
       }
     });
     prenotazioni.forEach((prenotazione, index) => {
-      // Variabili per il calcolo dei guadagni
-      /* checkin = prenotazione.check_in;
-      checkout = prenotazione.check_out;
-      checkinDate = new Date(checkin);
-      checkoutDate = new Date(checkout);
-
-      if (checkin === checkout) {
-        notti = 1;
-      } else {
-        notti = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
-      } */
-
       if (prenotazione.stato_prenotazione === 1) {
         // Contatore di richieste
         richieste += 1;
@@ -965,47 +936,7 @@
         $(`.identify[indice=${index}]`).on("click", () => {
           window.location.href = `/host/identifica-ospiti?id=${prenotazione.id_prenotazione}&ospiti=${prenotazione.n_ospiti_pren}`;
         });
-        /* $(`.cancel[indice=${index}]`).on("click", function () {
-          fetch(`/host/delete_pren/${prenotazione.id_prenotazione}`, {
-            method: "delete",
-          })
-            .then(async (res) => {
-              const response = await res.json();
-              if (response.success) {
-                window.location.reload();
-              }
-            })
-            .catch((err) => console.log(err));
-        }); */
-      } /*  else {
-        $("#pren").append(
-          `
-            <div class="card pren-card" style="background-color:rgba(0,0,0,0.3)">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-12 text-danger">
-                    <b><i>Rifiutata/annullata</i></b>
-                  </div>
-                  <div class="col-12">
-                    ${prenotazione.utente.nome}&nbsp;${
-            prenotazione.utente.cognome
-          }, <a href="mailto:${prenotazione.utente.email}"><i>${
-            prenotazione.utente.email
-          }</i></a>
-                  </div>
-                  <div class="col-12">
-                    <b>${prenotazione.check_in}</b> &#8594; <b>${
-            prenotazione.check_out
-          }</b>, ${prenotazione.n_ospiti_pren} ${
-            prenotazione.n_ospiti_pren === 1 ? "ospite" : "ospiti"
-          }
-                  </div>
-                </div>
-              </div>
-            </div>
-          `
-        );
-      } */
+      }
     });
 
     $(".ric-val").text(richieste);

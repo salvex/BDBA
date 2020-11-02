@@ -34,7 +34,7 @@ const registrazione_get = (req, res) => {
   if (req.cookies.jwt) {
     res.redirect("/");
   } else {
-    res.render("signup");
+    res.render("schermataRegistrazione");
   }
 };
 

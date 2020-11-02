@@ -15,7 +15,8 @@
       nights,
       prezzoPerNotte,
       prezzoNotteServizio,
-      prezzoTotale;
+      prezzoTotale,
+      dataInizioDatepicker;
     const servicesIcons = {
       wifi: `&nbsp;&nbsp;<i class="fas fa-wifi"></i>`,
       ascensore: `&nbsp;&nbsp;<i class="fas fa-arrow-up"></i>`,
@@ -177,11 +178,17 @@
     /* --------------------------------------------------------- */
 
     /* DATEPICKER */
+    if (new Date(inserzione.inizioDisponibilita) < new Date()) {
+      dataInizioDatepicker = new Date();
+    } else {
+      dataInizioDatepicker = inserzione.inizioDisponibilita;
+    }
+
     $("#check-in").datepicker({
       format: "yyyy-mm-dd",
       autoclose: true,
       todayHighlight: true,
-      startDate: inserzione.inizioDisponibilita,
+      startDate: dataInizioDatepicker,
       endDate: inserzione.fineDisponibilita,
       datesDisabled: reservedDates,
     });
@@ -190,7 +197,7 @@
       format: "yyyy-mm-dd",
       autoclose: true,
       todayHighlight: true,
-      startDate: inserzione.inizioDisponibilita,
+      startDate: dataInizioDatepicker,
       endDate: inserzione.fineDisponibilita,
       datesDisabled: reservedDates,
     });
@@ -575,149 +582,6 @@
         $(".text-msg").text("Non puoi pernottare per più di 28 giorni!");
       }
     });
-    /* --------------------------------------------------------- */
-
-    /* OPERAZIONE DI FETCH */
-    // Fetch informazioni generali dell'inserzione
-    // fetch(`/inserzione/res${window.location.search}`)
-    //   .then(async (res) => {
-    //     const response = await res.json();
-    //     console.log(response.show);
-    //     checkin = params.get("checkin");
-    //     checkout = params.get("checkout");
-    //     nospiti = params.get("nospiti");
-    //     prezzoBase = response.show.prezzo_base;
-
-    //     // Inserisco tutte le informazioni nei vari campi
-    //     // Heading
-    //     $(".title-container").append(
-    //       `<h1><b>${response.show.nome_inserzione}</b></h1>`
-    //     );
-    //     // Showcase
-    //     // -- Description
-    //     $("#citta > h3").append(response.show.citta);
-    //     $(".description-content-col > p").append(response.show.descrizione);
-    //     $("#desc-rooms > p")
-    //       .append(`${response.show.n_ospiti} ospiti &#8226; 3 stanze da letto`)
-    //       .addClass("text-muted");
-    //     // -- Map
-    //     $("#map > iframe").attr(
-    //       "src",
-    //       `https://www.google.com/maps/embed/v1/place?key=AIzaSyDS70zwyWHYnuia677DVOj8CRqfAzI00Qo
-    //     &q=${response.show.citta},${response.show.indirizzo}`
-    //     );
-
-    //     // Carousel
-    //     imgs = response.show.galleryPath.split(",");
-    //     for (let i = 0; i < imgs.length; i += 1) {
-    //       if (i === 0) {
-    //         $(".carousel-inner").append(
-    //           `
-    //             <div class="carousel-item active">
-    //               <div class="carousel-item-img" style="background-image: url('/uploads/fotoInserzione/${response.show.ref_host_ins}${imgs[i]}');">
-    //               </div>
-    //             </div>
-    //           `
-    //         );
-    //       } else {
-    //         $(".carousel-inner").append(
-    //           `
-    //             <div class="carousel-item">
-    //               <div class="carousel-item-img" style="background-image: url('/uploads/fotoInserzione/${response.show.ref_host_ins}${imgs[i]}');">
-    //               </div>
-    //             </div>
-    //           `
-    //         );
-    //       }
-    //     }
-
-    //     // Riepilogo
-    //     // Imposto il valore massimo dell'ìnput ospiti
-    //     $("#guestNum").attr("max", response.show.n_ospiti);
-
-    //     // Inserisco le date disabilitate, ossia quelle relative
-    //     // a giorni già prenotati da altri
-
-    //     date = response.date;
-
-    //     $("#check-in").datepicker({
-    //       format: "yyyy-mm-dd",
-    //       autoclose: true,
-    //       todayHighlight: true,
-    //       startDate: new Date(),
-    //       endDate: response.show.fineDisponibilita,
-    //       datesDisabled: date,
-    //       clearBtn: true,
-    //     });
-
-    //     $("#check-out").datepicker({
-    //       format: "yyyy-mm-dd",
-    //       autoclose: true,
-    //       todayHighlight: true,
-    //       startDate: new Date(),
-    //       endDate: response.show.fineDisponibilita,
-    //       datesDisabled: date,
-    //       clearBtn: true,
-    //     });
-
-    //     // Per rendere le cose graficamente mugliori
-    //     // inserisco uno spinner al posto del prezzo
-    //     // per simulare un caricamento
-    //     $("#total").html(`
-    //       <div class="spinner-border" role="status">
-    //         <span class="sr-only">Loading...</span>
-    //       </div>
-    //     `);
-
-    //     // Aggiungo un overlay alla mappa
-    //     if ($("#overlay").length === 0) {
-    //       $("#map").prepend("<div id='overlay'></div>");
-    //       $("#modal-map").attr("src", $("#map > iframe").attr("src"));
-    //       $("#overlay").on("click", () => {
-    //         $("#mapModal").modal("show");
-    //         $("#overlay").remove();
-    //       });
-    //     }
-
-    //     // Calcolo il prezzo totale in base ai giorni (-1)
-    //     // cioè calcolo il numero di notti. Tutto moltiplicato
-    //     // per il numero di ospiti. Lospinner viene rimosso
-    //     // da uno dei due metodi html
-    //     if (checkin && checkout) {
-    //       checkinDate = new Date(checkin);
-    //       checkoutDate = new Date(checkout);
-
-    //       // Se prenoto per un giorno pagherò l'intera giornata
-    //       // come se pernottassi
-    //       if (checkin === checkout) {
-    //         nights = 1;
-    //       } else {
-    //         nights = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
-    //       }
-
-    //       prezzoPerNotte = nights * prezzoBase;
-    //       prezzoNotteServizio = prezzoPerNotte + prezzoPerNotte * 0.07;
-    //       prezzoTotale = prezzoNotteServizio + prezzoNotteServizio * 0.1;
-    //       setTimeout(() => {
-    //         $("#total").html(prezzoTotale.toPrecision(4) + " &euro;");
-    //       }, 1000);
-    //     } else {
-    //       setTimeout(() => {
-    //         $("#total").html("0 &euro;");
-    //       }, 1000);
-    //     }
-
-    //     // SERVIZI
-    //     servizi = Object.keys(response.show.servizi);
-    //     servizi.forEach((servizio, index) => {
-    //       if (response.show.servizi[servizio] && index !== 0) {
-    //         $(".services-content-ul").append(
-    //           `<li>${servizio.slice(0, servizio.length - 4)}</li>`
-    //         );
-    //       }
-    //     });
-    //   })
-    //   .catch((err) => console.log(err));
     /* --------------------------------------------------------- */
   });
 </script>

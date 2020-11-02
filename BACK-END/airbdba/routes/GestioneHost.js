@@ -19,7 +19,7 @@ router.get(
   [JwtToken.verifyHost],
   HostControl.gestione_host_get,
   (req, res) => {
-    res.render("host");
+    res.render("schermataGestioneHost");
   }
 );
 
@@ -68,7 +68,7 @@ router.post(
 );
 
 router.get("/identifica-ospiti", (req, res) => {
-  res.render("identify");
+  res.render("schermataIdentificaOspiti");
 });
 router.post("/identifica-ospiti", HostControl.identifica_post);
 

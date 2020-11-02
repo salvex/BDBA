@@ -44,7 +44,7 @@ const user_get = async (req, res, next) => {
 };
 
 const modificaPassword_get = (req, res) => {
-  res.render("modificaPassword");
+  res.render("schermataModificaPassword");
 };
 
 const modificaPassword_post = async (req, res) => {

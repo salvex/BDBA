@@ -8,7 +8,7 @@ router.post("/res", RicercaControl.ricerca_get);
  */
 
 router.get("/", (req, res) => {
-  res.render("search");
+  res.render("schermataRicerca");
 });
 
 router.get("/res", RicercaControl.ricerca_get);

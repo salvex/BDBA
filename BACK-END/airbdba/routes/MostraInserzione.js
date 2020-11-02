@@ -5,7 +5,7 @@ const ShowInsControl = require("../controller/ShowInsControl");
 const PrenotazioneControl = require("../controller/PrenotazioneControl");
 
 router.get("/:id", ShowInsControl.mostra_get, (req, res) => {
-  res.render("insertion");
+  res.render("schermataInserzione");
 });
 
 /* router.get("/res", ShowInsControl.mostra_get); */
@@ -14,7 +14,7 @@ router.get(
   [JwtToken.verifyToken],
   PrenotazioneControl.riepilogo_get,
   (req, res) => {
-    res.render("riepilogo");
+    res.render("schermataRiepilogo");
   }
 );
 router.get(
@@ -22,7 +22,7 @@ router.get(
   [JwtToken.verifyToken],
   PrenotazioneControl.pagamento_get,
   (req, res) => {
-    res.render("pagamento");
+    res.render("schermataPagamento");
   }
 );
 

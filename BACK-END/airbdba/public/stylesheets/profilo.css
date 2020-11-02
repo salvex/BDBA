@@ -123,15 +123,6 @@ textarea {
   margin: 0;
 }
 
-/* .cropper-container img {
-  width: 50% !important;
-} */
-
-/* .cropper-container > div {
-  display: flex;
-  justify-content: center;
-} */
-
 @media (max-width: 576px) {
   .date {
     margin-top: 10px;

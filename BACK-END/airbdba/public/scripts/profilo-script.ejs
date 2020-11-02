@@ -41,15 +41,6 @@
     });
     $("#msg").val("");
 
-    // if (window.location.href.includes("#")) {
-    //   if (
-    //     /v-pills-profile-tab|v-pills-book-tab|v-pills-settings-tab/.test(
-    //       window.location.href.split("#")[1]
-    //     )
-    //   ) {
-    //     $(`#${window.location.href.split("#")[1]}`).click();
-    //   }
-    // }
     /* --------------------------------------------------------- */
 
     /* PRENOTAZIONI */
@@ -104,10 +95,28 @@
               </div>
               <div class="card-footer profile-pren-btns">
                 <div class="row">
-                  <div class="col-12">
+                  <div
+                    class="col-6"
+                    style="
+                      display:flex;
+                      align-items:center;
+                      ${
+                        prenotazione.stato_prenotazione === 1
+                          ? "color: #bb8d02;"
+                          : "color: #1b7731;"
+                      }
+                    ">
+                    ${
+                      prenotazione.stato_prenotazione === 1
+                        ? "<b>STATO:</b>&nbsp;in attesa&nbsp;<i class='far fa-clock'></i>"
+                        : "<b>STATO:</b>&nbsp;accettata&nbsp;<i class='far fa-check-circle'></i>"
+                    }
+                  </div>
+                  <div class="col-6" style="display:flex; justify-content:flex-end">
                     <button id="contact${index}" class="btn btn-primary">Contatta</button>
                     <button id="cancel${index}" class="btn btn-danger">Annulla</button>
                   </div>
+
                 </div>
               </div>
             </div>
@@ -490,22 +499,6 @@
               $(this).hasClass("is-invalid")
             ) {
               flag = 0;
-              if ($(this).val() === "") {
-                console.log("si");
-                console.log($(this).prop("id"));
-              } else {
-                console.log("no");
-              }
-              if ($(this).val() === null) {
-                console.log("si");
-              } else {
-                console.log("no");
-              }
-              if ($(this).hasClass("is-invalid")) {
-                console.log("si");
-              } else {
-                console.log("no");
-              }
 
               if (!$(this).hasClass("is-invalid")) {
                 $(this).addClass("is-invalid");

@@ -52,7 +52,7 @@ const login_get = (req, res) => {
   if (req.cookies.jwt) {
     res.redirect("/");
   } else {
-    res.render("login");
+    res.render("schermataAutenticazione");
   }
 };
 

@@ -334,14 +334,3 @@ input[type="text"]:read-only {
     width: 40px;
   }
 }
-
-@media (max-width: 576px) {
-}
-
-/* 
-xs
-sm -> min-width: 576px
-md -> min-width: 768px
-lg -> min-width: 992px
-xl
-*/

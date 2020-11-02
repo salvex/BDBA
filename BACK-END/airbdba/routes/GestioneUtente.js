@@ -4,7 +4,7 @@ const FileUpload = require("../utils/FileUpload");
 const userController = require("../controller/UtenteControl");
 
 router.get("/", userController.user_get, (req, res) => {
-  res.render("user");
+  res.render("schermataGestioneUtente");
 });
 
 /* router.get("/profilo", userController.profilo_get); */

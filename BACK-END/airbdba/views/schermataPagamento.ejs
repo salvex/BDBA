@@ -5,7 +5,7 @@
 
   <body>
     <div id="payment-wrapper">
-      <%- include("./partials/nav.ejs") %>
+      <%- include("./partials/barraDiNavigazione.ejs") %>
 
       <div id="payment-content">
         <div class="side"></div>
@@ -53,14 +53,3 @@
     <%- include("../public/scripts/pagamento-script.ejs") %>
   </body>
 </html>
-
-<!-- <form>
-  <label for="intestatario">Intestatario</label>
-  <input type="text" id="intestatario" class="form-control" />
-  <label for="circuito">Circuito</label>
-  <select id="circuito" class="form-control">
-    <option value="mastercard">Mastercard</option>
-    <option value="visa">Visa</option>
-    <option value="american-express">American express</option>
-  </select>
-</form> -->

@@ -1,8 +1,3 @@
-/* body {
-  background: url("https://images.pexels.com/photos/584399/living-room-couch-interior-room-584399.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
-  background-size: cover;
-} */
-
 #payment-wrapper {
   display: flex;
   flex-direction: column;
@@ -144,6 +139,25 @@
 
 label {
   margin: 0;
+}
+
+.aggiungi-closed {
+  cursor: pointer;
+}
+
+.aggiungi-closed,
+.aggiungi-opened {
+  border: 2px dashed rgba(0, 0, 0, 0.125);
+}
+
+.aggiungi-closed:hover,
+.aggiungi-closed:active {
+  background-color: rgba(0, 0, 0, 0.125);
+}
+
+.add-container {
+  display: flex;
+  justify-content: flex-end;
 }
 
 @media (max-width: 950px) {
