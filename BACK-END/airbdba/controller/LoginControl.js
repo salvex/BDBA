@@ -1,9 +1,8 @@
-const db = require("../utils/connection.js");
+
 const Utente = require("../model/Utente");
 require("dotenv").config();
 const JwtToken = require("../utils/JwtToken");
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcrypt");
+
 
 const maxAge = 60 * 60 * 24;
 
@@ -24,13 +23,15 @@ var errorsHandler = (err) => {
   return errors;
 };
 
-//TODO: SOSTITUIRE TUTTI i messaggi res.send con l'attributo "reason"
 
 const login_post = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     var utente = await Utente.Autentica(email, password);
+
     var token = JwtToken.createToken(utente.id);
+
     res.cookie("jwt", token, { httpOnly: true, expiresIn: maxAge * 1000 });
     if (utente.isHost == 1) {
       var token_host = JwtToken.createTokenHost(utente.id);
@@ -40,7 +41,7 @@ const login_post = async (req, res) => {
       });
     }
     req.session.utente = utente;
-    console.log(req.session.utente);
+
     res.status(200).json({ success: true });
   } catch (err) {
     const errors = errorsHandler(err);

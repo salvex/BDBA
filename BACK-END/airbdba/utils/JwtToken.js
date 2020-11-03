@@ -4,14 +4,9 @@ const Utente = require("../model/Utente");
 //MIDDLEWARE JWTs
 
 const verifyToken = (req, res, next) => {
-  //let token = req.headers['x-access-token'];
   let token = req.cookies.jwt;
 
   if (!token) {
-    /*return res.status(403).send({
-      auth: false,
-      message: "Nessun token fornito",
-    });*/
     res.redirect("/login");
   }
 
@@ -29,10 +24,6 @@ const verifyToken = (req, res, next) => {
 const verifyHost = (req, res, next) => {
   let token = req.cookies.host;
   if (!token) {
-    /*return res.status(403).send({
-      isHost: false,
-      message: "Nessun token fornito",
-    });*/
     res.redirect("/");
   }
 

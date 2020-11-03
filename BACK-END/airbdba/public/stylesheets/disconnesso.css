@@ -1,0 +1,51 @@
+.connection-container {
+  margin: 0;
+  padding: 0;
+}
+.nav-content-footer,
+.content-container,
+.body-col,
+.nav-col,
+.foot-col,
+.foot {
+  padding: 0;
+  margin: 0;
+}
+.body-col {
+  position: relative;
+  flex: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex-direction: column;
+}
+
+.nav-content-footer {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.nav-col,
+.foot-col {
+  flex: 1;
+}
+
+.connection-img-row {
+  width: 100%;
+}
+
+.connection-img {
+  width: 50%;
+  height: 300px;
+  background-image: url("/assets/images/caduta_connessione.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+}
+
+.back-home {
+  margin-bottom: 35px;
+}

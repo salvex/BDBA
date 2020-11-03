@@ -1,8 +1,6 @@
 const { Sequelize, DataTypes, JSONB } = require("sequelize");
 const db = require("../utils/connection");
 const bcrypt = require("bcrypt");
-//TO-DO mettere un validate, modificare allowNull per tutti gli attributi tranne id
-//TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 
 const Utente = db.sequelize.define(
   "utente",
@@ -46,22 +44,6 @@ const Utente = db.sequelize.define(
     hostBecomeAt: {
       type: DataTypes.DATEONLY(),
     },
-    /*    indirizzo: {
-        type: DataTypes.STRING(80),
-        allowNull: false
-    },
-    data_nascita: {
-        type: DataTypes.DATEONLY,
-        validate: {
-            notEmpty: {
-              msg: "Inserisci una data",
-            },
-          },
-    }, 
-    numero_telefonico: {
-        type: DataTypes.INTEGER,
-        
-    },*/
   },
   {
     freezeTableName: true,
@@ -69,14 +51,12 @@ const Utente = db.sequelize.define(
   }
 );
 
-//-------ASSOCIAZIONE [1-N] UTENTE-PRENOTAZIONE----------/
-/*Utente.hasMany(Prenotazione, {
-  //as: 'user',
-  foreignKey: "ref_utente",
-});
-Prenotazione.belongsTo(Utente, {
-  foreignKey: "ref_utente",
-});*/
+
+
+
+
+
+
 
 Utente.Autentica = async (emailutente, password) => {
   console.log("Login in corso..");
@@ -95,7 +75,6 @@ Utente.modificaPassword = async (email, vecchiaPsw, nuovaPsw) => {
   const user = await Utente.findOne({ where: { email } });
   if (user) {
     const confronto = await bcrypt.compare(vecchiaPsw, user.password);
-    console.log("confronto: ", confronto);
     if (confronto) {
       const salt = await bcrypt.genSalt();
       nuovaPsw = await bcrypt.hash(nuovaPsw, salt);

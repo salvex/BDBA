@@ -8,7 +8,7 @@ router.get("/:id", ShowInsControl.mostra_get, (req, res) => {
   res.render("schermataInserzione");
 });
 
-/* router.get("/res", ShowInsControl.mostra_get); */
+
 router.get(
   "/prenota/riepilogo",
   [JwtToken.verifyToken],
@@ -44,8 +44,6 @@ router.post(
   PrenotazioneControl.riepilogo_post
 );
 
-//router.get("")
 
-// localhost:3000/inserzione/prenota/identify
 
 module.exports = router;

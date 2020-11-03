@@ -23,12 +23,7 @@ const checkRendiconto = async () => {
           numPrenotazioni > 0
         ) {
           console.log(host.email);
-        } /* else if (
-          moment().diff(moment(host.hostBecomeAt), "months") >= 3 &&
-          numPrenotazioni > 0
-        ) {
-          console.log(host.email);
-        }*/
+        }
       });
     }
   } catch (err) {

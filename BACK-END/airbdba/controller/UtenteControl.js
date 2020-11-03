@@ -51,7 +51,6 @@ const modificaPassword_post = async (req, res) => {
   const { email, vecchiaPsw, nuovaPsw } = req.body;
   try {
     const result = await Utente.modificaPassword(email, vecchiaPsw, nuovaPsw);
-    console.log(result);
     res.status(200).json({ success: true });
   } catch (err) {
     const error = errorsHandler(err);
@@ -103,7 +102,6 @@ const metodoPagamento_delete = async (req, res) => {
 
 const modificaFotoProfilo_put = async (req, res) => {
   try {
-    console.log(req.body.formData);
     let path = req.files["avatar"][0].path;
     let user = await Utente.findByPk(req.session.utente.id);
     user.imagePath = path.replace(/\\/g, "/");

@@ -25,6 +25,9 @@ sequelize
     console.log("Connessione al database fallita!");
   });
 
+// QUESTA FUNZIONE SERVE A SINCRONIZZARE AUTOMATICAMENTE IL DATABASE, INSERENDO LE TABELLE CORRETTE 
+// N.B: Bisogna prima creare uno schema corrispondente a quello assegnato!
+
 /*sequelize
   .sync()
   .then(() => console.log("sincronizzazione completata"))

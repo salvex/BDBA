@@ -37,10 +37,6 @@ const Prenotazione = db.sequelize.define(
       type: DataTypes.DATEONLY(),
       allowNull: false,
     },
-    /*    prezzo_parziale : {
-      type: DataTypes.INTEGER(11),
-      allowNull: false,
-    }, */
     prezzo_finale: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -59,16 +55,14 @@ const Prenotazione = db.sequelize.define(
       defaultValue: 0,
       allowNull: false,
     },
-    /*    tassa_soggiorno_totale : {
-      type: DataTypes.INTEGER(11),
-      allowNull: false,
-    }, */
   },
   {
     freezeTableName: true,
     timestamps: false,
   }
 );
+
+
 
 //-------ASSOCIAZIONE [1-N] UTENTE-PRENOTAZIONE (PARTE UTENTE)----------/
 Utente.hasMany(Prenotazione, {
@@ -79,35 +73,19 @@ Prenotazione.belongsTo(Utente, {
   foreignKey: "ref_utente",
 });
 
+
+//DA VEDERE
+
 //-------ASSOCIAZIONE [1-N] UTENTE-PRENOTAZIONE (PARTE HOST)----------/
 Utente.hasMany(Prenotazione, {
-  /* as: 'prenotazioni_h', */
+  as: 'prenotazioni_h', 
   foreignKey: "ref_host",
 });
-/* Prenotazione.belongsTo(Utente, {
+ Prenotazione.belongsTo(Utente, {
   foreignKey: "ref_host",
-}); */
+}); 
 
-/* Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
-  let yearBefore = moment().format("YYYY") - 1;
-  let yearFuture = moment().format("YYYY") + 1;
-  const result = await Prenotazione.findAll({
-    attributes: ["check_in", "check_out"],
-    where: {
-      ref_utente: id_ut,
-      ref_inserzione: id_ins,
-      check_in: {
-        [Op.gte]: Date.parse(yearBefore),
-        [Op.lte]: Date.parse(moment().endOf("year")),
-      },
-      check_out: {
-        [Op.lte]: Date.parse(moment().add(1, "y").endOf("year")),
-        [Op.gte]: Date.parse(moment().format("YYYY")),
-      },
-    },
-  });
-  return result;
-}; */
+
 Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
   let yearBefore = moment().format("YYYY") - 1;
   let yearFuture = moment().format("YYYY") + 1;
@@ -161,29 +139,9 @@ Prenotazione.getUserMail = async (id_pren, id_host) => {
   }
 };
 
-/*Prenotazione.mostraPrenAss = async (idInserzione) => {
-  const risultato = await Prenotazione.findOne({
-    attributes: ["id_prenotazione", "check_in", "check_out"],
-    include: {
-      model: Inserzione,
-      required: true,
-      where: {
-        id_inserzione: idInserzione,
-      },
-    }
-  });
-  if (risultato) {
-    return risultato;
-  } else {
-    const risultato2 = await Inserzione.mostra(idInserzione);
-    return risultato2; 
-    //throw new Error("inserzione inesistente");
-  }
-};*/
 
 Prenotazione.getEmailUtentiPren = async (id_ins) => {
   let MailArray = [];
-  console.log("Panini al salmone");
   const prenAss = await Prenotazione.findAll({
     where: {
       ref_inserzione: id_ins,
@@ -201,7 +159,6 @@ Prenotazione.getEmailUtentiPren = async (id_ins) => {
     prenAss.forEach(async (pren) => {
       MailArray.push(pren.utente.email);
     });
-    console.log(MailArray);
     return MailArray;
   } else {
     throw new Error("prenotazioni non trovate");

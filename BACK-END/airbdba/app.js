@@ -1,4 +1,3 @@
-//IMPORTANTE: I METODI D'INSERIMENTO O DI RICERCA CHE COINVOLGONO I DB ACCETTANO SOLO "POST" DA FETCH
 var createError = require("http-errors");
 var express = require("express");
 var favicon = require("serve-favicon");
@@ -24,10 +23,8 @@ var authRouter = require("./routes/Autenticazione");
 var hostRouter = require("./routes/GestioneHost");
 var utenteRouter = require("./routes/GestioneUtente");
 var insRouter = require("./routes/MostraInserzione");
-var recRouter = require("./routes/RecuperaPassword");
 var regRouter = require("./routes/Registrazione");
 var searchRouter = require("./routes/Ricerca");
-//var Prenotazione = require("./model/Prenotazione");
 //---------Database--------------//
 var mysql = require("mysql2");
 const db = require("./utils/connection");
@@ -36,7 +33,6 @@ var cors = require("cors");
 var app = express();
 //NODEMAILER
 var transporter = require("./utils/mailSender");
-console.log(transporter);
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -70,9 +66,6 @@ app.use("*", checkUser);
 app.use("/", indexRouter);
 app.use(authRouter);
 //CONTROLLI GLOBALI
-/*setInterval(checkRendiconto, 60 * 60 * 24 * 1000);
-setInterval(checkPrenotazioneData, 60 * 60 * 24 * 1000);*/
-
 var rule = new schedule.RecurrenceRule();
 rule.hour = 12;
 var scheduleJob1 = schedule.scheduleJob(rule, checkRendiconto);
@@ -82,13 +75,12 @@ app.use("/profilo", verifyToken, utenteRouter);
 app.use("/signup", regRouter);
 app.use("/host", verifyToken, hostRouter);
 app.use("/inserzione", insRouter);
-app.use("/recovery", recRouter);
 app.use("/search", searchRouter);
 app.get("/become", HostControl.become_host_get);
 
-// handler errore 404
-app.use(function (req, res, next) {
-  next(createError(404));
+// error 404
+app.use(function (req, res) {
+  res.status(404).render("schermataErrore");
 });
 
 // error handler

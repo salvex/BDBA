@@ -27,7 +27,7 @@ const mostra_get = async (req, res, next) => {
       let range = moment().range(d.check_in, d.check_out);
       let array = Array.from(range.by("days"));
       date = date.concat(array);
-      console.log(date);
+
     });
 
     date = date.map((res) => {

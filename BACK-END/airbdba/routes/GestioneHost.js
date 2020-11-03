@@ -5,7 +5,6 @@ const FileUpload = require("../utils/FileUpload");
 const JwtToken = require("../utils/JwtToken");
 const formidableMiddleware = require("express-formidable");
 
-/* router.use(formidableMiddleware()); */
 
 router.put(
   "/crea_ins/:type/:id/:folder",
@@ -29,13 +28,7 @@ router.put(
   FileUpload.upFiles,
   HostControl.modifica_inserzione_put
 );
-/* 
-router.put(
-  "/modifica/:type/:id",
-  [JwtToken.verifyHost],
-  FileUpload.upFiles,
-  HostControl.modifica_inserzione_put_img
-); */
+
 
 router.delete(
   "/delete_ins",

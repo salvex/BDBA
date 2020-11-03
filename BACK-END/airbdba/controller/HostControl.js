@@ -5,8 +5,6 @@ const Servizi = require("../model/Servizi");
 const Ospite = require("../model/Ospite");
 require("dotenv").config();
 const JwtToken = require("../utils/JwtToken");
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcrypt");
 const Prenotazione = require("../model/Prenotazione.js");
 var transporter = require("../utils/mailSender");
 const fs = require("fs");
@@ -143,7 +141,7 @@ const modifica_inserzione_put = async (req, res) => {
       id_ins,
     } = JSON.parse(req.body.inserzione);
 
-    const id_host = req.session.utente.id;
+    
 
     let path;
     if (req.files["gallery"]) {
@@ -215,7 +213,7 @@ const cancella_inserzione_delete = async (req, res) => {
       `public/uploads/fotoInserzione/` +
       req.session.utente.id +
       deleteIns.galleryPath.slice(0, 14);
-    //Prendo le email degli utenti associati alle prenotazioni della relativa insserzione // DA INSERIRE
+    //Prendo le email degli utenti associati alle prenotazioni della relativa insserzione 
     const mailList = await Prenotazione.getEmailUtentiPren(id_inserzione);
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
@@ -403,7 +401,6 @@ const contatta_turismo_post = async (req, res) => {
   let { rendiconto, totaleRendiconto } = JSON.parse(req.fields.rendiconto);
   const newpathfile =
     req.files.ricevuta.path + path.extname(req.files.ricevuta.name);
-  console.log(newpathfile);
 
   fs.rename(req.files.ricevuta.path, newpathfile, () => {
     console.log("File rinominato");
@@ -553,7 +550,6 @@ const contatta_questura_post = async (req, res) => {
     const allegati = [];
     allegati.push({ filename: "generalita.pdf", content: doc });
     documenti.forEach((documento, index) => {
-      console.log(newpathfile[index]);
       let allegato = {};
       allegato.filename =
         `documento${index}` + path.extname(newpathfile[index]);
