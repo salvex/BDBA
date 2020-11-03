@@ -160,9 +160,7 @@ Inserzione.verRicerca = async (query, checkin, checkout) => {
   throw new Error("Nessuna inserzione");
 };
 
-
-
-Inserzione.aggiungiInserzione = async (
+Inserzione.aggiungiInserzioneServizi = async (
   nome_inserzione,
   citta,
   inizioDisponibilita,
@@ -264,8 +262,6 @@ Inserzione.processaLista = async (id_host) => {
   throw new Error("Nessuna inserzione");
 };
 
-
-
 Inserzione.cancellaInserzione = async (id_ins) => {
   const ins_cancella = await Inserzione.destroy({
     where: {
@@ -278,7 +274,5 @@ Inserzione.cancellaInserzione = async (id_ins) => {
 
   return ins_cancella;
 };
-
-
 
 module.exports = Inserzione;

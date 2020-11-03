@@ -1,10 +1,9 @@
 var express = require("express");
 var router = express.Router();
-const HostControl = require("../controller/HostControl");
+const HostControl = require("../controller/GestioneHostControl");
 const FileUpload = require("../utils/FileUpload");
 const JwtToken = require("../utils/JwtToken");
 const formidableMiddleware = require("express-formidable");
-
 
 router.put(
   "/crea_ins/:type/:id/:folder",
@@ -28,7 +27,6 @@ router.put(
   FileUpload.upFiles,
   HostControl.modifica_inserzione_put
 );
-
 
 router.delete(
   "/delete_ins",

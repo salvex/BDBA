@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const RegControl = require("../controller/RegControl.js");
+const RegControl = require("../controller/RegistrazioneControl.js");
 
 router.get("/", RegControl.registrazione_get);
 

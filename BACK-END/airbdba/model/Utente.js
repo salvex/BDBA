@@ -51,14 +51,7 @@ const Utente = db.sequelize.define(
   }
 );
 
-
-
-
-
-
-
-
-Utente.Autentica = async (emailutente, password) => {
+Utente.accedi = async (emailutente, password) => {
   console.log("Login in corso..");
   const utente = await Utente.findOne({ where: { email: emailutente } });
   if (utente) {

@@ -1,10 +1,8 @@
 var express = require("express");
 var router = express.Router();
-const LoginControl = require("../controller/LoginControl");
-const LogoutControl = require("../controller/LogoutControl");
+const LoginControl = require("../controller/AutenticazioneControl");
+const LogoutControl = require("../controller/DisconnessioneControl");
 const JwtToken = require("../utils/JwtToken");
-
-
 
 router.get("/login", LoginControl.login_get);
 router.post("/login", LoginControl.login_post);

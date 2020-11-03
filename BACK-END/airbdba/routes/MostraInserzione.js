@@ -1,13 +1,12 @@
 var express = require("express");
 var router = express.Router();
 const JwtToken = require("../utils/JwtToken");
-const ShowInsControl = require("../controller/ShowInsControl");
+const ShowInsControl = require("../controller/InserzioneControl");
 const PrenotazioneControl = require("../controller/PrenotazioneControl");
 
 router.get("/:id", ShowInsControl.mostra_get, (req, res) => {
   res.render("schermataInserzione");
 });
-
 
 router.get(
   "/prenota/riepilogo",
@@ -43,7 +42,5 @@ router.post(
   [JwtToken.verifyToken],
   PrenotazioneControl.riepilogo_post
 );
-
-
 
 module.exports = router;

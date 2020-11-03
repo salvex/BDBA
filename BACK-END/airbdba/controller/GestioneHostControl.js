@@ -70,7 +70,7 @@ const aggiungi_inserzione_post = async (req, res) => {
     )[1];
     path = path.replace(/\\/g, "/");
 
-    var inserzione = await Inserzione.aggiungiInserzione(
+    var inserzione = await Inserzione.aggiungiInserzioneServizi(
       nome,
       citta,
       inizioDisp,
@@ -214,7 +214,7 @@ const cancella_inserzione_delete = async (req, res) => {
       deleteIns.galleryPath.split("/")[2];
     console.log(path, deleteIns.galleryPath.split("/"));
     //Prendo le email degli utenti associati alle prenotazioni della relativa insserzione
-    const mailList = await Prenotazione.getEmailUtentiPren(id_inserzione);
+    const mailList = await Prenotazione.getEmails(id_inserzione);
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',
       bcc: mailList,

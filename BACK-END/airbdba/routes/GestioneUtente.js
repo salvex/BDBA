@@ -1,12 +1,11 @@
 var express = require("express");
 var router = express.Router();
 const FileUpload = require("../utils/FileUpload");
-const userController = require("../controller/UtenteControl");
+const userController = require("../controller/GestioneUtenteControl");
 
 router.get("/", userController.user_get, (req, res) => {
   res.render("schermataGestioneUtente");
 });
-
 
 router.get("/modifica-password", userController.modificaPassword_get);
 router.post("/modifica-password", userController.modificaPassword_post);

@@ -10,7 +10,7 @@ var session = require("express-session");
 var sessionStore = require("./utils/sessionStore");
 var { checkRendiconto } = require("./utils/checkRendiconto");
 var { checkPrenotazioneData } = require("./utils/checkPrenotazioneData");
-var HostControl = require("./controller/HostControl");
+var HostControl = require("./controller/GestioneHostControl");
 var schedule = require("node-schedule");
 
 dotenv.config();

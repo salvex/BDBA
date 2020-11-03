@@ -1,8 +1,6 @@
-
 const Utente = require("../model/Utente");
 require("dotenv").config();
 const JwtToken = require("../utils/JwtToken");
-
 
 const maxAge = 60 * 60 * 24;
 
@@ -23,12 +21,11 @@ var errorsHandler = (err) => {
   return errors;
 };
 
-
 const login_post = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    var utente = await Utente.Autentica(email, password);
+    var utente = await Utente.accedi(email, password);
 
     var token = JwtToken.createToken(utente.id);
 
