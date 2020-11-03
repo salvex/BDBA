@@ -16,22 +16,24 @@ const sequelize = new Sequelize("new_airbdba", "root", "", {
   },
 });
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Connesso al database!");
-  })
-  .catch((err) => {
-    console.log("Connessione al database fallita!");
-  });
+db.testConnessione = (req, res, next) => {
+  sequelize
+    .authenticate()
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(404).render("schermataCadutaConnessione");
+    });
+};
 
-// QUESTA FUNZIONE SERVE A SINCRONIZZARE AUTOMATICAMENTE IL DATABASE, INSERENDO LE TABELLE CORRETTE 
+// QUESTA FUNZIONE SERVE A SINCRONIZZARE AUTOMATICAMENTE IL DATABASE, INSERENDO LE TABELLE CORRETTE
 // N.B: Bisogna prima creare uno schema corrispondente a quello assegnato!
 
-/*sequelize
+/* sequelize
   .sync()
   .then(() => console.log("sincronizzazione completata"))
-  .catch((err) => console.log(err.message));*/
+  .catch((err) => console.log(err.message)); */
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

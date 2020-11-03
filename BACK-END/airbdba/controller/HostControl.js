@@ -141,8 +141,6 @@ const modifica_inserzione_put = async (req, res) => {
       id_ins,
     } = JSON.parse(req.body.inserzione);
 
-    
-
     let path;
     if (req.files["gallery"]) {
       if (imgToSave.length > 0) {
@@ -212,8 +210,10 @@ const cancella_inserzione_delete = async (req, res) => {
     let path =
       `public/uploads/fotoInserzione/` +
       req.session.utente.id +
-      deleteIns.galleryPath.slice(0, 14);
-    //Prendo le email degli utenti associati alle prenotazioni della relativa insserzione 
+      "/" +
+      deleteIns.galleryPath.split("/")[2];
+    console.log(path, deleteIns.galleryPath.split("/"));
+    //Prendo le email degli utenti associati alle prenotazioni della relativa insserzione
     const mailList = await Prenotazione.getEmailUtentiPren(id_inserzione);
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba_services@gmail.com> ',

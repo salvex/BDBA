@@ -5,7 +5,9 @@
     /* Vars */
     // Data
 
-    const inserzioni = JSON.parse("<%= inserzioni %>".replace(/&#34;/g, '"'));
+    const inserzioni = JSON.parse(
+      "<%= inserzioni %>".replace(/&#34;/g, '"').replace(/\n+/g, " ")
+    );
     const prenotazioni = JSON.parse(
       "<%= prenotazioni %>".replace(/&#34;/g, '"')
     );
@@ -244,7 +246,7 @@
 
               /* Attivo anche le checkbox dei servizi in modo corretto */
               let serviziKeys = Object.keys(inserzione.servizi);
-              for (let j = 1; j < serviziKeys.length - 1; j += 1) {
+              for (let j = 1; j < serviziKeys.length; j += 1) {
                 let servizio = serviziKeys[j].slice(
                   0,
                   serviziKeys[j].length - 4
@@ -534,7 +536,7 @@
         return !imgToDel.includes(x);
       });
 
-      // Creo un arrai per i servizi
+      // Creo un array per i servizi
       let servizi = {};
       $(`input[type=checkbox][id$="Modal"]`).each((index, element) => {
         if ($(element).prop("checked")) {

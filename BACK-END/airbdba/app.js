@@ -46,6 +46,8 @@ app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
 //Cookie parser
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+//test connessione
+app.use("*", db.testConnessione);
 //express-session
 app.use(
   session({

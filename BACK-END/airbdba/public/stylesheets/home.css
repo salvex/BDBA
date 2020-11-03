@@ -80,5 +80,8 @@
   }
 }
 
-@media (max-height: 400px) {
+@media (max-width: 330px) {
+  .center-spacer > h1 {
+    font-size: 25px;
+  }
 }
