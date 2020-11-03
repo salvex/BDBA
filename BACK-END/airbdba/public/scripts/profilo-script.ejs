@@ -169,10 +169,7 @@
               if ($("#msg").val() === "") {
                 return;
               }
-              console.log(
-                prenotazione.inserzione.nome_inserzione,
-                $("#msg").val()
-              );
+
               const contact = JSON.stringify({
                 id_host: prenotazione.ref_host,
                 titolo: prenotazione.inserzione.nome_inserzione,
@@ -221,7 +218,6 @@
         let reader = new FileReader();
 
         reader.onload = function (e) {
-          console.log(e.target.result);
           $image.cropper("destroy");
           $image.attr("src", "");
           $image.attr("src", e.target.result);
@@ -250,7 +246,6 @@
       $image.cropper("destroy");
       $image.attr("src", "/assets/images/upload.png");
       $("#imgupload").val("");
-      console.log($("#imgupload").val());
     });
 
     $("#imgupload").on("change", function () {
@@ -283,7 +278,6 @@
       $image.cropper("getCroppedCanvas").toBlob((blob) => {
         const formData = new FormData();
         formData.append("avatar", blob, "<%= user.id %>.png");
-        console.log(formData.get("avatar"));
 
         fetch("/profilo/modifica-foto/avatarUtente/<%= user.id %>", {
           method: "PUT",
@@ -292,7 +286,6 @@
           .then(async (res) => {
             const response = await res.json();
             if (response.success) {
-              console.log("caricamento effettuato");
               $("#image-crop").modal("hide");
               $("#profile-pic").css({
                 "background-image": `

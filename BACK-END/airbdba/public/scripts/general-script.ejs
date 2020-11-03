@@ -44,7 +44,6 @@
         .then(async (res) => {
           const response = await res.json();
           if (response.success) {
-            console.log("Sei diventato un host!");
             window.location.href = "/host";
           }
         })

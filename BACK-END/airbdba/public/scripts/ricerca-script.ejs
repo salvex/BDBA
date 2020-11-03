@@ -48,7 +48,6 @@
             filter !== "casaFlag" &&
             filter !== "bnbFlag"
           ) {
-            console.log("filtri");
             flag = 0;
             return;
           } else if (
@@ -56,7 +55,6 @@
             !filters["bnbFlag"] &&
             !response_list[i].servizi["casaFlag"]
           ) {
-            console.log("casa");
             flag = 0;
             return;
           } else if (
@@ -64,7 +62,6 @@
             filters["bnbFlag"] &&
             !response_list[i].servizi["bnbFlag"]
           ) {
-            console.log("bnb");
             flag = 0;
             return;
           }
@@ -201,7 +198,6 @@
     fetch(`/search/res${window.location.search}`)
       .then(async (res) => {
         const response = await res.json();
-        console.log(response.search_list);
         if (response.search_list.length === 0) {
           // Se non ci sono stati risultati con la ricerca
           // Stampo un messaggio di errore.

@@ -9,11 +9,9 @@
 
     const metodiJSON = `<%= lista_metodi %>`;
     const metodiObj = JSON.parse(metodiJSON.replace(/&#34;/g, '"'));
-    console.log(metodiObj);
 
     let params = new URLSearchParams(window.location.search);
     let prezzo = params.get("prezzo");
-    console.log(prezzo);
 
     // Prendo la data di oggi
     const anno = Number(String(new Date().getFullYear()).slice(2));
@@ -456,8 +454,6 @@
               $(element).on("click", function () {
                 let metodo = metodiObj[$(element).attr("index")];
                 let option = 1;
-
-                console.log(metodo, option);
 
                 fetch(
                   `/inserzione/prenota/pagamento${window.location.search}`,

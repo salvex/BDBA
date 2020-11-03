@@ -149,7 +149,6 @@
         `);
     } else {
       inserzioni.forEach((inserzione, index) => {
-        console.log(immagini[index][0]);
         $("#visualizza").append(`
           <div class="row">
             <div class="col-12">
@@ -210,7 +209,6 @@
                 immagini[index][0].split("/")[2] +
                 "/" +
                 immagini[index][0].split("/")[3];
-              console.log(folderPath);
 
               // Compilo i campi dell'inserzione con i valori attuali
               $("#inputTitoloModal").val(inserzione.nome_inserzione);
@@ -257,7 +255,7 @@
                   $(`#${servizio}Modal`).prop("checked", false);
                 }
               }
-              console.log(immagini[index]);
+
               if (immagini[index][0] !== "") {
                 $(".no-imgs").remove();
                 for (let i = 0; i < immagini[index].length; i += 1) {
@@ -274,7 +272,7 @@
                     .on("click", function () {
                       if (imgToDel.length < immagini[index].length - 1) {
                         imgToDel.push($(this).attr("path"));
-                        console.log(imgToDel);
+
                         $(this).animate({ opacity: 0 }, 125, function () {
                           $(this).css({
                             "background-image": "none",
@@ -307,7 +305,6 @@
               }
               while (imgToDel.length > 0) {
                 imgToDel.pop();
-                console.log(imgToDel);
               }
             })
             .modal("show");
@@ -329,7 +326,7 @@
       if ($("#inputFin").val() !== "") {
         const checkin = $(this).val();
         const checkout = $("#inputFin").val();
-        console.log(checkin, checkout);
+
         const checkinDate = new Date(checkin);
         const checkoutDate = new Date(checkout);
         if (checkoutDate < checkinDate) {
@@ -385,7 +382,7 @@
       if ($("#inputFinModal").val() !== "") {
         const checkin = $(this).val();
         const checkout = $("#inputFinModal").val();
-        console.log(checkin, checkout);
+
         const checkinDate = new Date(checkin);
         const checkoutDate = new Date(checkout);
         if (checkoutDate < checkinDate) {
@@ -435,7 +432,7 @@
           $(elem).removeClass("is-invalid");
         }
       });
-      console.log(flag);
+
       if (!flag) {
         return;
       }
@@ -570,10 +567,8 @@
         imgToDel,
         id_ins: $("#insMod").attr("inserzione"),
       });
-      console.log(insModal);
 
       formData.append("inserzione", insModal);
-      console.log(folderPath);
 
       fetch(
         `/host/modifica/fotoInserzione/<%= user.id %>/${
@@ -1197,7 +1192,7 @@
               }
 
               formData.append("prenQuestura", JSON.stringify(questuraPrens));
-              console.log(formData.getAll("documenti"));
+
               fetch("/host/questura", {
                 method: "POST",
                 body: formData,
@@ -1253,7 +1248,6 @@
           const response = await res.json();
           rendiconto = response;
           if (response) {
-            console.log(response);
             response.rendiconto.forEach((rend, index) => {
               if (rend.turismoFlag === 0) {
                 rend.ospiti.forEach((ospite, index) => {
