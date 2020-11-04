@@ -77,9 +77,9 @@ Utente.hasMany(Prenotazione, {
   as: "prenotazioni_h",
   foreignKey: "ref_host",
 });
-Prenotazione.belongsTo(Utente, {
+/*Prenotazione.belongsTo(Utente, {
   foreignKey: "ref_host",
-});
+});*/
 
 Prenotazione.getCheckInCheckOut = async (id_ins, id_ut) => {
   let yearBefore = moment().format("YYYY") - 1;
