@@ -776,6 +776,9 @@
             prenotazione.n_ospiti_pren === 1 ? "ospite" : "ospiti"
           }
                   </div>
+                  <div class="col-12">
+                    Totale: <b>${prenotazione.prezzo_finale}</b>
+                  </div>
                 </div>
                 <hr />
                 <div clas="row justify-content-center">
@@ -895,6 +898,9 @@
             }</b>, ${prenotazione.n_ospiti_pren} ${
               prenotazione.n_ospiti_pren === 1 ? "ospite" : "ospiti"
             }
+                  </div>
+                  <div class="col-12">
+                    Totale: <b>${prenotazione.prezzo_finale}</b>
                   </div>
                   <div class="col-12 pren-btns">
                     <button indice="${index}" class="btn btn-primary contact"><i class="fas fa-comment-alt"></i> Contatta</button>
