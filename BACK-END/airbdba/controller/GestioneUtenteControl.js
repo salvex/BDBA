@@ -148,10 +148,21 @@ const contatta_host_post = async (req, res) => {
 const cancella_pren_user_delete = async (req, res) => {
   try {
     const { id_pren } = req.body;
-    await Prenotazione.destroy({
-      where: {
-        id_prenotazione: id_pren,
-      },
+    const prenotazione = await Prenotazione.findByPk(id_pren);
+    const host = await Utente.findByPk(prenotazione.ref_host);
+
+    let bodyMail = {
+      from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
+      bcc: host.email,
+      subject: "Cancellazione prenotazione",
+      text: `Ti informiamo che l'utente ${req.session.utente.nome} ${req.session.utente.cognome} ha annullato la prenotazione dal ${prenotazione.check_in} al ${prenotazione.check_out}`,
+    };
+
+    await transporter.sendMail(bodyMail, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log("Messaggio inviato: %s", info.messageId);
     });
     res.status(200).json({ success: true });
   } catch (err) {
