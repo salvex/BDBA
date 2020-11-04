@@ -22,7 +22,20 @@ const checkRendiconto = async () => {
           moment().diff(moment(host.ultimo_rendiconto), "months") >= 3 &&
           numPrenotazioni > 0
         ) {
-          console.log(host.email);
+          let bodyMail = {
+            from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
+            bcc: host.email,
+            subject: "Promemoria rendiconto uccifio del turismo",
+            text:
+              "Ti ricordiamo che hai l'obbligo di rendicontare l'ammontare delle tasse di soggiorno all'ufficio del turismo. Sono passati più di tre mesi dall'ultimo rendiconto. Dirigiti nella sezione 'Contatta Ufficio del turismo' e mettiti in regola il prima possibile.\n\n Cordiali saluti, Team AIRBDBA",
+          };
+
+          /* await transporter.sendMail(bodyMail, (error, info) => {
+            if (error) {
+              return console.log(error);
+            }
+            console.log("Messaggio inviato: %s", info.messageId);
+          }); */
         }
       });
     }
