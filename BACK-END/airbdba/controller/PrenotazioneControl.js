@@ -76,7 +76,9 @@ const pagamento_get = async (req, res, next) => {
     var lista_metodi = await MetodoPagamento.get_metodi(req.session.utente.id);
 
     res.locals.lista_metodi = JSON.stringify(lista_metodi);
-    req.session.prezzo = req.query.prezzo;
+    if (req.query.prezzo) {
+      req.session.prezzo = req.query.prezzo;
+    }
     next();
   } catch (err) {
     console.log(err);
@@ -189,6 +191,27 @@ const riepilogo_post = async (req, res) => {
   }
 };
 
+const checkPrenotazioneData = async () => {
+  try {
+    var listaPren = await Prenotazione.findAll();
+    if (listaPren) {
+      listaPren.forEach(async (prenotazione) => {
+        if (
+          prenotazione.check_in < moment() &&
+          prenotazione.stato_prenotazione == 1
+        ) {
+          await prenotazione.destroy();
+        }
+      });
+      await listaPren.save();
+    } else {
+      console.log("nessuna prenotazione nel sistema");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   effettua_pren_get,
   identifica_ospiti_post,
@@ -196,4 +219,5 @@ module.exports = {
   pagamento_post,
   riepilogo_get,
   riepilogo_post,
+  checkPrenotazioneData,
 };

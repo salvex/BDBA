@@ -8,9 +8,8 @@ const dotenv = require("dotenv");
 var moment = require("moment");
 var session = require("express-session");
 var sessionStore = require("./utils/sessionStore");
-var { checkRendiconto } = require("./utils/checkRendiconto");
-var { checkPrenotazioneData } = require("./utils/checkPrenotazioneData");
 var HostControl = require("./controller/GestioneHostControl");
+var PrenotazioneControl = require("./controller/PrenotazioneControl");
 var schedule = require("node-schedule");
 
 dotenv.config();
@@ -70,8 +69,11 @@ app.use(authRouter);
 //CONTROLLI GLOBALI
 var rule = new schedule.RecurrenceRule();
 rule.hour = 12;
-var scheduleJob1 = schedule.scheduleJob(rule, checkRendiconto);
-var scheduleJob2 = schedule.scheduleJob(rule, checkPrenotazioneData);
+var scheduleJob1 = schedule.scheduleJob(rule, HostControl.checkRendiconto);
+var scheduleJob2 = schedule.scheduleJob(
+  rule,
+  PrenotazioneControl.checkPrenotazioneData
+);
 
 app.use("/profilo", verifyToken, utenteRouter);
 app.use("/signup", regRouter);

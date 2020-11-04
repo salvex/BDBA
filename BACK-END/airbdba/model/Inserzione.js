@@ -8,8 +8,6 @@ const MomentRange = require("moment-range");
 
 const moment = MomentRange.extendMoment(Moment);
 
-//TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
-
 const Inserzione = db.sequelize.define(
   "inserzione",
   {

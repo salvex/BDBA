@@ -1,7 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const db = require("../utils/connection");
 const Prenotazione = require("../model/Prenotazione");
-//TO-DO ASSOCIAZIONI : LE ASSOCIAZIONI SONO TUTTE UNA A MOLTI
 
 const Ospite = db.sequelize.define(
   "ospite",

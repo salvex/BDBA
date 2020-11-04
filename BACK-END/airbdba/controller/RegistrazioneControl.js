@@ -4,7 +4,6 @@ var bcrypt = require("bcrypt");
 
 const maxAge = 60 * 60 * 24;
 
-//TODO: SOSTITUIRE TUTTI i messaggi res.send con l'attributo "message"
 var errorsHandler = (err) => {
   let errors = {
     nome: "",

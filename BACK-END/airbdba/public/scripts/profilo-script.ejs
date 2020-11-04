@@ -152,6 +152,20 @@
                         window.location.reload();
                       })
                       .modal("show");
+                  } else {
+                    $("#successFailure")
+                      .on("show.bs.modal", () => {
+                        $("#successFailureLabel").html(
+                          `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                        );
+                        $("#successFailureContent").html(
+                          `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
+                        );
+                      })
+                      .on("hide.bs.modal", () => {
+                        window.location.reload();
+                      })
+                      .modal("show");
                   }
                 })
                 .catch((err) => console.log(err));
@@ -191,6 +205,20 @@
                         );
                         $("#successFailureContent").html(
                           `Il messaggio è stato inviato!`
+                        );
+                      })
+                      .on("hide.bs.modal", () => {
+                        window.location.reload();
+                      })
+                      .modal("show");
+                  } else {
+                    $("#successFailure")
+                      .on("show.bs.modal", () => {
+                        $("#successFailureLabel").html(
+                          `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                        );
+                        $("#successFailureContent").html(
+                          `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
                         );
                       })
                       .on("hide.bs.modal", () => {
@@ -310,6 +338,21 @@
                   window.location.reload();
                 })
                 .modal("show");
+            } else {
+              $("#image-crop").modal("hide");
+              $("#successFailure")
+                .on("show.bs.modal", () => {
+                  $("#successFailureLabel").html(
+                    `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                  );
+                  $("#successFailureContent").html(
+                    `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
+                  );
+                })
+                .on("hide.bs.modal", () => {
+                  window.location.reload();
+                })
+                .modal("show");
             }
           })
           .catch((err) => {
@@ -407,6 +450,20 @@
                       );
                       $("#successFailureContent").html(
                         `Il metodo di pagamento è stato rimostto con successo!`
+                      );
+                    })
+                    .on("hide.bs.modal", () => {
+                      window.location.reload();
+                    })
+                    .modal("show");
+                } else {
+                  $("#successFailure")
+                    .on("show.bs.modal", () => {
+                      $("#successFailureLabel").html(
+                        `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                      );
+                      $("#successFailureContent").html(
+                        `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
                       );
                     })
                     .on("hide.bs.modal", () => {
@@ -594,6 +651,20 @@
                   );
                   $("#successFailureContent").html(
                     `Nuovo metodo di pagamento inserito con successo!`
+                  );
+                })
+                .on("hide.bs.modal", () => {
+                  window.location.reload();
+                })
+                .modal("show");
+            } else {
+              $("#successFailure")
+                .on("show.bs.modal", () => {
+                  $("#successFailureLabel").html(
+                    `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                  );
+                  $("#successFailureContent").html(
+                    `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
                   );
                 })
                 .on("hide.bs.modal", () => {

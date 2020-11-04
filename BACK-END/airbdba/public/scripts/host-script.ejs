@@ -509,6 +509,20 @@
                 window.location.reload();
               })
               .modal("show");
+          } else {
+            $("#successFailure")
+              .on("show.bs.modal", () => {
+                $("#successFailureLabel").html(
+                  `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                );
+                $("#successFailureContent").html(
+                  `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
+                );
+              })
+              .on("hide.bs.modal", () => {
+                window.location.reload();
+              })
+              .modal("show");
           }
         })
         .catch((err) => {
@@ -645,6 +659,20 @@
                 window.location.reload();
               })
               .modal("show");
+          } else {
+            $("#successFailure")
+              .on("show.bs.modal", () => {
+                $("#successFailureLabel").html(
+                  `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                );
+                $("#successFailureContent").html(
+                  `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
+                );
+              })
+              .on("hide.bs.modal", () => {
+                window.location.reload();
+              })
+              .modal("show");
           }
         })
         .catch((err) => console.log(err));
@@ -675,6 +703,20 @@
                 );
                 $("#successFailureContent").html(
                   `L'inserzione è stata eliminata con successo!`
+                );
+              })
+              .on("hide.bs.modal", () => {
+                window.location.reload();
+              })
+              .modal("show");
+          } else {
+            $("#successFailure")
+              .on("show.bs.modal", () => {
+                $("#successFailureLabel").html(
+                  `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                );
+                $("#successFailureContent").html(
+                  `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
                 );
               })
               .on("hide.bs.modal", () => {
@@ -769,6 +811,20 @@
                     window.location.reload();
                   })
                   .modal("show");
+              } else {
+                $("#successFailure")
+                  .on("show.bs.modal", () => {
+                    $("#successFailureLabel").html(
+                      `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                    );
+                    $("#successFailureContent").html(
+                      `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
+                    );
+                  })
+                  .on("hide.bs.modal", () => {
+                    window.location.reload();
+                  })
+                  .modal("show");
               }
             })
             .catch((err) => console.log(err));
@@ -788,6 +844,20 @@
                     );
                     $("#successFailureContent").html(
                       `Hai rifiutato la richiesta!`
+                    );
+                  })
+                  .on("hide.bs.modal", () => {
+                    window.location.reload();
+                  })
+                  .modal("show");
+              } else {
+                $("#successFailure")
+                  .on("show.bs.modal", () => {
+                    $("#successFailureLabel").html(
+                      `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                    );
+                    $("#successFailureContent").html(
+                      `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
                     );
                   })
                   .on("hide.bs.modal", () => {
@@ -921,6 +991,20 @@
                             window.location.reload();
                           })
                           .modal("show");
+                      } else {
+                        $("#successFailure")
+                          .on("show.bs.modal", () => {
+                            $("#successFailureLabel").html(
+                              `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                            );
+                            $("#successFailureContent").html(
+                              `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
+                            );
+                          })
+                          .on("hide.bs.modal", () => {
+                            window.location.reload();
+                          })
+                          .modal("show");
                       }
                     })
                     .catch((err) => console.log(err));
@@ -957,6 +1041,20 @@
                             );
                             $("#successFailureContent").html(
                               `La prenotazione è stata annullata!`
+                            );
+                          })
+                          .on("hide.bs.modal", () => {
+                            window.location.reload();
+                          })
+                          .modal("show");
+                      } else {
+                        $("#successFailure")
+                          .on("show.bs.modal", () => {
+                            $("#successFailureLabel").html(
+                              `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                            );
+                            $("#successFailureContent").html(
+                              `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
                             );
                           })
                           .on("hide.bs.modal", () => {
@@ -1262,6 +1360,20 @@
                         window.location.reload();
                       })
                       .modal("show");
+                  } else {
+                    $("#successFailure")
+                      .on("show.bs.modal", () => {
+                        $("#successFailureLabel").html(
+                          `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                        );
+                        $("#successFailureContent").html(
+                          `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
+                        );
+                      })
+                      .on("hide.bs.modal", () => {
+                        window.location.reload();
+                      })
+                      .modal("show");
                   }
                 })
                 .catch((err) => console.log(err));
@@ -1409,6 +1521,20 @@
                                 );
                                 $("#successFailureContent").html(
                                   `Rendiconto inviato all'ufficio del turismo!`
+                                );
+                              })
+                              .on("hide.bs.modal", () => {
+                                window.location.reload();
+                              })
+                              .modal("show");
+                          } else {
+                            $("#successFailure")
+                              .on("show.bs.modal", () => {
+                                $("#successFailureLabel").html(
+                                  `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                                );
+                                $("#successFailureContent").html(
+                                  `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
                                 );
                               })
                               .on("hide.bs.modal", () => {

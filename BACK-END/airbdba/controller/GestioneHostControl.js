@@ -87,7 +87,7 @@ const aggiungi_inserzione_post = async (req, res) => {
     res.status(200).json({ success: true });
   } catch (err) {
     const errors = errorsHandler(err);
-    res.status(400).json({ errors });
+    res.status(400).json({ success: false });
   }
 };
 
@@ -198,7 +198,7 @@ const modifica_inserzione_put = async (req, res) => {
     res.status(200).json({ success: true });
   } catch (err) {
     const errors = errorsHandler(err);
-    res.status(400).json({ errors });
+    res.status(400).json({ success: false });
   }
 };
 
@@ -244,7 +244,7 @@ const cancella_inserzione_delete = async (req, res) => {
     res.status(200).json({ success: true });
   } catch (err) {
     console.log(err);
-    res.status(400).json({ err });
+    res.status(400).json({ success: false });
   }
 };
 
@@ -275,7 +275,7 @@ const accetta_prenotazione_get = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    res.status(400).json({ err });
+    res.status(400).json({ success: false });
   }
 };
 
@@ -305,7 +305,7 @@ const rifiuta_prenotazione_get = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    res.status(400).json({ err });
+    res.status(400).json({ success: false });
   }
 };
 
@@ -329,7 +329,7 @@ const cancella_prenotazione_delete = async (req, res) => {
     res.status(200).json({ success: true });
   } catch (err) {
     console.log(err);
-    res.status(400).json({ err });
+    res.status(400).json({ success: false });
   }
 };
 
@@ -361,7 +361,7 @@ const contatta_utente_post = async (req, res) => {
     res.status(200).json({ success: true });
   } catch (err) {
     console.log(err);
-    res.status(400).json({ err });
+    res.status(400).json({ success: false });
   }
 };
 
@@ -586,6 +586,47 @@ const contatta_questura_post = async (req, res) => {
   }
 };
 
+const checkRendiconto = async () => {
+  try {
+    const listaHost = await Utente.findAll({ where: { isHost: 1 } });
+    if (listaHost) {
+      listaHost.forEach(async (host) => {
+        const numPrenotazioni = await Prenotazione.count({
+          where: {
+            ref_host: host.id,
+            stato_prenotazione: 3,
+            check_in: {
+              [Op.gt]: host.ultimo_rendiconto,
+            },
+          },
+        });
+
+        if (
+          moment().diff(moment(host.ultimo_rendiconto), "months") >= 3 &&
+          numPrenotazioni > 0
+        ) {
+          let bodyMail = {
+            from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
+            bcc: host.email,
+            subject: "Promemoria rendiconto uccifio del turismo",
+            text:
+              "Ti ricordiamo che hai l'obbligo di rendicontare l'ammontare delle tasse di soggiorno all'ufficio del turismo. Sono passati più di tre mesi dall'ultimo rendiconto. Dirigiti nella sezione 'Contatta Ufficio del turismo' e mettiti in regola il prima possibile.\n\n Cordiali saluti, Team AIRBDBA",
+          };
+
+          await transporter.sendMail(bodyMail, (error, info) => {
+            if (error) {
+              return console.log(error);
+            }
+            console.log("Messaggio inviato: %s", info.messageId);
+          });
+        }
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   become_host_get,
   aggiungi_inserzione_post,
@@ -600,4 +641,5 @@ module.exports = {
   contatta_turismo_post,
   identifica_post,
   contatta_questura_post,
+  checkRendiconto,
 };

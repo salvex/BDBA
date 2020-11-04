@@ -377,6 +377,20 @@
                 window.location.href = `/host`;
               })
               .modal("show");
+          } else {
+            $("#successFailure")
+              .on("show.bs.modal", () => {
+                $("#successFailureLabel").html(
+                  `Ops! Qualcosa è andato storto...&nbsp;<i class="far fa-frown"></i>`
+                );
+                $("#successFailureContent").html(
+                  `Sembra che ci sia stato qualche errore durante l'elaborazione della richiesta! Riprova.`
+                );
+              })
+              .on("hide.bs.modal", () => {
+                window.location.reload();
+              })
+              .modal("show");
           }
         })
         .catch((err) => console.log(err));
