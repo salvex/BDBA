@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3000;
 //AUTH MIDDLEWARE
 const { checkUser, verifyToken, verifyHost } = require("./utils/JwtToken");
 //Router init
-var indexRouter = require("./routes/index");
+var indexRouter = require("./routes/SchermataPrincipale");
 var authRouter = require("./routes/Autenticazione");
 var hostRouter = require("./routes/GestioneHost");
 var utenteRouter = require("./routes/GestioneUtente");

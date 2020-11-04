@@ -73,7 +73,7 @@
     $(".quest-val").text(rendQuest);
     $(".tur-val").text(rendTur);
 
-    $("input, textarea, input[type=file]").val("");
+    $("input, textarea, input[type=file], .inputadd[type=file]").val("");
     $("input[type=checkbox]").prop("checked", false);
     /* ------------------------------------------------- */
 
@@ -241,7 +241,11 @@
 
               // Inserisco un avviso sul campo per inserire le immagini
               $("#customFileModalLabel").text(
-                `Solo altre ${10 - immagini[index].length}`
+                `${
+                  10 - immagini[index].length === 0
+                    ? "Hai raggiunto il limite (elimina qualche foto per aggiungerne altre)"
+                    : "Solo altre " + (10 - immagini[index].length)
+                }`
               );
 
               /* Attivo anche le checkbox dei servizi in modo corretto */
@@ -274,7 +278,11 @@
                     .on("click", function () {
                       if (imgToDel.length < immagini[index].length - 1) {
                         imgToDel.push($(this).attr("path"));
-
+                        $("#customFileModalLabel").text(
+                          `Solo altre ${
+                            10 - (immagini[index].length - imgToDel.length)
+                          }`
+                        );
                         $(this).animate({ opacity: 0 }, 125, function () {
                           $(this).css({
                             "background-image": "none",
@@ -435,6 +443,15 @@
         }
       });
 
+      if ($(`.inputadd[type=file]`).prop("files").length > 10) {
+        alert("Non puoi caricare più di 10 immagini!");
+        $(`.inputadd[type=file]`).val("");
+        $("#add-img-label").text(`Carica immagini`);
+        flag = 0;
+      } else if ($(`.inputadd[type=file]`).prop("files").length === 0) {
+        alert("Devi caricare almeno un'immagine!");
+      }
+
       if (!flag) {
         return;
       }
@@ -527,9 +544,39 @@
         }
       });
 
+      if (
+        immagini[$("#insMod").attr("index")].length === 10 &&
+        $(`input[type=file][id$="Modal"]`).prop("files").length > 0 &&
+        imgToDel.length === 0
+      ) {
+        alert("Hai raggiunto il numero massimo di foto!");
+        $(`input[type=file][id$="Modal"]`).val("");
+        $("#customFileModalLabel").text(
+          `Hai raggiunto il limite (elimina qualche foto per aggiungerne altre)`
+        );
+        flag = 0;
+      } else if (
+        imgToDel.length > 0 &&
+        $(`input[type=file][id$="Modal"]`).prop("files").length > 0 &&
+        immagini[$("#insMod").attr("index")].length +
+          $(`input[type=file][id$="Modal"]`).prop("files").length -
+          imgToDel.length >
+          10
+      ) {
+        alert("Hai superato il limite di 10 immagini");
+        $(`input[type=file][id$="Modal"]`).val("");
+        $("#customFileModalLabel").text(
+          `Solo altre ${
+            10 - (immagini[$("#insMod").attr("index")].length - imgToDel.length)
+          }`
+        );
+        flag = 0;
+      }
+
       if (!flag) {
         return;
       }
+
       // Sottraggo dalla lista di tutte le immagini, quelle rimosse
       // dall'utente
       const imgToSave = immagini[$("#insMod").attr("index")].filter((x) => {

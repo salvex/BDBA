@@ -61,7 +61,7 @@ const Inserzione = db.sequelize.define(
       allowNull: false,
     },
     galleryPath: {
-      type: DataTypes.STRING(300),
+      type: DataTypes.STRING(1000),
       allowNull: true,
     },
     ref_host_ins: {

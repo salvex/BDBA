@@ -119,7 +119,7 @@ const contatta_host_post = async (req, res) => {
     let host = await Utente.findByPk(id_host);
     let bodyMail = {
       from: '"Sistema AIRBDBA" <bdba.services@gmail.com>',
-      to: "",
+      to: host.email,
       replyTo: req.session.utente.email,
       subject:
         "Comunicazione dall'Utente " +
@@ -161,7 +161,6 @@ const cancella_pren_user_delete = async (req, res) => {
 
 module.exports = {
   user_get,
-  // profilo_get,
   modificaPassword_get,
   modificaPassword_post,
   metodoPagamento_post,

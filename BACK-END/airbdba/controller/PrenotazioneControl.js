@@ -6,7 +6,6 @@ const MetodoPagamento = require("../model/MetodoPagamento");
 var transporter = require("../utils/mailSender");
 const Utente = require("../model/Utente");
 
-
 const effettua_pren_get = async (req, res) => {
   console.log("Prenotazione in corso..");
   try {
@@ -71,7 +70,6 @@ const identifica_ospiti_post = (req, res) => {
     res.status(400).json({ err });
   }
 };
-
 
 const pagamento_get = async (req, res, next) => {
   try {
@@ -168,7 +166,7 @@ const riepilogo_post = async (req, res) => {
         subject: "Richiesta di prenotazione effettuata",
         text: `La tua richiesta di prenotazione è stata inoltrata con successo all'host della struttura ${req.session.inserzione.nome_inserzione}. Riceverei un email di notifica con l'esito della tua richiesta. \n\n Cordiali Saluti, Team AIRBDBA`,
       };
-      /*await transporter.sendMail(bodyMail1, (error, info) => {
+      await transporter.sendMail(bodyMail1, (error, info) => {
         if (error) {
           return console.log(error);
         }
@@ -179,7 +177,7 @@ const riepilogo_post = async (req, res) => {
           return console.log(error);
         }
         console.log("Messaggio inviato: %s", info.messageId);
-      });*/
+      });
 
       res.status(200).json({ success: true });
     } else {

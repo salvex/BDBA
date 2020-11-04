@@ -30,12 +30,12 @@ const checkRendiconto = async () => {
               "Ti ricordiamo che hai l'obbligo di rendicontare l'ammontare delle tasse di soggiorno all'ufficio del turismo. Sono passati più di tre mesi dall'ultimo rendiconto. Dirigiti nella sezione 'Contatta Ufficio del turismo' e mettiti in regola il prima possibile.\n\n Cordiali saluti, Team AIRBDBA",
           };
 
-          /* await transporter.sendMail(bodyMail, (error, info) => {
+          await transporter.sendMail(bodyMail, (error, info) => {
             if (error) {
               return console.log(error);
             }
             console.log("Messaggio inviato: %s", info.messageId);
-          }); */
+          });
         }
       });
     }
